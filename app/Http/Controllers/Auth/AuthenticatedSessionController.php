@@ -18,30 +18,44 @@ class AuthenticatedSessionController extends Controller
     {
         return view('auth.login');
     }
-
     /**
-     * Handle an incoming authentication request.
+     * Display the admin login view.
      */
+    public function createAdmin(): View
+    {
+        session(['role' => 'admin']);
+        return view('auth.login', [
+            'role' => 'admin',
+            'title' => 'Login Admin'
+        ]);
+    }
+
+    public function createAlumni(): View
+    {
+        session(['role' => 'alumni']);
+        return view('auth.login', [
+            'role' => 'alumni',
+            'title' => 'Login Alumni'
+        ]);
+    }
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if (auth()->user()->hasRole('admin')) {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        } else {
+            return redirect()->intended(route('alumni.dashboard', absolute: false));
+        }
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }

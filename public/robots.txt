@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /alumni/
+Disallow: /activation/
+Disallow: /taaruf/
+
+Sitemap: https://dakwah.salmanitb.com/sitemap.xml

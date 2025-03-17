@@ -12,10 +12,27 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                emerald: {
+                    50: '#ecfdf5',
+                    100: '#d1fae5',
+                    200: '#a7f3d0',
+                    300: '#6ee7b7',
+                    400: '#34d399',
+                    500: '#10b981',
+                    600: '#059669',
+                    700: '#047857',
+                    800: '#065f46',
+                    900: '#064e3b',
+                },
+                primer: '#66B161',
+                secondary: '#64748b',
+                dark: '#0f172a',
             },
         },
     },
 
-    plugins: [forms],
+    plugins: [ require('@tailwindcss/aspect-ratio'),forms],
 };

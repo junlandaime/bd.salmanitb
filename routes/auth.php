@@ -33,6 +33,13 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+
+    // Tambahkan route khusus untuk admin dan alumni
+    Route::get('login/admin', [AuthenticatedSessionController::class, 'createAdmin'])
+        ->name('login.admin');
+    Route::get('login/alumni', [AuthenticatedSessionController::class, 'createAlumni'])
+        ->name('login.alumni');
 });
 
 Route::middleware('auth')->group(function () {

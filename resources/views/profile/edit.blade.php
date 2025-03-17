@@ -1,7 +1,10 @@
-<x-app-layout>
+<x-app2-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
+            {{ __('Profile') }} <span><a class="text-green-600"
+                    href="{{ Auth::user()->hasRole('alumni') ? route('alumni.dashboard') : route('admin.dashboard') }}">
+                    to
+                    Dashboard</a></span>
         </h2>
     </x-slot>
 
@@ -26,4 +29,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-app2-layout>

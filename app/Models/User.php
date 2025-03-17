@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'remember_token',
+        'is_active',
+        'activation_token',
     ];
 
     /**
@@ -31,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'activation_token',
     ];
 
     /**
@@ -43,6 +48,33 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the activity batches that the user is an alumni of.
+     */
+    public function batchesAsAlumni()
+    {
+        return $this->belongsToMany(ActivityBatch::class, 'batch_alumni')
+            ->withPivot('instagram_account', 'gender', 'notes')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the alumni records for this user.
+     */
+    public function batchAlumni()
+    {
+        return $this->hasMany(BatchAlumni::class);
+    }
+
+    /**
+     * Get the taaruf profile associated with the user.
+     */
+    public function taarufProfile()
+    {
+        return $this->hasOne(TaarufProfile::class);
     }
 }
