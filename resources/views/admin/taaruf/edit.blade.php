@@ -145,7 +145,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Foto Saat Ini</label>
                             @if ($profile->photo_url)
                                 <div class="mb-2">
-                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                    <img src="{{ Storage::url($profile->photo_url) }}" alt="{{ $profile->full_name }}"
                                         class="w-32 h-32 object-cover rounded-lg">
                                 </div>
                                 <div class="flex items-center">

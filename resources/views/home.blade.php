@@ -95,7 +95,7 @@
                             <div class="p-4">
                                 <div class="bg-gray-100 h-64 rounded-lg flex items-center justify-center">
                                     <div class="flex flex-col items-center">
-                                        <img src="{{ $program->featured_image ?? 'https://picsum.photos/400/300' }}"
+                                        <img src="{{ Storage::url($program->featured_image) ?? 'https://picsum.photos/400/300' }}"
                                             alt="{{ $program->title }}" class="w-full h-full object-cover">
 
                                     </div>
@@ -163,7 +163,7 @@
 
                         <!-- Activity Image -->
                         <div class="relative">
-                            <img src="{{ $activity->featured_image }}" alt="{{ $activity->title }}"
+                            <img src="{{ Storage::url($activity->featured_image) }}" alt="{{ $activity->title }}"
                                 class="w-full h-56 object-cover">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-20">
                             </div>
@@ -557,7 +557,7 @@
                     @foreach ($latestNews as $news)
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="zoom-in"
                             data-aos-delay="{{ $loop->index * 100 }}">
-                            <img src="{{ $news->featured_image ?? 'https://picsum.photos/400/300' }}"
+                            <img src="{{ Storage::url($news->featured_image) ?? 'https://picsum.photos/400/300' }}"
                                 alt="{{ $news->title }}" class="w-full h-48 object-cover">
                             <div class="p-6">
                                 <div class="text-sm text-gray-500">{{ $news->published_at->format('d M Y') }}</div>
@@ -580,7 +580,7 @@
                     @foreach ($featuredArticles as $article)
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="flip-up"
                             data-aos-delay="{{ $loop->index * 100 }}">
-                            <img src="{{ $article->image_url ?? 'https://picsum.photos/400/300' }}"
+                            <img src="{{ Storage::url($article->image_url) ?? 'https://picsum.photos/400/300' }}"
                                 alt="{{ $article->title }}" class="w-full h-48 object-cover">
                             <div class="p-6">
                                 <div class="text-sm text-gray-500">{{ $article->published_at->format('d M Y') }}</div>

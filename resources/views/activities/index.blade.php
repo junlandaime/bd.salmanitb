@@ -138,7 +138,7 @@
 
                         <!-- Activity Image -->
                         <div class="relative">
-                            <img src="{{ $activity->featured_image }}" alt="{{ $activity->title }}"
+                            <img src="{{ Storage::url($activity->featured_image) }}" alt="{{ $activity->title }}"
                                 class="w-full h-56 object-cover">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-20">
                             </div>

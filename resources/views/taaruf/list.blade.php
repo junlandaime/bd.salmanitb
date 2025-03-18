@@ -75,7 +75,8 @@
                                         <div class="p-6">
                                             <div class="flex justify-center mb-4">
                                                 @if ($profile->photo_url)
-                                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                                    <img src="{{ Storage::url($profile->photo_url) }}"
+                                                        alt="{{ $profile->full_name }}"
                                                         class="w-24 h-24 rounded-full object-cover">
                                                 @else
                                                     <div
@@ -162,7 +163,7 @@
             </div>
 
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6 sticky top-5">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6 top-5">
                     <div class="p-6 border-b">
                         <h5 class="text-xl font-bold text-green-600">Informasi</h5>
                     </div>

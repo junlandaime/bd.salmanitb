@@ -63,7 +63,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                             <div class="text-center mb-4">
                                 @if ($profile->photo_url)
-                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                    <img src="{{ Storage::url($profile->photo_url) }}" alt="{{ $profile->full_name }}"
                                         class="rounded-lg border border-gray-200 inline-block max-w-full h-auto"
                                         style="max-width: 200px;">
                                 @else
@@ -229,7 +229,7 @@
             </div>
 
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden sticky top-8">
+                <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden top-8">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h5 class="text-xl font-bold text-green-600">Panduan Ta'aruf</h5>
                     </div>

@@ -255,7 +255,8 @@
                                     </label>
                                     <div class="mb-3">
                                         @if ($profile->photo_url)
-                                            <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                            <img src="{{ Storage::url($profile->photo_url) }}"
+                                                alt="{{ $profile->full_name }}"
                                                 class="h-32 w-32 object-cover rounded-lg border border-gray-200">
                                             <div class="mt-2 flex items-center">
                                                 <input id="remove_photo" name="remove_photo" type="checkbox"

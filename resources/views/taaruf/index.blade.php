@@ -101,7 +101,8 @@
                                 <div class="text-center py-4">
                                     <div class="mb-4">
                                         @if ($taarufProfile->photo_url)
-                                            <img src="{{ $taarufProfile->photo_url }}" alt="{{ $taarufProfile->full_name }}"
+                                            <img src="{{ Storage::url($taarufProfile->photo_url) }}"
+                                                alt="{{ $taarufProfile->full_name }}"
                                                 class="h-24 w-24 rounded-full object-cover mx-auto border-4 border-green-100">
                                         @else
                                             <div
