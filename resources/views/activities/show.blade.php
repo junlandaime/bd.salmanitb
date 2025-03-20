@@ -145,7 +145,7 @@
 
                                 <!-- Registration Button -->
                                 <div class="mt-8 flex justify-center opacity-0 animate-[fadeIn_1.5s_ease-in_forwards_1.5s]">
-                                    <a href="#daftar"
+                                    <a href="{{ $activeBatch->external_link }}"
                                         class="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-green-500 p-4 px-6 py-3 font-medium text-white transition duration-300 ease-out">
                                         <span
                                             class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600"></span>
@@ -369,21 +369,20 @@
 
         @if ($registrationStatus['open'] || $registrationStatus['ending_soon'])
             <!-- Registration Form Section -->
-            <section id="daftar" class="py-24 bg-white">
+            <section id="daftar" class="py-24 bg-white text-center">
                 <div class="container mx-auto px-4">
-                    <div class="max-w-4xl mx-auto">
+                    <div class="max-w-lg mx-auto">
                         <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl overflow-hidden shadow-xl">
-                            <div class="md:flex">
-                                <!-- Left Column - Information -->
-                                <div class="md:w-1/2 p-8 md:p-12 text-white">
-                                    <h3 class="text-3xl font-bold mb-6">Daftar Sekarang</h3>
-                                    <p class="mb-8 opacity-90">
-                                        Investasi terbaik untuk pernikahan Anda adalah mempersiapkan diri dengan ilmu dan
-                                        keterampilan yang tepat. Daftarkan diri Anda sekarang!
-                                    </p>
-                                    <div class="space-y-6">
+                            <div class="md:w-full p-8 md:p-12 text-white">
+                                <h3 class="text-3xl font-bold mb-6">Daftar Sekarang</h3>
+                                <p class="mb-8 opacity-90">
+                                    Investasi terbaik untuk pernikahan Anda adalah mempersiapkan diri dengan ilmu dan
+                                    keterampilan yang tepat. Daftarkan diri Anda sekarang!
+                                </p>
+                                <div class="flex justify-center">
+                                    <div class="space-y-6 ">
                                         <!-- Schedule Info -->
-                                        <div class="flex items-center">
+                                        <div class="flex items-center text-justify">
                                             <div class="bg-white bg-opacity-20 rounded-full p-2 mr-4">
                                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -403,7 +402,7 @@
                                             </div>
                                         </div>
                                         <!-- Learning Period -->
-                                        <div class="flex items-center">
+                                        <div class="flex items-center text-justify">
                                             <div class="bg-white bg-opacity-20 rounded-full p-2 mr-4">
                                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -420,7 +419,7 @@
                                             </div>
                                         </div>
                                         <!-- Investment Info -->
-                                        <div class="flex items-center">
+                                        <div class="flex items-center text-justify">
                                             <div class="bg-white bg-opacity-20 rounded-full p-2 mr-4">
                                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -439,79 +438,43 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Right Column - Registration Form -->
-                                <div class="md:w-1/2 bg-white p-8 md:p-12">
-                                    <form x-data="{ sending: false, sent: false }"
-                                        @submit.prevent="sending = true; setTimeout(() => { sending = false; sent = true; }, 1000)">
-                                        <div class="space-y-6">
-                                            {{-- <!-- Name Field -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama
-                                                    Lengkap</label>
-                                                <input type="text" name="name" required
-                                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                                    placeholder="Masukkan nama lengkap Anda">
+                                <div x-data="{ sending: false, sent: false }" class="mt-6">
+                                    <div>
+                                        <!-- Submit Button -->
+                                        <a href="{{ $activeBatch->external_link }}" target="_blank"
+                                            @click="sending = true; setTimeout(() => { sending = false; sent = true; }, 1000)"
+                                            class="block w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-lg font-semibold transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                            :class="{ 'cursor-not-allowed opacity-75': sending || sent }">
+                                            <div class="flex justify-center items-center">
+                                                <div x-show="!sending && !sent">
+                                                    Daftar Sekarang
+                                                </div>
+                                                <div x-show="sending" class="flex items-center justify-center">
+                                                    <svg class="animate-spin mr-2 h-4 w-4 text-white" fill="none"
+                                                        viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                        </path>
+                                                    </svg>
+                                                    Mengirim...
+                                                </div>
+                                                <div x-show="sent" class="flex items-center justify-center">
+                                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                    </svg>
+                                                    Segera Isi Formulir
+                                                </div>
                                             </div>
-                                            <!-- Email Field -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                                <input type="email" name="email" required
-                                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                                    placeholder="email@example.com">
-                                            </div>
-                                            <!-- WhatsApp Field -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor
-                                                    WhatsApp</label>
-                                                <input type="tel" name="whatsapp" required
-                                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                                    placeholder="08xxxxxxxxxx">
-                                            </div>
-                                            <!-- Marriage Status Field -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Status
-                                                    Pernikahan</label>
-                                                <select name="status" required
-                                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                                                    <option value="">Pilih status</option>
-                                                    <option value="planning">Rencana menikah</option>
-                                                    <option value="engaged">Sudah bertunangan</option>
-                                                    <option value="newlywed">Pengantin baru (< 1 tahun)</option>
-                                                </select>
-                                            </div> --}}
-                                            <!-- Submit Button -->
-                                            <div>
-                                                <button type="submit"
-                                                    class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                                    :disabled="sending || sent">
-                                                    <span x-show="!sending && !sent">Daftar Sekarang</span>
-                                                    <span x-show="sending" class="flex items-center justify-center">
-                                                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                                            fill="none" viewBox="0 0 24 24">
-                                                            <circle class="opacity-25" cx="12" cy="12"
-                                                                r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                            <path class="opacity-75" fill="currentColor"
-                                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                            </path>
-                                                        </svg>
-                                                        Mengirim...
-                                                    </span>
-                                                    <span x-show="sent" class="flex items-center justify-center">
-                                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                        </svg>
-                                                        Pendaftaran Terkirim
-                                                    </span>
-                                                </button>
-                                            </div>
-                                            <!-- Success Message -->
-                                            <div x-show="sent" x-transition class="text-sm text-green-600 text-center">
-                                                Terima kasih! Kami akan menghubungi Anda dalam 1x24 jam.
-                                            </div>
+                                        </a>
+                                        <!-- Success Message -->
+                                        <div x-show="sent" x-transition class="text-sm text-green-600 text-center mt-4">
+                                            Terima kasih! Kami akan menghubungi Anda dalam 1x24 jam.
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
