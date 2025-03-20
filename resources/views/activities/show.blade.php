@@ -431,7 +431,7 @@
                                             <div>
                                                 <h4 class="font-semibold">Investasi</h4>
                                                 <p class="text-sm opacity-80">
-                                                    Rp {{ number_format($activeBatch->harga, 0, ',', '.') }}/pasangan
+                                                    Rp {{ number_format($activeBatch->harga, 0, ',', '.') }}
                                                     <span class="block">(termasuk modul dan sertifikat)</span>
                                                 </p>
                                             </div>
