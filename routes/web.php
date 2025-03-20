@@ -15,6 +15,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\TaarufQuestionController;
 use App\Http\Controllers\Admin\ActivityFaqController;
 use App\Http\Controllers\Admin\TaarufAdminController;
 use App\Http\Controllers\Admin\AlumniImportController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Admin\ActivityGalleryController;
 use App\Http\Controllers\Admin\ProgramScheduleController;
 use App\Http\Controllers\Admin\ActivityHighlightController;
 use App\Http\Controllers\Admin\ActivityTestimonialController;
+use App\Http\Controllers\Admin\TaarufQuestionAdminController;
 use App\Http\Controllers\Admin\ActivityLearningPathController;
 use App\Http\Controllers\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
@@ -107,6 +109,13 @@ Route::middleware(['auth', 'verified', 'role:alumni'])->prefix('taaruf')->name('
     // Browse profiles
     Route::get('/list', [TaarufController::class, 'showList'])->name('list');
     Route::get('/profile/{id}', [TaarufController::class, 'showProfile'])->name('profile.show');
+
+    // Questions routes
+    Route::post('/profile/{id}/questions', [TaarufQuestionController::class, 'store'])->name('profile.questions.store');
+    Route::get('/my-questions', [TaarufQuestionController::class, 'index'])->name('questions.index');
+    Route::post('/questions/{id}/answer', [TaarufQuestionController::class, 'answer'])->name('questions.answer');
+    Route::post('/questions/{id}/toggle-public', [TaarufQuestionController::class, 'togglePublic'])->name('questions.toggle-public');
+    Route::delete('/questions/{id}', [TaarufQuestionController::class, 'destroy'])->name('questions.destroy');
 });
 
 // Admin routes
@@ -174,11 +183,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/taaruf/{id}', [TaarufAdminController::class, 'destroy'])->name('taaruf.destroy');
     Route::post('/taaruf/{id}/toggle-active', [TaarufAdminController::class, 'toggleActive'])->name('taaruf.toggle-active');
 
+    // Taaruf Questions Management
+    Route::get('/taaruf/q/questions', [TaarufQuestionAdminController::class, 'index'])->name('taaruf.questions.index');
+    Route::get('/taaruf/questions/{id}', [TaarufQuestionAdminController::class, 'show'])->name('taaruf.questions.show');
+    Route::delete('/taaruf/questions/{id}', [TaarufQuestionAdminController::class, 'destroy'])->name('taaruf.questions.destroy');
+
+
     // Alumni Import Management
     Route::get('/alumni/import', [AlumniImportController::class, 'showImportForm'])->name('alumni.import.form');
     Route::post('/alumni/import', [AlumniImportController::class, 'importAlumni'])->name('alumni.import');
     Route::get('/alumni/materials/import', [AlumniImportController::class, 'showMaterialImportForm'])->name('alumni.materials.import.form');
     Route::post('/alumni/materials/import', [AlumniImportController::class, 'importMaterials'])->name('alumni.materials.import');
+
+    // Batch Alumni Management
+    Route::resource('batch-alumni', \App\Http\Controllers\Admin\BatchAlumniController::class);
 
     // User Web Management
     Route::resource('users', UserController::class);

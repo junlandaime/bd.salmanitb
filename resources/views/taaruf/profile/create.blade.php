@@ -329,7 +329,8 @@
                                                 <p class="pl-1">atau drag and drop</p>
                                             </div>
                                             <p class="text-xs text-gray-500">
-                                                Format: PDF, JPG, JPEG, PNG. Maksimal 5MB. Unduh template <a href="#"
+                                                Format: PDF, JPG, JPEG, PNG. Maksimal 5MB. Unduh template <a
+                                                    href="https://docs.google.com/document/d/1RcjFahFF3bmEpvDvf2QCZ8QlKi5gteNN/edit?tab=t.0"
                                                     class="text-green-600 hover:underline" target="_blank">di sini</a>,
                                                 isi, tandatangani, dan unggah kembali.
                                             </p>

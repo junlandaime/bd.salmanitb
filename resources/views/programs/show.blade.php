@@ -31,9 +31,14 @@
                 </div>
 
                 <!-- Image -->
-                <div class="lg:w-1/2" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
-                    <img src="{{ Storage::url($program->featured_image) }}" alt="{{ $program->title }}"
-                        class="w-full h-auto rounded-lg shadow-lg">
+                <div class="lg:w-1/2 flex items-center justify-center" data-aos="fade-up" data-aos-delay="200"
+                    data-aos-duration="1000">
+                    {{-- <img src="{{ Storage::url($program->featured_image) }}" alt="{{ $program->title }}"
+                        class="w-full h-auto rounded-lg shadow-lg"> --}}
+                    <div class="w-full lg:w-1/2 flex items-center justify-center" data-aos="fade-right"
+                        data-aos-duration="1000">
+                        <x-application-logo-full class="w-full h-auto" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -42,7 +47,7 @@
     <section class="py-12 lg:py-24 md:px-40">
         <!-- Header Section -->
         <div class="mb-12" data-aos="fade-up" data-aos-duration="800">
-            <h1 class="text-4xl md:text-5xl font-semibold text-gray-900 mb-6">{{ $program->title }}</h1>
+            {{-- <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-6">{{ $program->title }}</h1> --}}
             <p class="text-gray-700 text-lg">
                 {{ $program->description }}
             </p>
@@ -58,7 +63,7 @@
 
             <!-- Description Section -->
             <div class="w-full md:w-1/2" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6">{{ $program->title }}</h2>
+                {{-- <h2 class="text-3xl font-semibold text-gray-900 mb-6">{{ $program->title }}</h2> --}}
                 <p class="text-gray-700 mb-4">
                     {!! nl2br(e($program->overview)) !!}
                 </p>
@@ -146,7 +151,7 @@
     </section>
 
     <!-- Engaging Topics Section -->
-    <section class="py-20 bg-gray-50">
+    {{-- <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="800">
                 <h3 class="text-4xl font-semibold mb-6 relative inline-block">
@@ -184,10 +189,10 @@
                 @endforeach
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Interactive Schedule Section -->
-    <section id="schedule" class="py-20 bg-white relative overflow-hidden">
+    {{-- <section id="schedule" class="py-20 bg-white relative overflow-hidden">
         <div class="absolute top-0 right-0 -mr-16 -mt-16">
             <svg width="404" height="404" fill="none" viewBox="0 0 404 404">
                 <defs>
@@ -297,10 +302,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Inspiring Call-to-Action -->
-    <section class="py-24 bg-gradient-to-br from-green-500 to-green-600 relative">
+    {{-- <section class="py-24 bg-gradient-to-br from-green-500 to-green-600 relative">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" fill="none">
                 <defs>
@@ -341,10 +346,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Immersive Hero Section -->
-    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+    {{-- <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-70"></div>
             <video class="w-full h-full object-cover" autoplay loop muted poster="{{ $program->featured_image }}">
@@ -373,10 +378,10 @@
             </div>
         </div>
         <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
-    </section>
+    </section> --}}
 
     <!-- Inspirational Overview -->
-    <section id="overview" class="py-20 bg-white">
+    {{-- <section id="overview" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap items-center">
                 <div class="w-full lg:w-6/12 px-4 mb-12 lg:mb-0">
@@ -405,10 +410,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Engaging Topics Section -->
-    <section class="py-20 bg-gray-50">
+    {{-- <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h3 class="inline-block text-3xl font-serif relative">
@@ -429,11 +434,11 @@
                         <div class="h-1 bg-green-500"></div>
                         <div class="p-8">
                             <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 mx-auto">
-                                {{-- <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor"
+                                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="{{ $topic->icon }}"></path>
-                                </svg> --}}
+                                </svg>
                                 <i class="fas fa-{{ $topic->icon }} text-xl text-green-500"></i>
                             </div>
 
@@ -447,10 +452,10 @@
                 @endforeach
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Interactive Schedule Section -->
-    <section id="schedule" class="py-20 bg-white relative overflow-hidden">
+    {{-- <section id="schedule" class="py-20 bg-white relative overflow-hidden">
         <div class="absolute top-0 right-0 -mr-16 -mt-16">
             <svg width="404" height="404" fill="none" viewBox="0 0 404 404">
                 <defs>
@@ -557,10 +562,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Inspiring Call-to-Action -->
-    <section class="py-24 bg-gradient-to-br from-green-500 to-green-600 relative">
+    {{-- <section class="py-24 bg-gradient-to-br from-green-500 to-green-600 relative">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" fill="none">
                 <defs>
@@ -601,10 +606,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Testimonials -->
-    <section class="py-20 bg-white">
+    {{-- <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h3 class="text-3xl font-serif mb-4">Voices from Our Community</h3>
@@ -652,5 +657,5 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection

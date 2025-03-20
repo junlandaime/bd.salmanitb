@@ -152,6 +152,118 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Taaruf Stats -->
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Taaruf Profiles</dt>
+                                    <dd class="flex items-baseline">
+                                        <div class="text-2xl font-semibold text-gray-900">
+                                            {{ $stats['taaruf']['profiles'] ?? 0 }}</div>
+                                        <div class="ml-2 flex items-baseline text-sm font-semibold">
+                                            <span class="text-green-600">{{ $stats['taaruf']['active'] ?? 0 }}
+                                                Active</span>
+                                            <span class="mx-2 text-gray-500">&middot;</span>
+                                            <span class="text-yellow-600">{{ $stats['taaruf']['questions'] ?? 0 }}
+                                                Questions</span>
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Section -->
+            <div class="mt-8">
+                <h2 class="text-lg font-medium text-gray-900">Quick Access</h2>
+                <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- Content Management -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <h3 class="text-md font-medium text-gray-900">Content Management</h3>
+                            <div class="mt-4 grid grid-cols-2 gap-2">
+                                <a href="{{ route('admin.articles.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Articles
+                                </a>
+                                <a href="{{ route('admin.news.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    News
+                                </a>
+                                <a href="{{ route('admin.programs.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Programs
+                                </a>
+                                <a href="{{ route('admin.services.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Services
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Management -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <h3 class="text-md font-medium text-gray-900">Manajemen Kegiatan</h3>
+                            <div class="mt-4 grid grid-cols-2 gap-2">
+                                <a href="{{ route('admin.activities.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Activities
+                                </a>
+                                <a href="{{ route('admin.batches.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Batches
+                                </a>
+                                <a href="{{ route('admin.alumni.import.form') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Import Alumni
+                                </a>
+                                <a href="{{ route('admin.alumni.materials.import.form') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Import Materials
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Taaruf Management -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <h3 class="text-md font-medium text-gray-900">Taaruf Management</h3>
+                            <div class="mt-4 grid grid-cols-2 gap-2">
+                                <a href="{{ route('admin.taaruf.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Profiles
+                                </a>
+                                <a href="{{ route('admin.taaruf.statistics') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Statistics
+                                </a>
+                                <a href="{{ route('admin.taaruf.questions.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Questions
+                                </a>
+                                <a href="{{ route('admin.users.index') }}"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Users
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Recent Content Section -->

@@ -15,8 +15,7 @@
 </script>
 @section('content')
     <header class="relative pt-16 pb-32 flex content-center items-center justify-center" style="min-height: 50vh;">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover"
-            style="background-image: url('{{ asset('images/activities-background.jpg') }}');">
+        <div class="absolute top-0 w-full h-full bg-center bg-cover" style="background-image: url('{{ asset('bd3.jpg') }}');">
             <span class="w-full h-full absolute opacity-50 bg-black"></span>
         </div>
         <div class="container relative mx-auto px-4">

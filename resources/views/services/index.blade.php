@@ -29,8 +29,7 @@
 @section('content')
     <!-- Hero Section -->
     <section class="relative pt-16 pb-32 flex content-center items-center justify-center " style="min-height: 50vh;">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover"
-            style='background-image: url("https://picsum.photos/1920/1085");'>
+        <div class="absolute top-0 w-full h-full bg-center bg-cover" style='background-image: url("{{ asset('bd3.jpg') }}");'>
             <span class="w-full h-full absolute opacity-50 bg-black"></span>
         </div>
         <div class="container relative mx-auto">
@@ -119,7 +118,8 @@
 
                 <div class="w-full md:w-4/12 px-4 mr-auto ml-auto" data-aos="fade-left">
                     <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-green-500">
-                        <img alt="Contact Us" src="https://picsum.photos/400/300" class="w-full align-middle rounded-t-lg">
+                        <img alt="Contact Us" src="{{ asset('bd2.jpg') }}" class="w-full align-middle rounded-t-lg">
+
                         <blockquote class="relative p-8 mb-4">
                             <h4 class="text-xl font-bold text-white">
                                 Jam Operasional

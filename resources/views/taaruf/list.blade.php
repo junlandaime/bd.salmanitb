@@ -75,8 +75,7 @@
                                         <div class="p-6">
                                             <div class="flex justify-center mb-4">
                                                 @if ($profile->photo_url)
-                                                    <img src="{{ Storage::url($profile->photo_url) }}"
-                                                        alt="{{ $profile->full_name }}"
+                                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
                                                         class="w-24 h-24 rounded-full object-cover">
                                                 @else
                                                     <div

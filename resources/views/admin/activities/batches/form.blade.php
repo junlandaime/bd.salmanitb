@@ -124,6 +124,15 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+            <div class="md:col-span-2">
+                <label for="external_link" class="block text-sm font-medium text-gray-700">Link Pendaftaran</label>
+                <input type="text" name="external_link" id="external_link"
+                    value="{{ old('external_link', $batch->external_link ?? '') }}"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                @error('external_link')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
     </div>
 

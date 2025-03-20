@@ -25,7 +25,7 @@
                     <div class="w-full md:w-1/3 mb-6 md:mb-0 md:pr-6">
                         <div class="mb-6 flex justify-center">
                             @if ($profile->photo_url)
-                                <img src="{{ Storage::url($profile->photo_url) }}" alt="{{ $profile->full_name }}"
+                                <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
                                     class="w-48 h-48 object-cover rounded-lg shadow-md">
                             @else
                                 <div class="w-48 h-48 bg-gray-200 rounded-lg shadow-md flex items-center justify-center">

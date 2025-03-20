@@ -414,7 +414,9 @@
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold">Periode Pembelajaran</h4>
-                                                <p class="text-sm opacity-80">{{ $activeBatch->durasi_program }}</p>
+                                                <p class="text-sm opacity-80">
+                                                    {{ $activeBatch->tanggal_mulai_kegiatan->format('d F Y') }} -
+                                                    {{ $activeBatch->tanggal_selesai_kegiatan->format('d F Y') }}</p>
                                             </div>
                                         </div>
                                         <!-- Investment Info -->
@@ -442,7 +444,7 @@
                                     <form x-data="{ sending: false, sent: false }"
                                         @submit.prevent="sending = true; setTimeout(() => { sending = false; sent = true; }, 1000)">
                                         <div class="space-y-6">
-                                            <!-- Name Field -->
+                                            {{-- <!-- Name Field -->
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama
                                                     Lengkap</label>
@@ -476,7 +478,7 @@
                                                     <option value="engaged">Sudah bertunangan</option>
                                                     <option value="newlywed">Pengantin baru (< 1 tahun)</option>
                                                 </select>
-                                            </div>
+                                            </div> --}}
                                             <!-- Submit Button -->
                                             <div>
                                                 <button type="submit"

@@ -84,8 +84,8 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold mb-2">Email</h3>
-                        <a href="mailto:info@salmanitb.com"
-                            class="text-green-600 hover:text-green-800">info@salmanitb.com</a>
+                        <a href="mailto:{{ $landingPage->contact_email }}" target="_blank"
+                            class="text-green-600 hover:text-green-800">{{ $landingPage->contact_email }}</a>
                     </div>
 
                     <!-- Phone Card -->
@@ -98,8 +98,10 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">Telepon</h3>
-                        <a href="tel:+6222-2500935" class="text-green-600 hover:text-green-800">+62 22-2500935</a>
+                        <h3 class="text-xl font-semibold mb-2">WhatsApp</h3>
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $landingPage->contact_whatsapp) }}"
+                            target="_blank"
+                            class="text-green-600 hover:text-green-800">{{ $landingPage->contact_whatsapp }}</a>
                     </div>
                 </div>
 
@@ -159,7 +161,8 @@
                                     Konsultasikan kebutuhan Anda seputar program-program yang kami selenggarakan, termasuk
                                     jadwal, biaya, dan persyaratan.
                                 </p>
-                                <a href="https://wa.me/6281234567890?text=Assalamu'alaikum,%20saya%20ingin%20konsultasi%20tentang%20program%20Bidang%20Dakwah%20Salman%20ITB"
+                                <a target="_blank"
+                                    href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $landingPage->contact_whatsapp) }}?text=Assalamu'alaikum,%20saya%20ingin%20konsultasi%20tentang%20program%20Bidang%20Dakwah%20Salman%20ITB"
                                     class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 w-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor"
                                         viewBox="0 0 24 24">
@@ -182,7 +185,8 @@
                                     Ajukan pertanyaan seputar keislaman dan kehidupan sehari-hari kepada ustadz dan ustadzah
                                     yang berkompeten di bidangnya.
                                 </p>
-                                <a href="https://wa.me/6289876543210?text=Assalamu'alaikum,%20saya%20ingin%20berkonsultasi%20tentang%20masalah%20keislaman"
+                                <a target="_blank"
+                                    href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $landingPage->contact_whatsapp) }}?text=Assalamu'alaikum,%20saya%20ingin%20berkonsultasi%20tentang%20masalah%20keislaman"
                                     class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 w-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor"
                                         viewBox="0 0 24 24">
@@ -205,9 +209,9 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                     <div class="aspect-w-16 aspect-h-9">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.0633018301306!2d107.60837361477223!3d-6.893528695019248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e65767c9b183%3A0x2478e3dcdce37961!2sMasjid%20Salman%20ITB!5e0!3m2!1sen!2sid!4v1615789958619!5m2!1sen!2sid"
-                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            class="w-full"></iframe>
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d990.2430774148318!2d107.61088000121023!3d-6.89391551305945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e7000a9b75bb%3A0xa7340eec78bacc1d!2sBidang%20Dakwah%20YPM%20Salman%20ITB!5e0!3m2!1sid!2sid!4v1742397564575!5m2!1sid!2sid"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
@@ -288,7 +292,7 @@
                         Jika Anda memiliki pertanyaan lain yang belum terjawab, jangan ragu untuk menghubungi kami.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
-                        <a href="mailto:info@salmanitb.com"
+                        <a href="mailto:{{ $landingPage->contact_email }}" target="_blank"
                             class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-white hover:bg-gray-100">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -297,7 +301,8 @@
                             </svg>
                             Kirim Email
                         </a>
-                        <a href="https://wa.me/6281234567890"
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $landingPage->contact_whatsapp) }}"
+                            target="_blank"
                             class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-white hover:bg-gray-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor"
                                 viewBox="0 0 24 24">

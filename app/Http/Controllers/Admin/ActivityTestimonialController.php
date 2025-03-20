@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Activity;
-use App\Models\ActivityTestimonial;
 use Illuminate\Http\Request;
+use App\Models\ActivityTestimonial;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityTestimonialController extends Controller
 {
@@ -73,12 +74,12 @@ class ActivityTestimonialController extends Controller
     public function destroy(ActivityTestimonial $activityTestimonial)
     {
         $activity_id = $activityTestimonial->activity_id;
-        
+
         // Delete image if exists
         if ($activityTestimonial->image) {
             Storage::disk('public')->delete($activityTestimonial->image);
         }
-        
+
         $activityTestimonial->delete();
 
         return redirect()

@@ -255,8 +255,7 @@
                                     </label>
                                     <div class="mb-3">
                                         @if ($profile->photo_url)
-                                            <img src="{{ Storage::url($profile->photo_url) }}"
-                                                alt="{{ $profile->full_name }}"
+                                            <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
                                                 class="h-32 w-32 object-cover rounded-lg border border-gray-200">
                                             <div class="mt-2 flex items-center">
                                                 <input id="remove_photo" name="remove_photo" type="checkbox"
@@ -362,8 +361,9 @@
                                                 </div>
                                                 <p class="text-xs text-gray-500">
                                                     Format: PDF, JPG, JPEG, PNG. Maksimal 5MB. Unduh template <a
-                                                        href="#" class="text-green-600 hover:text-green-500"
-                                                        target="_blank">di sini</a>, isi, tandatangani, dan unggah kembali.
+                                                        href="https://docs.google.com/document/d/1RcjFahFF3bmEpvDvf2QCZ8QlKi5gteNN/edit?tab=t.0"
+                                                        class="text-green-600 hover:text-green-500" target="_blank">di
+                                                        sini</a>, isi, tandatangani, dan unggah kembali.
                                                 </p>
                                             </div>
                                         </div>

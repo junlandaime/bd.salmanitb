@@ -63,7 +63,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                             <div class="text-center mb-4">
                                 @if ($profile->photo_url)
-                                    <img src="{{ Storage::url($profile->photo_url) }}" alt="{{ $profile->full_name }}"
+                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
                                         class="rounded-lg border border-gray-200 inline-block max-w-full h-auto"
                                         style="max-width: 200px;">
                                 @else
@@ -93,6 +93,14 @@
                                     @if ($profile->instagram)
                                         <p><span class="font-semibold">Instagram:</span> @ {{ $profile->instagram }}</p>
                                     @endif
+                                    <p><span class="font-semibold">Batch SPN:</span>
+                                        @if ($profile->user->batchAlumni->first() && $profile->user->batchAlumni->first()->activityBatch)
+                                            {{ $profile->user->batchAlumni->first()->activityBatch->nama_batch }} -
+                                            {{ $profile->user->batchAlumni->first()->activityBatch->activity->title }}
+                                        @else
+                                            Tidak tersedia
+                                        @endif
+                                    </p>
                                 </div>
 
                                 <div>
@@ -226,6 +234,130 @@
                         </div>
                     </div>
                 </div> --}}
+
+
+                @php
+                    $publicQuestions = \App\Models\TaarufQuestion::where('profile_id', $profile->id)
+                        ->where('is_answered', true)
+                        ->where('is_public', true)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+                @endphp
+
+                @if (count($publicQuestions) > 0)
+                    <!-- In your code where the questions section begins, replace with this: -->
+                    <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h5 class="text-xl font-bold text-green-600">Pertanyaan & Jawaban</h5>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                @foreach ($publicQuestions as $index => $question)
+                                    <div class="border border-gray-200 rounded-lg overflow-hidden" x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }">
+                                        <div class="bg-gray-50 p-0" id="heading{{ $index }}">
+                                            <button
+                                                class="w-full flex items-center justify-between p-4 text-left focus:outline-none"
+                                                type="button" @click="open = !open"
+                                                :aria-expanded="open ? 'true' : 'false'"
+                                                aria-controls="collapse{{ $index }}">
+                                                <div class="flex items-center">
+                                                    <svg class="h-5 w-5 text-green-600 mr-2" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span
+                                                        class="font-medium text-gray-800">{{ $question->question }}</span>
+                                                </div>
+                                                <svg class="h-5 w-5 text-gray-500 transform"
+                                                    :class="{ 'rotate-180': open }" fill="currentColor"
+                                                    viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <div id="collapse{{ $index }}" x-show="open"
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 transform scale-95"
+                                            x-transition:enter-end="opacity-100 transform scale-100"
+                                            x-transition:leave="transition ease-in duration-100"
+                                            x-transition:leave-start="opacity-100 transform scale-100"
+                                            x-transition:leave-end="opacity-0 transform scale-95">
+                                            <div class="p-4 border-t border-gray-200">
+                                                <div class="flex">
+                                                    <svg class="h-5 w-5 text-green-600 mr-2 mt-0.5" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="text-gray-700">{{ $question->answer }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mt-6">
+                    <div class="p-6 border-b">
+                        <h5 class="text-xl font-bold text-green-600">Tanyakan Sesuatu</h5>
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                            <div class="flex">
+                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="text-blue-700">Anda dapat mengajukan pertanyaan kepada alumni ini. Pertanyaan
+                                    dapat dikirim secara anonim.</span>
+                            </div>
+                        </div>
+
+                        <form action="{{ route('taaruf.profile.questions.store', $profile->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="question" class="block text-gray-700 mb-2">Pertanyaan Anda:</label>
+                                <textarea name="question" id="question" rows="4"
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('question') border-red-500 @enderror"
+                                    required maxlength="500"></textarea>
+                                @error('question')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                                <p class="text-gray-500 text-sm mt-1">Maksimal 500 karakter</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex items-center">
+                                    {{-- <input type="checkbox" id="is_anonymous" name="is_anonymous" value="1" checked
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                                    <label for="is_anonymous" class="ml-2 text-gray-700">Kirim sebagai pertanyaan
+                                        anonim</label> --}}
+                                </div>
+                                <p class="text-gray-500 text-sm mt-1 ml-6">Nama Anda tidak akan ditampilkan kepada alumni,
+                                    tetapi admin tetap dapat melihat identitas Anda.</p>
+                            </div>
+
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Kirim Pertanyaan
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <div class="lg:col-span-1">
@@ -273,15 +405,26 @@
                                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
-                                admin@salmanitb.com
+                                <a target="_blank" href="mailto:bidangdakwah@salmanitb.com">bidangdakwah@salmanitb.com</a>
                             </p>
                             <p class="flex items-center text-gray-600">
                                 <svg class="h-5 w-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                                 </svg>
-                                +62 812-3456-7890
+                                <a target="_blank"
+                                    href="https://wa.me/{{ preg_replace('/[^0-9]/', '', '+6285722183585') }}">+6285722183585</a>
                             </p>
+                            <button
+                                class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                                <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                </svg>
+                                <a target="_blank"
+                                    href="https://docs.google.com/forms/d/e/1FAIpQLSf_iqVADX6qSlJ4T5ceaYAmele14_0AtlcVp9pQpsIKu44BjQ/viewform"
+                                    class="text-white no-underline">Ajukan Nama untuk Taaruf</a>
+                            </button>
                         </div>
                     </div>
                 </div>

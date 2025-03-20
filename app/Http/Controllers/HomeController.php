@@ -33,7 +33,7 @@ class HomeController extends Controller
         $featuredPrograms = Program::
             // where('is_featured', true)
             // ->
-            latest()
+            inRandomOrder()
             ->take(3)
             ->get();
 
@@ -69,6 +69,7 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $landingPage = LandingPage::firstOrFail();
+        return view('contact', compact('landingPage'));
     }
 }

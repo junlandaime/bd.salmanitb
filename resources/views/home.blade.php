@@ -41,8 +41,7 @@
                         <h1 class="text-4xl md:text-5xl font-bold mb-4">BIDANG DAKWAH</h1>
                         <h2 class="text-3xl md:text-4xl font-bold mb-6">Yayasan Pembina Masjid (YPM) Salman ITB</h2>
                         <p class="text-gray-700 mb-8">
-                            Pengelola kegiatan atau program ketakmiran masjid meliputi layanan pelaksanaan shalat,
-                            pengurusan jenazah, ikrar Islam & pembinaan mualaf, serta kegiatan pembelajaran keislaman.
+                            {!! $landingpage->hero_subtitle !!}
                         </p>
                         <!-- CTA Buttons -->
                         <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start" data-aos="fade-up"
@@ -369,21 +368,10 @@
                     <h2 class="text-4xl font-bold text-gray-900">Tentang Kami</h2>
 
                     <div class="space-y-4 text-gray-700 text-justify">
-                        <p class="text-base">
-                            Bidang Dakwah Salman ITB merupakan salah satu pilar utama dalam menggerakkan dan
-                            mengelola aktivitas keislaman di lingkungan Masjid Salman Institut Teknologi Bandung. Kami
-                            memiliki komitmen kuat untuk menyediakan layanan keagamaan yang menyeluruh dan
-                            berkualitas, guna mendukung kebutuhan spiritual dan pembinaan umat Islam di kampus serta
-                            masyarakat luas.
-                        </p>
-
-                        <p class="text-base">
-                            Diantara kegiatan atau program yang kami kelola adalah layanan pelaksanaan shalat, pengurusan
-                            jenazah, ikrar Islam dan pembinaan mualaf, serta kegiatan-kegiatan pembelajaran keislaman.
-                        </p>
+                        {!! $landingpage->about_content !!}
                     </div>
 
-                    <button
+                    {{-- <button
                         class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
                         x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
@@ -392,7 +380,7 @@
                                 d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
                         Read more
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </section>
@@ -493,10 +481,10 @@
                             <i class="fas fa-users text-green-600 text-3xl"></i>
                         </div>
                         <h3 class="text-xl text-green-600 font-medium mb-2">Tim Profesional</h3>
-                        <p class="text-gray-600">
+                        {{-- <p class="text-gray-600">
                             Lorem ipsum dolor sit amet consectetur. Tincidunt tortor nibh adipiscing enim nulla phasellus
                             mattis at.
-                        </p>
+                        </p> --}}
                     </div>
 
                     <!-- Feature 2 -->
@@ -506,10 +494,10 @@
                             <i class="fas fa-medal text-green-600 text-3xl"></i>
                         </div>
                         <h3 class="text-xl text-green-600 font-medium mb-2">Pilihan Kelas</h3>
-                        <p class="text-gray-600">
+                        {{-- <p class="text-gray-600">
                             Lorem ipsum dolor sit amet consectetur. Tincidunt tortor nibh adipiscing enim nulla phasellus
                             mattis at.
-                        </p>
+                        </p> --}}
                     </div>
 
                     <!-- Feature 3 -->
@@ -519,10 +507,10 @@
                             <i class="fas fa-graduation-cap text-green-600 text-3xl"></i>
                         </div>
                         <h3 class="text-xl text-green-600 font-medium mb-2">Layanan Pasca Program</h3>
-                        <p class="text-gray-600">
+                        {{-- <p class="text-gray-600">
                             Lorem ipsum dolor sit amet consectetur. Tincidunt tortor nibh adipiscing enim nulla phasellus
                             mattis at.
-                        </p>
+                        </p> --}}
                     </div>
 
                     <!-- Feature 4 -->
@@ -532,17 +520,17 @@
                             <i class="fas fa-globe text-green-600 text-3xl"></i>
                         </div>
                         <h3 class="text-xl text-green-600 font-medium mb-2">Terjangkau</h3>
-                        <p class="text-gray-600">
+                        {{-- <p class="text-gray-600">
                             Lorem ipsum dolor sit amet consectetur. Tincidunt tortor nibh adipiscing enim nulla phasellus
                             mattis at.
-                        </p>
+                        </p> --}}
                     </div>
                 </div>
 
                 <!-- Right side with image -->
                 <div class="w-full lg:w-2/5" data-aos="fade-left" data-aos-duration="1200">
-                    <div class="bg-gray-300 rounded-lg p-6 relative overflow-hidden aspect-square">
-                        <img src="{{ asset('bd2.jpg') }}" alt="">
+                    <div class="bg-gray-200 rounded-lg p-6 relative overflow-hidden aspect-square">
+                        <img src="{{ asset('bd.jpg') }}" alt="">
 
                     </div>
                 </div>
@@ -563,7 +551,7 @@
                                 <div class="text-sm text-gray-500">{{ $news->published_at->format('d M Y') }}</div>
                                 <h3 class="mt-2 text-xl font-bold">{{ $news->title }}</h3>
                                 <p class="mt-2 text-gray-600">{{ Str::limit($news->content, 100) }}</p>
-                                <a href="{{ route('news.show', $news) }}"
+                                <a href="{{ route('news.show', $news->slug) }}"
                                     class="mt-4 inline-block text-green-600 hover:text-green-700">Read More →</a>
                             </div>
                         </div>
@@ -586,7 +574,7 @@
                                 <div class="text-sm text-gray-500">{{ $article->published_at->format('d M Y') }}</div>
                                 <h3 class="mt-2 text-xl font-bold">{{ $article->title }}</h3>
                                 <p class="mt-2 text-gray-600">{{ Str::limit($article->content, 100) }}</p>
-                                <a href="{{ route('articles.show', $article) }}"
+                                <a href="{{ route('articles.show', $article->slug) }}"
                                     class="mt-4 inline-block text-green-600 hover:text-green-700">Read More →</a>
                             </div>
                         </div>

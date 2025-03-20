@@ -17,8 +17,7 @@
 
 @section('content')
     <header class="relative pt-16 pb-32 flex content-center items-center justify-center" style="min-height: 50vh;">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover"
-            style='background-image: url("https://picsum.photos/1920/1081");'>
+        <div class="absolute top-0 w-full h-full bg-center bg-cover" style='background-image: url("{{ asset('bd3.jpg') }}");'>
             <span class="w-full h-full absolute opacity-50 bg-black"></span>
         </div>
         <div class="container relative mx-auto px-4">
@@ -183,7 +182,7 @@
                                     <div
                                         class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black opacity-60 z-10">
                                     </div>
-                                    <img alt="{{ $activity->title }}" src="{{ $activity->featured_image }}"
+                                    <img alt="{{ $activity->title }}" src="{{ Storage::url($activity->featured_image) }}"
                                         class="w-full align-middle rounded-t-lg h-64 object-cover">
                                     <div class="absolute top-0 left-0 p-4 z-20">
                                         <span
@@ -248,7 +247,7 @@
     @endif
 
     <!-- Testimonial Section with Modern Cards -->
-    <section class="py-24 lg:px-32 bg-white">
+    {{-- <section class="py-24 lg:px-32 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap justify-center text-center mb-16">
                 <div class="w-full lg:w-6/12 px-4">
@@ -291,7 +290,7 @@
                 @endfor
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Call to Action with Modern Design -->
     <section class="relative py-32">
@@ -306,7 +305,7 @@
                         Jadilah bagian dari perjalanan membangun peradaban Islam melalui program-program dakwah yang
                         inspiratif dan bermanfaat
                     </p>
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('contact') }}"
                         class="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white p-4 px-8 py-4 font-medium text-green-700 transition duration-300 ease-out">
                         <span class="absolute inset-0 bg-white"></span>
                         <span
@@ -327,7 +326,7 @@
     </section>
 
     <!-- Newsletter Subscription with Modern Form -->
-    <section class="py-12 bg-gray-50">
+    {{-- <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap items-center">
                 <div class="w-full md:w-6/12 px-4 ml-auto mr-auto text-center md:text-left">
@@ -349,5 +348,5 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection

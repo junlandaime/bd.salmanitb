@@ -20,8 +20,9 @@ class ActivityGalleryController extends Controller
     {
         $validated = $request->validate([
             'activity_id' => 'required|exists:activities,id',
+            'title' => 'required|string|max:255',
             'image' => 'required|image|max:2048',
-            'caption' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:255',
             'order' => 'nullable|integer|min:0'
         ]);
 
@@ -46,7 +47,8 @@ class ActivityGalleryController extends Controller
     {
         $validated = $request->validate([
             'image' => 'nullable|image|max:2048',
-            'caption' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'order' => 'nullable|integer|min:0'
         ]);
 
