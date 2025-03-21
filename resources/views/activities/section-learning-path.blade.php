@@ -24,7 +24,7 @@
                         <h4 class="text-xl font-semibold text-gray-900 mb-2">{{ $path->title }}</h4>
                         <p class="text-gray-600">{{ $path->description }}</p>
                         <p class="text-sm text-green-600 mt-2">
-                            <span class="font-semibold">Mentor:</span> {{ $path->mentors }}
+                            <span class="font-semibold">Pemateri:</span> {{ $path->mentors }}
                         </p>
                     </div>
 

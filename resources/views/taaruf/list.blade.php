@@ -53,20 +53,102 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                    <div class="p-6 border-b flex justify-between items-center">
-                        <h5 class="text-xl font-bold text-green-600">Profil Alumni</h5>
-                        <div class="flex items-center">
-                            <label for="filter" class="mr-2 text-gray-600">Filter:</label>
-                            <select id="filter"
-                                class="rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
-                                <option value="all">Semua</option>
-                                <option value="location">Berdasarkan Lokasi</option>
-                                <option value="education">Berdasarkan Pendidikan</option>
-                                <option value="marriage_year">Berdasarkan Target Menikah</option>
-                            </select>
-                        </div>
+                    <div class="p-6 border-b">
+                        <h5 class="text-xl font-bold text-green-600 mb-4">Pencarian dan Filter</h5>
+                        <form action="{{ route('taaruf.list') }}" method="GET" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari
+                                        Nama</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <input type="text" name="search" id="search"
+                                            class="focus:ring-green-500 focus:border-green-500 block w-full pl-3 pr-10 py-2 sm:text-sm border-gray-300 rounded-md"
+                                            placeholder="Masukkan nama..." value="{{ request('search') }}">
+                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="filter"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Filter</label>
+                                    <select id="filter" name="filter"
+                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                        <option value="all"
+                                            {{ request('filter') == 'all' || !request('filter') ? 'selected' : '' }}>Semua
+                                        </option>
+                                        <option value="location" {{ request('filter') == 'location' ? 'selected' : '' }}>
+                                            Berdasarkan Lokasi</option>
+                                        <option value="education" {{ request('filter') == 'education' ? 'selected' : '' }}>
+                                            Berdasarkan Pendidikan</option>
+                                        <option value="marriage_year"
+                                            {{ request('filter') == 'marriage_year' ? 'selected' : '' }}>Berdasarkan Target
+                                            Menikah</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="hidden filter-options" id="location-options">
+                                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Pilih
+                                    Lokasi</label>
+                                <select name="location" id="location"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Lokasi</option>
+                                    @foreach ($locations ?? [] as $location)
+                                        <option value="{{ $location }}"
+                                            {{ request('location') == $location ? 'selected' : '' }}>{{ $location }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="hidden filter-options" id="education-options">
+                                <label for="education" class="block text-sm font-medium text-gray-700 mb-1">Pilih
+                                    Pendidikan</label>
+                                <select name="education" id="education"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Pendidikan</option>
+                                    @foreach ($educations ?? [] as $education)
+                                        <option value="{{ $education }}"
+                                            {{ request('education') == $education ? 'selected' : '' }}>{{ $education }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="hidden filter-options" id="marriage_year-options">
+                                <label for="marriage_year" class="block text-sm font-medium text-gray-700 mb-1">Pilih Target
+                                    Tahun Menikah</label>
+                                <select name="marriage_year" id="marriage_year"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Tahun</option>
+                                    @for ($year = 2025; $year <= 2030; $year++)
+                                        <option value="{{ $year }}"
+                                            {{ request('marriage_year') == $year ? 'selected' : '' }}>{{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    Cari
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="p-6">
+                        <h5 class="text-xl font-bold text-green-600 mb-4">Profil Alumni</h5>
                         @if (count($profiles) > 0)
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @foreach ($profiles as $profile)
@@ -96,8 +178,6 @@
                                             <div class="space-y-2">
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">Usia:</span>
-                                                    {{-- <span>{{ \Carbon\Carbon::parse(explode(', ', $profile->birth_place_date)[1])->age }}
-                                                        tahun</span> --}}
                                                     <span>{{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
                                                         tahun</span>
                                                 </div>
@@ -142,7 +222,7 @@
                             </div>
 
                             <div class="flex justify-center mt-8">
-                                {{ $profiles->links() }}
+                                {{ $profiles->appends(request()->query())->links() }}
                             </div>
                         @else
                             <div class="text-center py-16">
@@ -259,18 +339,30 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const filterSelect = document.getElementById('filter');
+                const filterOptions = document.querySelectorAll('.filter-options');
 
-                filterSelect.addEventListener('change', function() {
-                    // Implement filtering logic here
-                    // This would typically involve an AJAX request to the server
-                    // or client-side filtering of the profiles
+                // Function to show the appropriate filter options based on selection
+                function showFilterOptions() {
+                    // Hide all filter option divs first
+                    filterOptions.forEach(option => {
+                        option.classList.add('hidden');
+                    });
 
-                    console.log('Filter changed to:', this.value);
+                    // Show the selected filter options if not "all"
+                    const selectedFilter = filterSelect.value;
+                    if (selectedFilter !== 'all') {
+                        const optionsToShow = document.getElementById(selectedFilter + '-options');
+                        if (optionsToShow) {
+                            optionsToShow.classList.remove('hidden');
+                        }
+                    }
+                }
 
-                    // For now, we'll just reload the page with a query parameter
-                    // In a real implementation, you would use AJAX to update the list
-                    window.location.href = '{{ route('taaruf.list') }}?filter=' + this.value;
-                });
+                // Initialize to show current filter options
+                showFilterOptions();
+
+                // Update when the filter changes
+                filterSelect.addEventListener('change', showFilterOptions);
             });
         </script>
     @endpush

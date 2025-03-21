@@ -384,9 +384,10 @@ class TaarufController extends Controller
     /**
      * Show list of alumni who are open for taaruf
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
-    public function showList()
+    public function showList(Request $request)
     {
         // Check if user is eligible
         if (!$this->isEligibleForTaaruf()) {
@@ -410,15 +411,58 @@ class TaarufController extends Controller
         // Get opposite gender profiles that are active
         $oppositeGender = $taarufProfile->gender === 'male' ? 'female' : 'male';
 
-        $profiles = TaarufProfile::where('gender', $oppositeGender)
+        $query = TaarufProfile::where('gender', $oppositeGender)
+            ->where('is_active', true);
+
+        // Apply search by name if provided
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('full_name', 'like', '%' . $search . '%');
+        }
+
+        // Apply filters if selected
+        if ($request->has('filter') && $request->filter != 'all') {
+            switch ($request->filter) {
+                case 'location':
+                    if ($request->has('location') && !empty($request->location)) {
+                        $query->where('current_residence', $request->location);
+                    }
+                    break;
+
+                case 'education':
+                    if ($request->has('education') && !empty($request->education)) {
+                        $query->where('last_education', $request->education);
+                    }
+                    break;
+
+                case 'marriage_year':
+                    if ($request->has('marriage_year') && !empty($request->marriage_year)) {
+                        $query->where('marriage_target_year', $request->marriage_year);
+                    }
+                    break;
+            }
+        }
+
+        // Get unique locations and education levels for dropdowns
+        $locations = TaarufProfile::where('gender', $oppositeGender)
             ->where('is_active', true)
-            ->with('user')
-            ->paginate(12);
+            ->distinct()
+            ->pluck('current_residence')
+            ->toArray();
+
+        $educations = TaarufProfile::where('gender', $oppositeGender)
+            ->where('is_active', true)
+            ->distinct()
+            ->pluck('last_education')
+            ->toArray();
+
+        // Get the profiles with pagination
+        $profiles = $query->with('user')->paginate(12);
 
         // Pass the user's own profile as myProfile
         $myProfile = $taarufProfile;
 
-        return view('taaruf.list', compact('profiles', 'myProfile'));
+        return view('taaruf.list', compact('profiles', 'myProfile', 'locations', 'educations'));
     }
 
     /**

@@ -27,11 +27,6 @@ class BatchAlumniController extends Controller
      */
     public function index(Request $request)
     {
-        // Permission check handled by middleware
-        // if (Auth::user()->cannot('manage alumni')) {
-        //     throw UnauthorizedException::forPermissions(['manage alumni']);
-        // }
-
         $query = BatchAlumni::with(['user', 'activityBatch.activity']);
 
         // Filter by batch if provided
@@ -39,8 +34,56 @@ class BatchAlumniController extends Controller
             $query->where('activity_batch_id', $request->batch_id);
         }
 
-        $batchAlumni = $query->orderBy('created_at', 'desc')->paginate(15);
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Sorting functionality
+        if ($request->has('sort_by')) {
+            switch ($request->sort_by) {
+                case 'name_asc':
+                    $query->join('users', 'batch_alumni.user_id', '=', 'users.id')
+                        ->orderBy('users.name', 'asc')
+                        ->select('batch_alumni.*');
+                    break;
+                case 'name_desc':
+                    $query->join('users', 'batch_alumni.user_id', '=', 'users.id')
+                        ->orderBy('users.name', 'desc')
+                        ->select('batch_alumni.*');
+                    break;
+                case 'batch_asc':
+                    $query->join('activity_batches', 'batch_alumni.activity_batch_id', '=', 'activity_batches.id')
+                        ->orderBy('activity_batches.created_at', 'asc')
+                        ->select('batch_alumni.*');
+                    break;
+                case 'batch_desc':
+                    $query->join('activity_batches', 'batch_alumni.activity_batch_id', '=', 'activity_batches.id')
+                        ->orderBy('activity_batches.created_at', 'desc')
+                        ->select('batch_alumni.*');
+                    break;
+                case 'created_at_asc':
+                    $query->orderBy('batch_alumni.created_at', 'asc');
+                    break;
+                case 'created_at_desc':
+                default:
+                    $query->orderBy('batch_alumni.created_at', 'desc');
+                    break;
+            }
+        } else {
+            // Default sorting
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $batchAlumni = $query->paginate(15);
         $batches = ActivityBatch::with('activity')->orderBy('created_at', 'desc')->get();
+
+        // Preserve query parameters in pagination links
+        $batchAlumni->appends($request->except('page'));
 
         return view('admin.batch-alumni.index', compact('batchAlumni', 'batches'));
     }

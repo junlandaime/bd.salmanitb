@@ -59,7 +59,7 @@
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Semua Kegiatan
                             </a>
-                            @foreach (App\Models\Activity::take(5)->get() as $activity)
+                            @foreach (App\Models\Activity::take(5)->where('status', 'published')->get() as $activity)
                                 <a href="{{ route('activities.show', $activity->slug) }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     {{ $activity->title }}
