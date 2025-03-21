@@ -34,7 +34,7 @@
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Semua Program
                             </a> --}}
-                            @foreach (App\Models\Program::take(5)->get() as $program)
+                            @foreach (App\Models\Program::take(6)->get() as $program)
                                 <a href="{{ route('programs.show', $program->slug) }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     {{ $program->title }}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\LandingPage;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -26,7 +27,13 @@ class ActivityController extends Controller
 
         $activeBatch = $activity->getActiveBatch();
         $upcomingBatches = $activity->getUpcomingBatches();
+        $landingPage = LandingPage::firstOrFail();
 
-        return view('activities.show', compact('activity', 'activeBatch', 'upcomingBatches'));
+        return view('activities.show', compact(
+            'activity',
+            'activeBatch',
+            'upcomingBatches',
+            'landingPage'
+        ));
     }
 }

@@ -82,8 +82,8 @@
 
                                 <div class="space-y-2 mb-6">
                                     <p><span class="font-semibold">Nama Panggilan:</span> {{ $profile->nickname }}</p>
-                                    <p><span class="font-semibold">Tempat, Tanggal Lahir:</span>
-                                        {{ $profile->birth_place_date }}</p>
+                                    {{-- <p><span class="font-semibold">Tempat, Tanggal Lahir:</span>
+                                        {{ $profile->birth_place_date }}</p> --}}
                                     {{-- <p class="mb-1"><strong>Usia:</strong> {{ \Carbon\Carbon::parse(explode(', ', $profile->birth_place_date)[1])->age }} tahun</p> --}}
                                     <p class="mb-1"><strong>Usia:</strong>
                                         {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
@@ -407,7 +407,7 @@
                                 </svg>
                                 <a target="_blank" href="mailto:bidangdakwah@salmanitb.com">bidangdakwah@salmanitb.com</a>
                             </p>
-                            <p class="flex items-center text-gray-600">
+                            <p class="flex items-center text-gray-600 mb-5">
                                 <svg class="h-5 w-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />

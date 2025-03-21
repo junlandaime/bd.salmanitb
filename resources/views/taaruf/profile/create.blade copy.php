@@ -146,8 +146,6 @@
                                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -266,15 +264,12 @@
                                     @enderror
                                 </div>
 
-                                <!-- Photo Upload with Alpine.js -->
                                 <div>
                                     <label for="photo" class="block text-sm font-medium text-gray-700">
                                         Foto Profil
                                     </label>
-                                    <div x-data="photoUploader()" x-on:dragover.prevent="dragover = true"
-                                        x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
-                                        x-bind:class="{ 'border-green-500 bg-green-50': dragover }"
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md transition duration-150">
+                                    <div
+                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                         <div class="space-y-1 text-center">
                                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
                                                 fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -288,7 +283,7 @@
                                                     <span>Upload file</span>
                                                     <input id="photo" name="photo" type="file" class="sr-only"
                                                         accept="image/jpeg,image/png,image/jpg"
-                                                        x-on:change="handleFileSelect()">
+                                                        onchange="previewPhoto(this)">
                                                 </label>
                                                 <p class="pl-1">atau drag and drop</p>
                                             </div>
@@ -297,10 +292,10 @@
                                                 wajah terlihat jelas.
                                             </p>
                                             <!-- Container untuk preview foto -->
-                                            <div x-show="preview" id="photoPreviewContainer" class="mt-3">
-                                                <img id="photoPreview" class="max-h-48 rounded-md mx-auto"
-                                                    x-bind:src="preview" alt="Preview foto">
-                                                <button type="button" x-on:click="removeFile()"
+                                            <div id="photoPreviewContainer" class="mt-3 hidden">
+                                                <img id="photoPreview" class="max-h-48 rounded-md mx-auto" src="#"
+                                                    alt="Preview foto">
+                                                <button type="button" onclick="removePhoto()"
                                                     class="mt-2 text-sm text-red-600 hover:text-red-800">Hapus</button>
                                             </div>
                                         </div>
@@ -310,15 +305,12 @@
                                     @enderror
                                 </div>
 
-                                <!-- Document Upload with Alpine.js -->
                                 <div>
                                     <label for="informed_consent" class="block text-sm font-medium text-gray-700">
                                         Dokumen Informed Consent <span class="text-red-500">*</span>
                                     </label>
-                                    <div x-data="documentUploader()" x-on:dragover.prevent="dragover = true"
-                                        x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
-                                        x-bind:class="{ 'border-green-500 bg-green-50': dragover }"
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md transition duration-150">
+                                    <div
+                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                         <div class="space-y-1 text-center">
                                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
                                                 fill="none" viewBox="0 0 24 24">
@@ -332,7 +324,7 @@
                                                     <input id="informed_consent" name="informed_consent" type="file"
                                                         class="sr-only" required
                                                         accept="application/pdf,image/jpeg,image/png,image/jpg"
-                                                        x-on:change="handleFileSelect()">
+                                                        onchange="previewDocument(this)">
                                                 </label>
                                                 <p class="pl-1">atau drag and drop</p>
                                             </div>
@@ -343,7 +335,7 @@
                                                 isi, tandatangani, dan unggah kembali.
                                             </p>
                                             <!-- Container untuk preview dokumen -->
-                                            <div x-show="fileName" id="documentPreviewContainer" class="mt-3">
+                                            <div id="documentPreviewContainer" class="mt-3 hidden">
                                                 <div id="documentPreview"
                                                     class="p-3 border rounded-md bg-gray-50 flex items-center justify-between">
                                                     <div class="flex items-center">
@@ -353,11 +345,10 @@
                                                                 stroke-width="2"
                                                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                         </svg>
-                                                        <span id="documentName" class="text-sm text-gray-700"
-                                                            x-text="fileName">Nama
+                                                        <span id="documentName" class="text-sm text-gray-700">Nama
                                                             dokumen</span>
                                                     </div>
-                                                    <button type="button" x-on:click="removeFile()"
+                                                    <button type="button" onclick="removeDocument()"
                                                         class="text-sm text-red-600 hover:text-red-800">Hapus</button>
                                                 </div>
                                             </div>
@@ -510,74 +501,106 @@
         </div>
     </main>
     @push('scripts')
-        {{-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> --}}
         <script>
-            function photoUploader() {
-                return {
-                    dragover: false,
-                    preview: null,
+            document.addEventListener('DOMContentLoaded', function() {
+                // Show filename when file is selected
+                document.querySelectorAll('.custom-file-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const fileName = this.files[0].name;
+                        this.nextElementSibling.textContent = fileName;
+                    });
+                });
+            });
+        </script>
+        <script>
+            // Untuk drag and drop pada foto
+            const photoDropzone = document.querySelector('div:has(> #photo)').closest('.border-dashed');
+            photoDropzone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('border-green-500', 'bg-green-50');
+            });
 
-                    handleFileSelect() {
-                        const input = document.getElementById('photo');
-                        if (input.files && input.files[0]) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.preview = e.target.result;
-                            };
-                            reader.readAsDataURL(input.files[0]);
-                        }
-                    },
+            photoDropzone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('border-green-500', 'bg-green-50');
+            });
 
-                    dropHandler(event) {
-                        this.dragover = false;
-                        const dt = event.dataTransfer;
-                        const files = dt.files;
+            photoDropzone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('border-green-500', 'bg-green-50');
 
-                        if (files.length > 0) {
-                            const input = document.getElementById('photo');
-                            input.files = files;
-                            this.handleFileSelect();
-                        }
-                    },
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const photoInput = document.getElementById('photo');
+                    photoInput.files = files;
+                    previewPhoto(photoInput);
+                }
+            });
 
-                    removeFile() {
-                        const input = document.getElementById('photo');
-                        input.value = '';
-                        this.preview = null;
+            // Untuk drag and drop pada dokumen
+            const documentDropzone = document.querySelector('div:has(> #informed_consent)').closest('.border-dashed');
+            documentDropzone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('border-green-500', 'bg-green-50');
+            });
+
+            documentDropzone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('border-green-500', 'bg-green-50');
+            });
+
+            documentDropzone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('border-green-500', 'bg-green-50');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const documentInput = document.getElementById('informed_consent');
+                    documentInput.files = files;
+                    previewDocument(documentInput);
+                }
+            });
+
+            // Fungsi untuk preview foto
+            function previewPhoto(input) {
+                const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+                const photoPreview = document.getElementById('photoPreview');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        photoPreview.src = e.target.result;
+                        photoPreviewContainer.classList.remove('hidden');
                     }
-                };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
 
-            function documentUploader() {
-                return {
-                    dragover: false,
-                    fileName: null,
+            // Fungsi untuk hapus foto
+            function removePhoto() {
+                document.getElementById('photo').value = '';
+                document.getElementById('photoPreview').src = '#';
+                document.getElementById('photoPreviewContainer').classList.add('hidden');
+            }
 
-                    handleFileSelect() {
-                        const input = document.getElementById('informed_consent');
-                        if (input.files && input.files[0]) {
-                            this.fileName = input.files[0].name;
-                        }
-                    },
+            // Fungsi untuk preview dokumen
+            function previewDocument(input) {
+                const documentPreviewContainer = document.getElementById('documentPreviewContainer');
+                const documentName = document.getElementById('documentName');
 
-                    dropHandler(event) {
-                        this.dragover = false;
-                        const dt = event.dataTransfer;
-                        const files = dt.files;
+                if (input.files && input.files[0]) {
+                    documentName.textContent = input.files[0].name;
+                    documentPreviewContainer.classList.remove('hidden');
+                }
+            }
 
-                        if (files.length > 0) {
-                            const input = document.getElementById('informed_consent');
-                            input.files = files;
-                            this.handleFileSelect();
-                        }
-                    },
-
-                    removeFile() {
-                        const input = document.getElementById('informed_consent');
-                        input.value = '';
-                        this.fileName = null;
-                    }
-                };
+            // Fungsi untuk hapus dokumen
+            function removeDocument() {
+                document.getElementById('informed_consent').value = '';
+                document.getElementById('documentName').textContent = 'Nama dokumen';
+                document.getElementById('documentPreviewContainer').classList.add('hidden');
             }
         </script>
     @endpush

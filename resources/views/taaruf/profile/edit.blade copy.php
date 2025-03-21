@@ -272,8 +272,11 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Unggah foto baru
                                         </label>
-                                        <div
-                                            class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                                            x-data="photoUploader()" x-on:dragover.prevent="dragover = true"
+                                            x-on:dragleave.prevent="dragover = false"
+                                            x-on:drop.prevent="dropHandler($event)"
+                                            x-bind:class="{ 'border-green-500 bg-green-50': dragover }">
                                             <div class="space-y-1 text-center">
                                                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
                                                     fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -287,14 +290,22 @@
                                                         class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
                                                         <span>Pilih file</span>
                                                         <input id="photo" name="photo" type="file"
-                                                            class="sr-only">
+                                                            class="sr-only" accept="image/jpeg,image/png,image/jpg"
+                                                            x-on:change="handleFileSelect()">
                                                     </label>
-                                                    <p class="pl-1">disini</p>
+                                                    <p class="pl-1">atau drag and drop</p>
                                                 </div>
                                                 <p class="text-xs text-gray-500">
                                                     Format: JPG, JPEG, PNG. Maksimal 2MB. Disarankan foto setengah badan
                                                     dengan wajah terlihat jelas.
                                                 </p>
+                                                <!-- Container untuk preview foto -->
+                                                <div x-show="preview" id="photoPreviewContainer" class="mt-3">
+                                                    <img id="photoPreview" class="max-h-48 rounded-md mx-auto"
+                                                        x-bind:src="preview" alt="Preview foto">
+                                                    <button type="button" x-on:click="removeFile()"
+                                                        class="mt-2 text-sm text-red-600 hover:text-red-800">Hapus</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -340,8 +351,11 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Unggah dokumen consent
                                         </label>
-                                        <div
-                                            class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                                            x-data="documentUploader()" x-on:dragover.prevent="dragover = true"
+                                            x-on:dragleave.prevent="dragover = false"
+                                            x-on:drop.prevent="dropHandler($event)"
+                                            x-bind:class="{ 'border-green-500 bg-green-50': dragover }">
                                             <div class="space-y-1 text-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="mx-auto h-12 w-12 text-gray-400" fill="none"
@@ -355,9 +369,11 @@
                                                         <span>Pilih file</span>
                                                         <input id="informed_consent" name="informed_consent"
                                                             type="file" class="sr-only"
-                                                            {{ $profile->informed_consent_url ? '' : 'required' }}>
+                                                            {{ $profile->informed_consent_url ? '' : 'required' }}
+                                                            accept="application/pdf,image/jpeg,image/png,image/jpg"
+                                                            x-on:change="handleFileSelect()">
                                                     </label>
-                                                    <p class="pl-1">disini</p>
+                                                    <p class="pl-1">atau drag and drop</p>
                                                 </div>
                                                 <p class="text-xs text-gray-500">
                                                     Format: PDF, JPG, JPEG, PNG. Maksimal 5MB. Unduh template <a
@@ -365,6 +381,25 @@
                                                         class="text-green-600 hover:text-green-500" target="_blank">di
                                                         sini</a>, isi, tandatangani, dan unggah kembali.
                                                 </p>
+                                                <!-- Container untuk preview dokumen -->
+                                                <div x-show="fileName" id="documentPreviewContainer" class="mt-3">
+                                                    <div id="documentPreview"
+                                                        class="p-3 border rounded-md bg-gray-50 flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="h-6 w-6 text-gray-600 mr-2" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span id="documentName" class="text-sm text-gray-700"
+                                                                x-text="fileName">Nama
+                                                                dokumen</span>
+                                                        </div>
+                                                        <button type="button" x-on:click="removeFile()"
+                                                            class="text-sm text-red-600 hover:text-red-800">Hapus</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -381,7 +416,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l3 3m-3-3V8" />
                                 </svg>
                                 Simpan Perubahan
                             </button>
@@ -508,14 +543,14 @@
 
                             <div class="mt-6 text-center">
                                 {{-- <a href="{{ route('taaruf.faq') }}"
-                            class="text-green-600 hover:text-green-700 font-medium">
-                            Baca FAQ Ta'aruf
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            </a> --}}
+                                    class="text-green-600 hover:text-green-700 font-medium">
+                                    Baca FAQ Ta'aruf
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a> --}}
                             </div>
                         </div>
                     </div>
@@ -544,28 +579,40 @@
                     });
                 }
 
-                // File upload previews and custom file input styling
-                const photoInput = document.getElementById('photo');
-                if (photoInput) {
-                    photoInput.addEventListener('change', function(e) {
-                        const fileName = e.target.files[0]?.name || 'No file chosen';
-                        const fileNameDisplay = this.parentElement.parentElement.querySelector('.pl-1');
-                        if (fileNameDisplay) {
-                            fileNameDisplay.textContent = fileName;
+                // Setup Alpine.js globally
+                window.photoUploader = function() {
+                    return {
+                        preview: '',
+                        dragover: false,
+                        handleFileSelect() {
+                            const file = document.getElementById('photo').files[0];
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.preview = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        },
+                        removeFile() {
+                            this.preview = '';
+                            document.getElementById('photo').value = '';
                         }
-                    });
-                }
+                    };
+                };
 
-                const consentInput = document.getElementById('informed_consent');
-                if (consentInput) {
-                    consentInput.addEventListener('change', function(e) {
-                        const fileName = e.target.files[0]?.name || 'No file chosen';
-                        const fileNameDisplay = this.parentElement.parentElement.querySelector('.pl-1');
-                        if (fileNameDisplay) {
-                            fileNameDisplay.textContent = fileName;
+                window.documentUploader = function() {
+                    return {
+                        fileName: '',
+                        dragover: false,
+                        handleFileSelect() {
+                            const file = document.getElementById('informed_consent').files[0];
+                            this.fileName = file.name;
+                        },
+                        removeFile() {
+                            this.fileName = '';
+                            document.getElementById('informed_consent').value = '';
                         }
-                    });
-                }
+                    };
+                };
             });
         </script>
     @endpush

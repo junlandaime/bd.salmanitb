@@ -181,7 +181,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/taaruf/{id}/edit', [TaarufAdminController::class, 'edit'])->name('taaruf.edit');
     Route::put('/taaruf/{id}', [TaarufAdminController::class, 'update'])->name('taaruf.update');
     Route::delete('/taaruf/{id}', [TaarufAdminController::class, 'destroy'])->name('taaruf.destroy');
-    Route::post('/taaruf/{id}/toggle-active', [TaarufAdminController::class, 'toggleActive'])->name('taaruf.toggle-active');
+    Route::patch('/taaruf/{id}/toggle-active', [TaarufAdminController::class, 'toggleActive'])->name('taaruf.toggle-active');
 
     // Taaruf Questions Management
     Route::get('/taaruf/q/questions', [TaarufQuestionAdminController::class, 'index'])->name('taaruf.questions.index');

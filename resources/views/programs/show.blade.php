@@ -130,14 +130,14 @@
                                 Memastikan pelaksanaan sholat berjamaah lima waktu serta sholat Jumat dengan suasana yang
                                 khusyuk dan tertib.
                             </p>
-                            <a href="#"
+                            <a href="{{ $layanan->link_url }}"
                                 class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                 </svg>
-                                Hubungi Kami
+                                {{ $layanan->link_text ?? 'Pelajari Lebih Lanjut' }}
                             </a>
                         </div>
                     </div>
