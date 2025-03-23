@@ -36,7 +36,7 @@ class TaarufQuestion extends Model
     /**
      * Get the user who asked the question.
      */
-    public function askedByUser()
+    public function askedBy()
     {
         return $this->belongsTo(User::class, 'asked_by_user_id');
     }
