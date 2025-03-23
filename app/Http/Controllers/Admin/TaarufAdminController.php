@@ -17,20 +17,44 @@ class TaarufAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $query = TaarufProfile::with('user');
+        $query = TaarufProfile::with(['user', 'user.batchAlumni']);
 
-        // Filter by gender if requested
-        if ($request->has('gender') && in_array($request->gender, ['male', 'female'])) {
-            $query->where('gender', $request->gender);
+        // Handle all gender filter options
+        if ($request->has('gender')) {
+            if ($request->gender === 'male' || $request->gender === 'female') {
+                // Filter by specific gender
+                $query->where('gender', $request->gender);
+            } elseif ($request->gender === 'gender_mismatch') {
+                // Use a more explicit approach to find mismatches
+                $query->whereHas('user.batchAlumni', function ($q) {
+                    $q->where(function ($subquery) {
+                        // Case 1: Profile is female but alumni record says Pria
+                        $subquery->where('batch_alumni.gender', 'Pria')
+                            ->whereHas('user.taarufProfile', function ($profileQuery) {
+                                $profileQuery->where('gender', 'female');
+                            });
+                    })->orWhere(function ($subquery) {
+                        // Case 2: Profile is male but alumni record says Wanita
+                        $subquery->where('batch_alumni.gender', 'Wanita')
+                            ->whereHas('user.taarufProfile', function ($profileQuery) {
+                                $profileQuery->where('gender', 'male');
+                            });
+                    });
+                });
+            }
         }
 
         // Filter by active status if requested
-        if ($request->has('status')) {
+        if ($request->has('status') && in_array($request->status, ['active', 'inactive'])) {
             $isActive = $request->status === 'active';
             $query->where('is_active', $isActive);
         }
 
         $profiles = $query->latest()->paginate(15);
+
+        // For debugging purposes, you could log the SQL query
+        // \Log::info($query->toSql());
+        // \Log::info($query->getBindings());
 
         return view('admin.taaruf.index', compact('profiles'));
     }

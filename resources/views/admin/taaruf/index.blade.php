@@ -27,6 +27,9 @@
                         <option value="">Semua</option>
                         <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Perempuan</option>
+                        <option value="gender_mismatch" {{ request('gender') == 'gender_mismatch' ? 'selected' : '' }}>Tidak
+                            Cocok
+                        </option>
                     </select>
                 </div>
                 <div class="w-full md:w-auto">

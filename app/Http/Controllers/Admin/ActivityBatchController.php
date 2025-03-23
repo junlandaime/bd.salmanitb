@@ -96,11 +96,76 @@ class ActivityBatchController extends Controller
     /**
      * Display a listing of all activity batches across all activities.
      */
-    public function allBatches()
+    public function allBatches(Request $request)
     {
-        $batches = ActivityBatch::with('activity')
-            ->orderBy('tanggal_mulai_kegiatan', 'desc')
-            ->get();
+        $query = ActivityBatch::with(['activity', 'materials']);
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by materials
+        if ($request->filled('has_material')) {
+            if ($request->has_material == '1') {
+                $query->has('materials');
+            } else {
+                $query->doesntHave('materials');
+            }
+        }
+
+        // Search by batch name or activity title
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_batch', 'like', "%{$search}%")
+                    ->orWhereHas('activity', function ($q2) use ($search) {
+                        $q2->where('title', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Sort
+        if ($request->filled('sort_by')) {
+            switch ($request->sort_by) {
+                case 'tanggal_mulai_kegiatan_asc':
+                    $query->orderBy('tanggal_mulai_kegiatan', 'asc');
+                    break;
+                case 'tanggal_mulai_kegiatan_desc':
+                    $query->orderBy('tanggal_mulai_kegiatan', 'desc');
+                    break;
+                case 'nama_batch_asc':
+                    $query->orderBy('nama_batch', 'asc');
+                    break;
+                case 'nama_batch_desc':
+                    $query->orderBy('nama_batch', 'desc');
+                    break;
+                case 'harga_asc':
+                    $query->orderBy('harga', 'asc');
+                    break;
+                case 'harga_desc':
+                    $query->orderBy('harga', 'desc');
+                    break;
+                case 'material_count_desc':
+                    $query->withCount('materials')->orderBy('materials_count', 'desc');
+                    break;
+                case 'material_count_asc':
+                    $query->withCount('materials')->orderBy('materials_count', 'asc');
+                    break;
+                default:
+                    $query->orderBy('tanggal_mulai_kegiatan', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('tanggal_mulai_kegiatan', 'desc');
+        }
+
+        // Get results with optional pagination
+        // If you want pagination (e.g. 15 items per page):
+        $batches = $query->paginate(15);
+
+        // If you don't want pagination:
+        // $batches = $query->get();
 
         return view('admin.activities.batches.all', compact('batches'));
     }

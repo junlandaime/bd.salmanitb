@@ -89,7 +89,7 @@
                 ->whereHas('batches', function ($query) {
                     $query->where(
                         'status',
-                        'aktif',
+                        'selesai',
                         // ->where('tanggal_selesai_pendaftaran', '>=', now())
                     );
                 })

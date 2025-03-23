@@ -29,6 +29,16 @@ class BatchAlumniController extends Controller
     {
         $query = BatchAlumni::with(['user', 'activityBatch.activity']);
 
+        // Filter untuk alumni yang muncul di lebih dari satu batch
+        if ($request->has('duplicate_names') && $request->duplicate_names == 1) {
+            $duplicateUserIds = BatchAlumni::select('user_id')
+                ->groupBy('user_id')
+                ->havingRaw('COUNT(DISTINCT activity_batch_id) > 1')
+                ->pluck('user_id');
+
+            $query->whereIn('user_id', $duplicateUserIds);
+        }
+
         // Filter by batch if provided
         if ($request->has('batch_id') && $request->batch_id) {
             $query->where('activity_batch_id', $request->batch_id);

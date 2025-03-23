@@ -111,7 +111,7 @@
             Semua Batch
         </a>
 
-        @php
+        {{-- @php
             $batches = \App\Models\ActivityBatch::with('activity')
                 ->where('status', 'selesai')
                 ->whereHas('materials', function ($query) {
@@ -131,7 +131,7 @@
                 </svg>
                 {{ $batch->activity->title }} - {{ $batch->nama_batch }}
             </a>
-        @endforeach
+        @endforeach --}}
 
         <a href="{{ route('admin.alumni.materials.import.form') }}"
             class="flex items-center px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 text-sm {{ request()->routeIs('admin.alumni.materials.import.*') ? 'bg-gray-100' : '' }}">

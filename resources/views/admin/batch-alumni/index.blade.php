@@ -73,7 +73,17 @@
                     </div>
                 </div>
 
-                <div class="flex">
+                <!-- Duplicate names filter checkbox -->
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" name="duplicate_names" id="duplicate_names" value="1"
+                        {{ request('duplicate_names') == '1' ? 'checked' : '' }}
+                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <label for="duplicate_names" class="ml-2 block text-sm text-gray-700">
+                        Show only alumni appearing in multiple batches
+                    </label>
+                </div>
+
+                <div class="flex mt-4">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                         Apply Filters
                     </button>
