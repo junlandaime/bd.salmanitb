@@ -457,7 +457,7 @@ class TaarufController extends Controller
             ->toArray();
 
         // Get the profiles with pagination
-        $profiles = $query->with('user')->paginate(12);
+        $profiles = $query->with('user')->orderBy('full_name', 'asc')->paginate(12);
 
         // Pass the user's own profile as myProfile
         $myProfile = $taarufProfile;
