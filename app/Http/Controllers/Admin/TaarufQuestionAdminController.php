@@ -80,14 +80,14 @@ class TaarufQuestionAdminController extends Controller
     public function destroy($id)
     {
         // Permission check handled by middleware
-        if (Auth::user()->cannot('manage taaruf')) {
-            throw UnauthorizedException::forPermissions(['manage taaruf']);
-        }
+        // if (Auth::user()->cannot('manage taaruf')) {
+        //     throw UnauthorizedException::forPermissions(['manage taaruf']);
+        // }
 
         $question = TaarufQuestion::findOrFail($id);
         $question->delete();
 
-        return Redirect::route('taaruf.questions.index')
+        return Redirect::route('admin.taaruf.questions.index')
             ->with('success', 'Pertanyaan berhasil dihapus.');
     }
 }

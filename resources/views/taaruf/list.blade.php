@@ -183,20 +183,24 @@
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">Domisili:</span>
-                                                    <span>{{ $profile->current_residence }}</span>
+                                                    <span
+                                                        class="text-wrap text-right text-sm">{{ $profile->current_residence }}</span>
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">Pendidikan:</span>
-                                                    <span>{{ $profile->last_education }}</span>
+                                                    <span
+                                                        class="text-wrap text-right text-sm">{{ $profile->last_education }}</span>
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">Pekerjaan:</span>
-                                                    <span>{{ $profile->occupation }}</span>
+                                                    <span
+                                                        class="text-wrap text-right text-sm">{{ $profile->occupation }}</span>
                                                 </div>
                                                 @if ($profile->marriage_target_year)
                                                     <div class="flex justify-between">
                                                         <span class="text-gray-500">Target Menikah:</span>
-                                                        <span>{{ $profile->marriage_target_year }}</span>
+                                                        <span
+                                                            class="text-wrap text-right text-sm">{{ $profile->marriage_target_year }}</span>
                                                     </div>
                                                 @endif
                                             </div>

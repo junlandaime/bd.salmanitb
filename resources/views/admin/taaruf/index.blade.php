@@ -21,7 +21,7 @@
             <h2 class="text-lg font-medium mb-4">Filter</h2>
             <form action="{{ route('admin.taaruf.index') }}" method="GET" class="flex flex-wrap gap-4">
                 <div class="w-full md:w-auto">
-                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                    <label for="gender" class="block text-xs font-medium text-gray-700 mb-1">Jenis Kelamin</label>
                     <select name="gender" id="gender"
                         class="w-full md:w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         <option value="">Semua</option>
@@ -33,7 +33,7 @@
                     </select>
                 </div>
                 <div class="w-full md:w-auto">
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <label for="status" class="block text-xs font-medium text-gray-700 mb-1">Status</label>
                     <select name="status" id="status"
                         class="w-full md:w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         <option value="">Semua</option>
@@ -112,7 +112,7 @@
                                         <div class="text-sm font-medium text-gray-900">
                                             {{ $profile->full_name }}
                                         </div>
-                                        <div class="text-sm text-gray-500">
+                                        <div class="text-xs text-gray-500">
                                             {{ $profile->user->email }}
                                         </div>
                                     </div>
@@ -124,10 +124,10 @@
                                     {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 text-xs text-gray-500">
                                 {{ $profile->birth_place_date }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 text-xs text-gray-500 text-wrap">
                                 {{ $profile->occupation }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -142,7 +142,7 @@
                                     {{ $profile->is_in_taaruf_process ? 'Sedang Proses' : 'Tidak Dalam Proses' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium">
                                 <div class="flex space-x-2">
                                     <a href="{{ route('admin.taaruf.show', $profile->id) }}"
                                         class="text-blue-600 hover:text-blue-900">
@@ -199,7 +199,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td colspan="7" class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 text-center">
                                 Tidak ada profil taaruf yang ditemukan.
                             </td>
                         </tr>

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Article;
 use App\Models\News;
+use App\Models\User;
+use App\Models\Article;
 use App\Models\Program;
 use App\Models\Activity;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\TaarufProfile;
+use App\Http\Controllers\Controller;
+use App\Models\TaarufQuestion;
 
 class DashboardController extends Controller
 {
@@ -19,6 +21,11 @@ class DashboardController extends Controller
                 'total' => Article::count(),
                 'published' => Article::where('status', 'published')->count(),
                 'draft' => Article::where('status', 'draft')->count(),
+            ],
+            'taaruf' => [
+                'active' => TaarufProfile::where('is_active', true)->count(),
+                'questions' => TaarufQuestion::count(),
+                'profiles' => TaarufProfile::count(),
             ],
             'news' => [
                 'total' => News::count(),
