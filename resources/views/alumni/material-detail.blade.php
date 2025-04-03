@@ -46,11 +46,29 @@
                                     @php
                                         // Extract YouTube video ID if it's a YouTube URL
 $videoId = null;
+$isGoogleDrive = false;
+$gdriveFileId = null;
+
 if (strpos($material->video_url, 'youtube.com') !== false) {
     parse_str(parse_url($material->video_url, PHP_URL_QUERY), $params);
     $videoId = $params['v'] ?? null;
 } elseif (strpos($material->video_url, 'youtu.be') !== false) {
-                                            $videoId = substr(parse_url($material->video_url, PHP_URL_PATH), 1);
+    $videoId = substr(parse_url($material->video_url, PHP_URL_PATH), 1);
+} elseif (strpos($material->video_url, 'drive.google.com') !== false) {
+    $isGoogleDrive = true;
+    // Extract Google Drive file ID
+    if (strpos($material->video_url, 'id=') !== false) {
+        parse_str(parse_url($material->video_url, PHP_URL_QUERY), $params);
+        $gdriveFileId = $params['id'] ?? null;
+    } else {
+        // Handle format like: https://drive.google.com/file/d/{fileId}/view
+        $path = parse_url($material->video_url, PHP_URL_PATH);
+        $pathParts = explode('/', $path);
+        $fileIdIndex = array_search('d', $pathParts);
+                                                if ($fileIdIndex !== false && isset($pathParts[$fileIdIndex + 1])) {
+                                                    $gdriveFileId = $pathParts[$fileIdIndex + 1];
+                                                }
+                                            }
                                         }
                                     @endphp
 
@@ -58,6 +76,10 @@ if (strpos($material->video_url, 'youtube.com') !== false) {
                                         <iframe class="w-full h-full"
                                             src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0"
                                             allowfullscreen></iframe>
+                                    @elseif ($isGoogleDrive && $gdriveFileId)
+                                        <iframe class="w-full h-full"
+                                            src="https://drive.google.com/file/d/{{ $gdriveFileId }}/preview"
+                                            frameborder="0" allowfullscreen></iframe>
                                     @else
                                         <div class="flex flex-col items-center justify-center py-12 text-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4"
