@@ -1,0 +1,135 @@
+Penambahan database
+
+tentukan item penambahan 
+    Kelebihan & Kekurangan
+    Kriteria Pasangan
+
+$table->text('visi_misi')->nullable();
+$table->text('kelebihan_kekurangan')->nullable();
+
+2025_03_19_000000_add_visimisi_kelebihankekurangan_to_taaruf_profiles_table
+
+
+    public function up(): void
+    {
+        Schema::table('taaruf_profiles', function (Blueprint $table) {
+            $table->text('visi_misi')->nullable();
+            $table->text('kelebihan_kekurangan')->nullable();
+        })->after('ideal_partner_criteria');
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('taaruf_profiles', function (Blueprint $table) {
+            $table->dropColumn(['visi_misi', 'kelebihan_kekurangan']);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    saya telah menambahkan colom baru pada database profile (Schema::table('taaruf_profiles', function (Blueprint $table) {             $table->text('visi_misi')->nullable();             $table->text('kelebihan_kekurangan')->nullable();         })->after('ideal_partner_criteria');)
+
+, dan saya ingin memeberikan notifikasi kepada peserta yang sebelumnya telah mengisi profile namun belum mengisi kolom baru ini, notifikasi akan terus muncul sampai profile tersebut mengisi bagian kolom baru
+
+berikut controller yang memunculkan halaman tersebut
+
+    public function index()
+    {
+        // Check if user is eligible
+        if (!$this->isEligibleForTaaruf()) {
+            return redirect()->route('alumni.dashboard')
+                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
+        }
+
+        $user = Auth::user();
+        $taarufProfile = $user->taarufProfile;
+
+        return view('taaruf.index', compact('taarufProfile'));
+    }
+
+I'll help you add a notification for users who have existing profiles but haven't filled out the new columns yet. You'll need to modify your controller and view to implement this feature.
+
+Here's how to update your controller method:
+
+php
+public function index()
+{
+    // Check if user is eligible
+    if (!$this->isEligibleForTaaruf()) {
+        return redirect()->route('alumni.dashboard')
+            ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
+    }
+
+    $user = Auth::user();
+    $taarufProfile = $user->taarufProfile;
+    
+    // Check if profile exists but new fields are empty
+    $needsProfileUpdate = false;
+    if ($taarufProfile && (empty($taarufProfile->visi_misi) || empty($taarufProfile->kelebihan_kekurangan))) {
+        $needsProfileUpdate = true;
+    }
+
+    return view('taaruf.index', compact('taarufProfile', 'needsProfileUpdate'));
+}
+Then, update your index.blade.php file to display the notification. Add this code right after your existing session messages (@if (session('success')), etc.):
+
+php
+@if(isset($needsProfileUpdate) && $needsProfileUpdate)
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm">Profil Ta'aruf Anda perlu dilengkapi. Silakan tambahkan informasi visi misi dan kelebihan kekurangan pada profil Anda.</p>
+                <p class="mt-2">
+                    <a href="{{ route('taaruf.profile.edit') }}" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-yellow-700 bg-yellow-100 hover:bg-yellow-50 focus:outline-none focus:border-yellow-300 focus:shadow-outline-yellow active:bg-yellow-200 transition ease-in-out duration-150">
+                        Lengkapi Profil
+                        <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+@endif
+This will display a yellow notification banner that persists until both new fields are filled out. The notification includes a convenient link to the profile edit page where they can update their information.
+
+Additionally, you should ensure your edit profile page and controller methods properly handle these new fields. Make sure to:
+
+Add form fields for these new columns in your edit profile form
+Update the validation rules in your controller to include these fields
+Ensure the update method properly saves these new values
+The notification will disappear automatically once both fields are filled, as the $needsProfileUpdate condition will no longer be true.
+
+
+
+TaarufController 6
+TaarufAdminController 3
+taarufProfile 1
+edit.blade.php admin/taaruf 6
+show.blade.php admin/taaruf 1
+create.blade.php taaruf/profile 6
+edit.blade.php taaruf/profile 7
+show.blade.php taaruf/profile 1

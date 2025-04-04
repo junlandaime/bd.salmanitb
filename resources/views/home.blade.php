@@ -550,7 +550,7 @@
                             <div class="p-6">
                                 <div class="text-sm text-gray-500">{{ $news->published_at->format('d M Y') }}</div>
                                 <h3 class="mt-2 text-xl font-bold">{{ $news->title }}</h3>
-                                <p class="mt-2 text-gray-600">{{ Str::limit($news->content, 100) }}</p>
+                                <p class="mt-2 text-gray-600">{!! Str::limit($news->content, 100) !!}</p>
                                 <a href="{{ route('news.show', $news->slug) }}"
                                     class="mt-4 inline-block text-green-600 hover:text-green-700">Read More →</a>
                             </div>

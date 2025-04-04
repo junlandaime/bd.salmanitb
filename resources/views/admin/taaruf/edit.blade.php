@@ -253,6 +253,25 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="mb-4">
+                        <label for="visi_misi" class="block text-sm font-medium text-gray-700 mb-1">Kriteria
+                            Pasangan</label>
+                        <textarea id="visi_misi" name="visi_misi" rows="4"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">{{ old('visi_misi', $profile->visi_misi) }}</textarea>
+                        @error('visi_misi')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="kelebihan_kekurangan" class="block text-sm font-medium text-gray-700 mb-1">Kelebihan
+                            dan Kekurangan Diri</label>
+                        <textarea id="kelebihan_kekurangan" name="kelebihan_kekurangan" rows="4"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">{{ old('kelebihan_kekurangan', $profile->kelebihan_kekurangan) }}</textarea>
+                        @error('kelebihan_kekurangan')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mt-6 flex justify-end">

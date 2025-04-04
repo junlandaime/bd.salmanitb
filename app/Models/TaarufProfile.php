@@ -23,6 +23,8 @@ class TaarufProfile extends Model
         'personality',
         'expectation',
         'ideal_partner_criteria',
+        'visi_misi',
+        'kelebihan_kekurangan',
         'photo_url',
         'instagram',
         'informed_consent_url',

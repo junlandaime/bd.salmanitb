@@ -166,7 +166,7 @@
                         </div>
 
                         <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-                            <h2 class="text-xl font-semibold mb-4">Ekspektasi & Kriteria</h2>
+                            <h2 class="text-xl font-semibold mb-4">Ekspektasi & Visi Misi</h2>
 
                             <div class="mb-3">
                                 <span class="block text-sm font-medium text-gray-500 mb-1">Ekspektasi dalam
@@ -183,6 +183,23 @@
                         </div>
 
                         <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                            <h2 class="text-xl font-semibold mb-4">Kriteria Pasangan dan Kelebihan Kekurangan Diri</h2>
+
+                            <div class="mb-3">
+                                <span class="block text-sm font-medium text-gray-500 mb-1">Kriteria Pasangan</span>
+                                <p class="text-gray-900 whitespace-pre-line">{{ $profile->visi_misi ?? 'Tidak diisi' }}
+                                </p>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="block text-sm font-medium text-gray-500 mb-1">Kelebihan dan Kekurangan
+                                    Diri</span>
+                                <p class="text-gray-900 whitespace-pre-line">
+                                    {{ $profile->kelebihan_kekurangan ?? 'Tidak diisi' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
                             <h2 class="text-xl font-semibold mb-4">Dokumen</h2>
 
                             <div class="mb-3">
@@ -190,7 +207,8 @@
                                 @if ($profile->informed_consent_url)
                                     <a href="{{ $profile->informed_consent_url }}" target="_blank"
                                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -150,16 +150,27 @@
                                     <p class="text-gray-600">{{ $profile->marriage_target_year ?? 'Tidak disebutkan' }}</p>
                                 </div>
 
-                                <div>
+                                <div class="mb-6">
                                     <h6 class="font-bold text-gray-800 mb-2">Kepribadian</h6>
                                     <p class="text-gray-600">{{ $profile->personality ?? 'Tidak disebutkan' }}</p>
+                                </div>
+
+                                <div class="mb-6">
+                                    <h6 class="font-bold text-gray-800 mb-2">Harapan dalam Pernikahan</h6>
+                                    <p class="text-gray-600">{{ $profile->expectation ?? 'Tidak disebutkan' }}</p>
                                 </div>
                             </div>
 
                             <div>
                                 <div class="mb-6">
-                                    <h6 class="font-bold text-gray-800 mb-2">Harapan dalam Pernikahan</h6>
-                                    <p class="text-gray-600">{{ $profile->expectation ?? 'Tidak disebutkan' }}</p>
+                                    <h6 class="font-bold text-gray-800 mb-2">Kriteria Pasangan</h6>
+                                    <p class="text-gray-600">{{ $profile->visi_misi ?? 'Tidak disebutkan' }}
+                                    </p>
+                                </div>
+                                <div class="mb-6">
+                                    <h6 class="font-bold text-gray-800 mb-2">Kelebihan dan Kekurangan</h6>
+                                    <p class="text-gray-600">{{ $profile->kelebihan_kekurangan ?? 'Tidak disebutkan' }}
+                                    </p>
                                 </div>
 
                                 <div>
@@ -168,6 +179,8 @@
                                     </p>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -253,7 +266,8 @@
                         <div class="p-6">
                             <div class="space-y-4">
                                 @foreach ($publicQuestions as $index => $question)
-                                    <div class="border border-gray-200 rounded-lg overflow-hidden" x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }">
+                                    <div class="border border-gray-200 rounded-lg overflow-hidden"
+                                        x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }">
                                         <div class="bg-gray-50 p-0" id="heading{{ $index }}">
                                             <button
                                                 class="w-full flex items-center justify-between p-4 text-left focus:outline-none"

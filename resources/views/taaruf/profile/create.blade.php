@@ -239,6 +239,30 @@
                                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+
+                                <div>
+                                    <label for="visi_misi" class="block text-sm font-medium text-gray-700">
+                                        Kriteria Pasangan
+                                    </label>
+                                    <textarea name="visi_misi" id="visi_misi" rows="3"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('visi_misi') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+                                        placeholder="Tuliskan Kriteria Pasangan menurut Anda">{{ old('visi_misi') }}</textarea>
+                                    @error('visi_misi')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="kelebihan_kekurangan" class="block text-sm font-medium text-gray-700">
+                                        Kelebihan dan Kekurangan Diri
+                                    </label>
+                                    <textarea name="kelebihan_kekurangan" id="kelebihan_kekurangan" rows="3"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('kelebihan_kekurangan') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+                                        placeholder="Tuliskan Kelebihan dan Kekurangan Diri Anda">{{ old('kelebihan_kekurangan') }}</textarea>
+                                    @error('kelebihan_kekurangan')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 

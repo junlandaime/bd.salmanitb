@@ -34,7 +34,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required',
             'excerpt' => 'nullable|string',
-            'featured_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'event_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'is_featured' => 'boolean',
@@ -42,6 +42,7 @@ class NewsController extends Controller
             'news_category_id' => 'required|exists:news_categories,id',
             'tags' => 'nullable|array',
         ]);
+        dd($request);
 
         $imagePath = $request->file('featured_image')->store('news', 'public');
 
@@ -53,7 +54,7 @@ class NewsController extends Controller
             'featured_image' => $imagePath,
             'event_date' => $request->event_date,
             'location' => $request->location,
-            'is_featured' => $request->is_featured ?? false,
+            'is_featured' => $request->has('is_featured'),
             'status' => $request->status,
             'news_category_id' => $request->news_category_id,
             'author_id' => auth()->id(),

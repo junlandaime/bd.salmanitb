@@ -38,8 +38,12 @@
                         <h1 class="text-white font-semibold text-5xl mb-6">
                             {{ $news->title }}
                         </h1>
+                        <div class="space-y-4 flex flex-col items-center py-5">
+                            <img src="{{ Storage::url($news->featured_image) }}" alt="{{ $news->title }}"
+                                class="w-4/6 rounded-md">
+                        </div>
                         <div class="flex items-center justify-center">
-                            <img src="https://picsum.photos/40" alt="{{ $news->author->name }}"
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($news->author->name) }}"
                                 class="w-12 h-12 rounded-full mr-4">
                             <div class="text-left">
                                 <p class="text-white font-medium">{{ $news->author->name }}</p>
@@ -139,12 +143,12 @@
                     <!-- Author Bio -->
                     <div class="bg-white rounded-lg shadow-lg p-8 mt-8">
                         <div class="flex items-center">
-                            <img src="https://picsum.photos/100" alt="{{ $news->author->name }}"
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($news->author->name) }}"
                                 class="w-24 h-24 rounded-full mr-6">
                             <div>
                                 <h3 class="text-xl font-bold mb-2">{{ $news->author->name }}</h3>
                                 <p class="text-gray-600 mb-4">
-                                    {{ $news->author->bio ?? 'Staff at Salman ITB' }}
+                                    {{ $news->author->bio ?? 'Staff at Bidang Dakwah Salman ITB' }}
                                 </p>
                                 <div class="flex space-x-4">
                                     @if ($news->author->twitter)

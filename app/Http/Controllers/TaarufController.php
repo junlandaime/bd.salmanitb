@@ -60,7 +60,13 @@ class TaarufController extends Controller
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
-        return view('taaruf.index', compact('taarufProfile'));
+        // Check if profile exists but new fields are empty
+        $needsProfileUpdate = false;
+        if ($taarufProfile && (empty($taarufProfile->visi_misi) || empty($taarufProfile->kelebihan_kekurangan))) {
+            $needsProfileUpdate = true;
+        }
+
+        return view('taaruf.index', compact('taarufProfile', 'needsProfileUpdate'));
     }
 
     /**
@@ -156,6 +162,8 @@ class TaarufController extends Controller
             'personality' => 'nullable|string|max:255',
             'expectation' => 'nullable|string',
             'ideal_partner_criteria' => 'nullable|string',
+            'visi_misi' => 'nullable|string',
+            'kelebihan_kekurangan' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'instagram' => 'nullable|string|max:255',
             'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -192,6 +200,8 @@ class TaarufController extends Controller
             'personality' => $request->personality,
             'expectation' => $request->expectation,
             'ideal_partner_criteria' => $request->ideal_partner_criteria,
+            'visi_misi' => $request->visi_misi,
+            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
             'photo_url' => $photoUrl,
             'instagram' => $request->instagram,
             'informed_consent_url' => $informedConsentUrl,
@@ -250,6 +260,8 @@ class TaarufController extends Controller
             'personality' => 'nullable|string|max:255',
             'expectation' => 'nullable|string',
             'ideal_partner_criteria' => 'nullable|string',
+            'visi_misi' => 'nullable|string',
+            'kelebihan_kekurangan' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'instagram' => 'nullable|string|max:255',
             'informed_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -306,6 +318,8 @@ class TaarufController extends Controller
             'personality' => $request->personality,
             'expectation' => $request->expectation,
             'ideal_partner_criteria' => $request->ideal_partner_criteria,
+            'visi_misi' => $request->visi_misi,
+            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
             'instagram' => $request->instagram,
             'photo_url' => $taarufProfile->photo_url,
         ]);
