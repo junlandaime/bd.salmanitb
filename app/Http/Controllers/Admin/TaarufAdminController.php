@@ -19,8 +19,20 @@ class TaarufAdminController extends Controller
     {
         $query = TaarufProfile::with(['user', 'user.batchAlumni']);
 
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('full_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('occupation', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('email', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
         // Handle all gender filter options
-        if ($request->has('gender')) {
+        if ($request->has('gender') && !empty($request->gender)) {
             if ($request->gender === 'male' || $request->gender === 'female') {
                 // Filter by specific gender
                 $query->where('gender', $request->gender);
@@ -50,11 +62,34 @@ class TaarufAdminController extends Controller
             $query->where('is_active', $isActive);
         }
 
-        $profiles = $query->latest()->paginate(15);
+        // Filter by taaruf process status
+        if ($request->has('taaruf_process') && in_array($request->taaruf_process, ['in_process', 'not_in_process'])) {
+            $isInProcess = $request->taaruf_process === 'in_process';
+            $query->where('is_in_taaruf_process', $isInProcess);
+        }
 
-        // For debugging purposes, you could log the SQL query
-        // \Log::info($query->toSql());
-        // \Log::info($query->getBindings());
+        // Sorting
+        $sortField = $request->sort_by ?? 'created_at';
+        $sortDirection = $request->sort_direction ?? 'desc';
+
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = [
+            'full_name',
+            'gender',
+            'birth_place_date',
+            'occupation',
+            'is_active',
+            'is_in_taaruf_process',
+            'created_at'
+        ];
+
+        if (in_array($sortField, $allowedSortFields)) {
+            $query->orderBy($sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
+        } else {
+            $query->latest(); // Default sorting
+        }
+
+        $profiles = $query->paginate(15)->appends($request->all());
 
         return view('admin.taaruf.index', compact('profiles'));
     }

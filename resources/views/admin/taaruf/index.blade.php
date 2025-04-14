@@ -6,50 +6,118 @@
     <div class="py-6 px-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Manajemen Profil Taaruf</h1>
-            <a href="{{ route('admin.taaruf.statistics') }}"
-                class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                <i class="fas fa-chart-bar mr-2"></i>Statistik
-            </a>
-            <a href="{{ route('admin.taaruf.questions.index') }}"
-                class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                <i class="fas fa-chart-bar mr-2"></i>pertanyaan taaruf
-            </a>
+            <div class="flex space-x-2">
+                <a href="{{ route('admin.taaruf.statistics') }}"
+                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+                    <i class="fas fa-chart-bar mr-2"></i>Statistik
+                </a>
+                <a href="{{ route('admin.taaruf.questions.index') }}"
+                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+                    <i class="fas fa-question-circle mr-2"></i>Pertanyaan Taaruf
+                </a>
+            </div>
         </div>
 
-        <!-- Filter Section -->
+        <!-- Search and Filter Section -->
         <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-            <h2 class="text-lg font-medium mb-4">Filter</h2>
-            <form action="{{ route('admin.taaruf.index') }}" method="GET" class="flex flex-wrap gap-4">
-                <div class="w-full md:w-auto">
-                    <label for="gender" class="block text-xs font-medium text-gray-700 mb-1">Jenis Kelamin</label>
-                    <select name="gender" id="gender"
-                        class="w-full md:w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        <option value="">Semua</option>
-                        <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Perempuan</option>
-                        <option value="gender_mismatch" {{ request('gender') == 'gender_mismatch' ? 'selected' : '' }}>Tidak
-                            Cocok
-                        </option>
-                    </select>
+            <form action="{{ route('admin.taaruf.index') }}" method="GET" class="space-y-4">
+                <!-- Search Box -->
+                <div class="w-full">
+                    <label for="search" class="block text-xs font-medium text-gray-700 mb-1">Cari</label>
+                    <div class="flex">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}"
+                            placeholder="Cari berdasarkan nama, email, atau pekerjaan..."
+                            class="flex-grow rounded-l-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-r-md">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="w-full md:w-auto">
-                    <label for="status" class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" id="status"
-                        class="w-full md:w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        <option value="">Semua</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Tidak Aktif
-                        </option>
-                    </select>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Gender Filter -->
+                    <div>
+                        <label for="gender" class="block text-xs font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                        <select name="gender" id="gender"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option value="">Semua</option>
+                            <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="gender_mismatch" {{ request('gender') == 'gender_mismatch' ? 'selected' : '' }}>
+                                Tidak
+                                Cocok
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label for="status" class="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                        <select name="status" id="status"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option value="">Semua</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Tidak Aktif
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Taaruf Process Filter -->
+                    <div>
+                        <label for="taaruf_process" class="block text-xs font-medium text-gray-700 mb-1">Proses
+                            Taaruf</label>
+                        <select name="taaruf_process" id="taaruf_process"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option value="">Semua</option>
+                            <option value="in_process" {{ request('taaruf_process') == 'in_process' ? 'selected' : '' }}>
+                                Sedang Proses</option>
+                            <option value="not_in_process"
+                                {{ request('taaruf_process') == 'not_in_process' ? 'selected' : '' }}>Tidak Dalam Proses
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Sort Options -->
+                    <div>
+                        <label for="sort_by" class="block text-xs font-medium text-gray-700 mb-1">Urutkan
+                            Berdasarkan</label>
+                        <select name="sort_by" id="sort_by"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Tanggal
+                                Dibuat</option>
+                            <option value="full_name" {{ request('sort_by') == 'full_name' ? 'selected' : '' }}>Nama
+                            </option>
+                            <option value="birth_place_date"
+                                {{ request('sort_by') == 'birth_place_date' ? 'selected' : '' }}>Usia</option>
+                            <option value="occupation" {{ request('sort_by') == 'occupation' ? 'selected' : '' }}>Pekerjaan
+                            </option>
+                        </select>
+                    </div>
                 </div>
-                <div class="w-full md:w-auto flex items-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                        Filter
-                    </button>
-                    <a href="{{ route('admin.taaruf.index') }}"
-                        class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded">
-                        Reset
-                    </a>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Sort Direction -->
+                    <div>
+                        <label for="sort_direction" class="block text-xs font-medium text-gray-700 mb-1">Urutan</label>
+                        <select name="sort_direction" id="sort_direction"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option value="desc" {{ request('sort_direction') == 'desc' ? 'selected' : '' }}>Menurun
+                                (Z-A, Terbaru)</option>
+                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Menaik (A-Z,
+                                Terlama)</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="md:col-span-3 flex items-end justify-end">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+                            <i class="fas fa-filter mr-2"></i>Terapkan Filter
+                        </button>
+                        <a href="{{ route('admin.taaruf.index') }}"
+                            class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded">
+                            <i class="fas fa-undo mr-2"></i>Reset
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
@@ -62,26 +130,74 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Nama
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'full_name', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'full_name' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'full_name')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Jenis Kelamin
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'gender', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'gender' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'gender')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Usia
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'birth_place_date', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'birth_place_date' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'birth_place_date')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Pekerjaan
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'occupation', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'occupation' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'occupation')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'is_active', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'is_active' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'is_active')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Proses Taaruf
+                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'is_in_taaruf_process', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'is_in_taaruf_process' ? 'desc' : 'asc'])) }}"
+                                class="ml-1 text-gray-400 hover:text-gray-600">
+                                @if (request('sort_by') == 'is_in_taaruf_process')
+                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
+                                @else
+                                    <i class="fas fa-sort"></i>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -96,8 +212,8 @@
                                 <div class="flex items-center">
                                     @if ($profile->photo_url)
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ $profile->photo_url }}"
-                                                alt="{{ $profile->full_name }}">
+                                            <img class="h-10 w-10 rounded-full object-cover"
+                                                src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}">
                                         </div>
                                     @else
                                         <div
@@ -208,9 +324,9 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination with appended query parameters -->
         <div class="mt-4">
-            {{ $profiles->links() }}
+            {{ $profiles->appends(request()->query())->links() }}
         </div>
     </div>
 @endsection

@@ -133,7 +133,7 @@ class BatchAlumniController extends Controller
             'user_id' => 'required|exists:users,id',
             'activity_batch_id' => 'required|exists:activity_batches,id',
             'instagram_account' => 'nullable|string|max:255',
-            'gender' => 'nullable|string|in:male,female,Laki-laki,Perempuan',
+            'gender' => 'nullable|string|in:male,female,Laki-laki,Perempuan,Pria,Wanita',
             'notes' => 'nullable|string',
         ]);
 
@@ -197,7 +197,7 @@ class BatchAlumniController extends Controller
             'user_id' => 'required|exists:users,id',
             'activity_batch_id' => 'required|exists:activity_batches,id',
             'instagram_account' => 'nullable|string|max:255',
-            'gender' => 'nullable|string|in:male,female,Laki-laki,Perempuan',
+            'gender' => 'nullable|string|in:male,female,Laki-laki,Perempuan,Pria,Wanita',
             'notes' => 'nullable|string',
         ]);
 

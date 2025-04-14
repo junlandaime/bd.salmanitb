@@ -11,10 +11,51 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
-        return view('admin.users.index', compact('users'));
+        $query = User::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('email', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        // Role filter
+        if ($request->filled('role')) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        // Date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Sorting
+        $sortField = $request->filled('sort') ? $request->sort : 'created_at';
+        $sortDirection = $request->filled('direction') && $request->direction === 'asc' ? 'asc' : 'desc';
+
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['name', 'email', 'created_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+
+        $query->orderBy($sortField, $sortDirection);
+
+        $users = $query->paginate(10)->withQueryString();
+        $roles = Role::all(); // Pass all roles for the filter dropdown
+
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     public function create()
