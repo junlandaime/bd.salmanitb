@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaarufProfile;
-use App\Models\TaarufQuestion;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\TaarufProfile;
+use App\Models\TaarufQuestion;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use App\Notifications\NewTaarufQuestion;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\TaarufQuestionAnswered;
 
 class TaarufQuestionController extends Controller
 {
@@ -47,13 +49,18 @@ class TaarufQuestionController extends Controller
         }
 
         // Create the question
-        TaarufQuestion::create([
+        $question = TaarufQuestion::create([
             'profile_id' => $profile->id,
             'asked_by_user_id' => Auth::id(),
             'question' => $request->question,
             'is_anonymous' => true,
             'is_answered' => false,
         ]);
+
+
+        // Send notification to profile owner
+        $profileOwner = User::findOrFail($profile->user_id);
+        $profileOwner->notify(new NewTaarufQuestion($question));
 
         return Redirect::back()->with('success', 'Pertanyaan berhasil dikirim. Pemilik profil akan menjawab pertanyaan Anda jika berkenan.');
     }
@@ -82,6 +89,17 @@ class TaarufQuestionController extends Controller
             ->with('profile.user')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // Mark notifications as read
+        Auth::user()->unreadNotifications()
+            ->where('type', 'App\Notifications\NewTaarufQuestion')
+            ->get()
+            ->each(function ($notification) use ($profile) {
+                if ($notification->data['profile_id'] == $profile->id) {
+                    $notification->markAsRead();
+                }
+            });
+
 
         return View::make('taaruf.questions.index', compact('questions', 'myQuestions'));
     }
@@ -117,6 +135,15 @@ class TaarufQuestionController extends Controller
             'is_public' => $request->has('is_public') ? true : false,
         ]);
 
+
+        // Send notification to the user who asked the question
+        // $asker = User::find($question->user_id);
+        // $asker->notify(new TaarufQuestionAnswered($question));
+
+        $asker = User::find($question->user_id);
+        if ($asker) {
+            $asker->notify(new TaarufQuestionAnswered($question));
+        }
         return Redirect::route('taaruf.questions.index')->with('success', 'Pertanyaan berhasil dijawab.');
     }
 

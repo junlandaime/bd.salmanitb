@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\ActivityBatch;
 use App\Models\TaarufProfile;
-use Illuminate\Http\Request;
+use App\Models\TaarufQuestion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class TaarufController extends Controller
 {
@@ -66,7 +67,26 @@ class TaarufController extends Controller
             $needsProfileUpdate = true;
         }
 
-        return view('taaruf.index', compact('taarufProfile', 'needsProfileUpdate'));
+        // Get unread notifications count for taaruf questions
+        $unreadQuestionsCount = 0;
+
+        if ($taarufProfile) {
+            $unreadQuestionsCount = $user->unreadNotifications()
+                ->where('type', 'App\Notifications\NewTaarufQuestion')
+                ->count();
+
+            // Get count of unanswered questions
+            $unansweredQuestionsCount = TaarufQuestion::where('profile_id', $taarufProfile->id)
+                ->where('is_answered', false)
+                ->count();
+
+            // If there are unanswered questions, make sure to show notification
+            if ($unansweredQuestionsCount > 0 && $unreadQuestionsCount == 0) {
+                $unreadQuestionsCount = $unansweredQuestionsCount;
+            }
+        }
+
+        return view('taaruf.index', compact('taarufProfile', 'needsProfileUpdate', 'unreadQuestionsCount'));
     }
 
     /**
