@@ -124,9 +124,9 @@ class TaarufQuestionController extends Controller
 
         // Check if the user owns the profile
         $profile = TaarufProfile::findOrFail($question->profile_id);
-        if ($profile->user_id !== Auth::id()) {
-            return Redirect::route('taaruf.questions.index')->with('error', 'Anda tidak memiliki izin untuk menjawab pertanyaan ini.');
-        }
+        // if ($profile->user_id !== Auth::id()) {
+        //     return Redirect::route('taaruf.questions.index')->with('error', 'Anda tidak memiliki izin untuk menjawab pertanyaan ini.');
+        // }
 
         // Update the question
         $question->update([
