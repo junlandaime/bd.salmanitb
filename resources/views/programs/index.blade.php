@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title', 'Program Bidang Dakwah Masjid Salman ITB')
 
 <!-- Google tag (gtag.js) -->
@@ -11,61 +10,86 @@
         dataLayer.push(arguments);
     }
     gtag('js', new Date());
-
     gtag('config', 'G-WE2HFGE5VL');
 </script>
 
 @section('content')
-    <header class="relative pt-16 pb-32 flex content-center items-center justify-center" style="min-height: 50vh;">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover" style='background-image: url("{{ asset('bd3.jpg') }}");'>
-            <span class="w-full h-full absolute opacity-50 bg-black"></span>
-        </div>
-        <div class="container relative mx-auto px-4">
-            <div class="items-center flex flex-wrap">
-                <div class="w-full lg:w-8/12 px-4 ml-auto mr-auto text-center">
-                    <div class="pr-12">
-                        <div class="flex justify-center items-center space-x-4 mb-6">
-                            <span class="px-3 py-1 rounded-full text-sm font-medium"
-                                style="background-color: #05966920; color: #059669">
-                                Program
-                            </span>
-                            <span class="text-white">{{ date('d F Y') }}</span>
-                        </div>
-                        <!-- Animated Title -->
-                        <div x-data="{ text: '', fullText: 'Program & Kegiatan', charIndex: 0 }" x-init="() => {
-                            const interval = setInterval(() => {
-                                if (charIndex <= fullText.length) {
-                                    text = fullText.substring(0, charIndex);
-                                    charIndex++;
-                                } else {
-                                    clearInterval(interval);
-                                }
-                            }, 100);
-                        }">
-                            <h1 class="text-white font-semibold text-5xl mb-6">
-                                <span x-text="text"></span>
-                                <span class="animate-pulse">|</span>
-                            </h1>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <p class="text-gray-200">
-                                Menebarkan cahaya ilmu dan keimanan melalui program-program unggulan
-                                Bidang Dakwah Masjid Salman ITB untuk membangun peradaban Islami yang berdampak
-                            </p>
-                        </div>
-                    </div>
-                </div>
+    <style>
+        .soft-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1rem;
+            padding-right: 1rem
+        }
+
+        . {
+            position: relative
+        }
+
+        .:before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 1rem;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, .6), rgba(59, 130, 246, .35));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05)
+        }
+
+        .card .card-image {
+            transition: transform .6s cubic-bezier(.2, .8, .2, 1)
+        }
+
+        .section-badge {
+            letter-spacing: .06em
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .65);
+            backdrop-filter: saturate(1.4) blur(8px)
+        }
+
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, .06) 1px, transparent 1px);
+            background-size: 16px 16px
+        }
+    </style>
+
+    {{-- ========================= HERO ========================= --}}
+    <section
+        class="relative isolate overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-700 text-white">
+        <div aria-hidden="true" class="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-emerald-500/30 blur-3xl"></div>
+        <div aria-hidden="true" class="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>
+
+        <div class="soft-container py-16 md:py-24">
+            <div class="text-center" data-aos="fade-down" data-aos-duration="800">
+                <p
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 ring-1 ring-white/20 section-badge text-sm">
+                    <span>{{ date('d F Y') }}</span>
+                </p>
+                <h1 class="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">Program & Kegiatan</h1>
+                <p class="mt-4 text-white/90 max-w-3xl mx-auto text-lg">
+                    Menebarkan cahaya ilmu dan keimanan melalui program-program unggulan Bidang Dakwah Masjid Salman ITB
+                    untuk membangun peradaban Islami yang berdampak
+                </p>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Breadcrumb -->
-    <div class="bg-white shadow-sm w-full top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex py-3 text-gray-700 text-sm">
+    {{-- ========================= BREADCRUMB ========================= --}}
+    <div class="bg-white shadow-sm border-b border-gray-100">
+        <div class="soft-container">
+            <nav class="flex py-3 text-sm" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li class="inline-flex items-center">
-                        <a href="{{ route('home') }}" class="inline-flex items-center text-gray-600 hover:text-green-500">
+                        <a href="{{ route('home') }}"
+                            class="inline-flex items-center text-gray-600 hover:text-emerald-600 transition">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
@@ -81,7 +105,7 @@
                                     d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <span class="ml-1 text-green-500 font-medium md:ml-2">Program & Kegiatan</span>
+                            <span class="ml-1 text-emerald-600 font-medium md:ml-2">Program & Kegiatan</span>
                         </div>
                     </li>
                 </ol>
@@ -89,264 +113,169 @@
         </div>
     </div>
 
-    <!-- Program Section with Modern Hover Effects -->
-    <section id="programs" class="py-24 lg:px-32 bg-white">
-        <div class="container mx-auto px-4">
-
-
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-500">
-                    Eksplorasi Program
-                </h2>
-                <div class="h-1 w-20 bg-gradient-to-r from-green-600 to-emerald-500 mx-auto my-6"></div>
-                <p class="max-w-2xl mx-auto text-lg text-gray-600">
+    {{-- ========================= PROGRAM SECTION ========================= --}}
+    <section class="py-16 bg-gray-50">
+        <div class="soft-container">
+            <div class="text-center mb-12" data-aos="fade-down">
+                <span
+                    class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 section-badge text-xs">EKSPLORASI
+                    PROGRAM</span>
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Pilih Program Terbaik Untuk Anda</h2>
+                <div class="mt-4 h-1 w-20 bg-gradient-to-r from-emerald-600 to-emerald-500 mx-auto rounded-full"></div>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
                     Temukan program yang sesuai dengan kebutuhan spiritual dan intelektual Anda
                 </p>
             </div>
 
-            <!-- Interactive Program Grid -->
-            <div class="flex flex-wrap">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($programs as $program)
-                    <div
-                        class="w-full md:w-4/12 px-4 text-center mb-12 transform transition duration-500 hover:-translate-y-2">
-                        <div
-                            class="relative flex flex-col min-w-0 break-words bg-white w-full shadow-xl rounded-lg overflow-hidden group">
+                    <article class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
+                        data-aos="zoom-in" data-aos-delay="{{ $loop->index * 80 }}">
+                        <a href="{{ route('programs.show', $program->slug) }}" class="block">
                             <div class="relative overflow-hidden">
-                                <img alt="{{ $program->title }}" src="{{ Storage::url($program->featured_image) }}"
-                                    class="w-full align-middle rounded-t-lg transition duration-500 group-hover:scale-110">
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-0 group-hover:opacity-70 transition duration-300">
+                                <img class="card-image w-full h-56 object-cover"
+                                    src="{{ Storage::url($program->featured_image) }}" alt="{{ $program->title }}">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent"></div>
+                                <div class="absolute top-4 left-4">
+                                    <div
+                                        class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/90 text-emerald-600">
+                                        <i
+                                            class="fas fa-{{ ['mosque', 'book-open', 'users', 'hands-helping', 'graduation-cap', 'hand-holding-droplet'][$loop->index % 6] }} text-xl"></i>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="px-6 py-6 flex-auto">
-                                <div
-                                    class="inline-flex items-center justify-center w-12 h-12 mb-5 rounded-full bg-green-100 text-green-600 mx-auto">
-                                    <i
-                                        class="fas fa-{{ ['mosque', 'book-open', 'users', 'hands-helping', 'graduation-cap', 'hand-holding-droplet'][$loop->index % 6] }} text-xl"></i>
-                                </div>
-                                <h6 class="text-2xl font-bold">{{ $program->title }}</h6>
-                                <p class="mt-3 mb-5 text-gray-600 leading-relaxed">
-                                    {{ $program->description }}
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold">{{ $program->title }}</h3>
+                                <p class="mt-2 text-gray-600 text-sm leading-relaxed">
+                                    {{ Str::limit($program->description, 120) }}
                                 </p>
-                                <a href="{{ route('programs.show', $program->slug) }}"
-                                    class="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-green-500 p-4 px-6 py-3 font-medium text-white transition duration-300 ease-out">
-                                    <span class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600"></span>
-                                    <span
-                                        class="ease absolute bottom-0 left-0 h-1 w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-                                    <span
-                                        class="ease absolute right-0 top-0 h-0 w-0 border-t-2 border-white transition-all duration-500 group-hover:w-full"></span>
-                                    <span
-                                        class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-white transition-all duration-500 group-hover:h-full"></span>
-                                    <span
-                                        class="ease absolute left-0 top-0 h-0 w-0 border-l-2 border-white transition-all duration-500 group-hover:h-full"></span>
-                                    <span class="relative font-semibold tracking-wider">
-                                        Lihat Program <i class="fas fa-arrow-right ml-2"></i>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="inline-flex items-center text-emerald-700 font-semibold text-sm">
+                                        Lihat Program
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-4 h-4 ml-1">
+                                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                                        </svg>
                                     </span>
-                                </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </a>
+                    </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <!-- Featured Programs with Modern Timeline Effect -->
+    {{-- ========================= FEATURED ACTIVITIES ========================= --}}
     @if ($featuredActivities->count() > 0)
-        <section class="py-24 lg:px-32 bg-gray-50 relative overflow-hidden">
-            <!-- Decorative Elements -->
-            <div class="absolute -right-24 -top-24 w-96 h-96 bg-green-100 rounded-full opacity-50"></div>
-            <div class="absolute -left-24 -bottom-24 w-96 h-96 bg-green-100 rounded-full opacity-50"></div>
+        <section class="py-16 bg-white relative overflow-hidden">
+            <div aria-hidden="true" class="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl">
+            </div>
+            <div aria-hidden="true" class="absolute -left-24 -bottom-24 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl">
+            </div>
 
-            <div class="container mx-auto px-4 relative z-10">
-                <div class="flex flex-wrap justify-center text-center mb-16">
-                    <div class="w-full lg:w-7/12 px-4">
-                        <span
-                            class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200 mb-4">Direkomendasikan</span>
-                        <h2 class="text-5xl font-bold mb-2">Kegiatan <span
-                                class="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-500">Unggulan</span>
-                        </h2>
-                        <div class="h-1 w-24 bg-gradient-to-r from-green-600 to-emerald-500 mx-auto my-4"></div>
-                        <p class="text-xl leading-relaxed mt-6 text-gray-600">
-                            Kegiatan pilihan yang dirancang untuk memaksimalkan manfaat bagi Anda dan masyarakat
-                        </p>
-                    </div>
+            <div class="soft-container relative">
+                <div class="text-center mb-12" data-aos="fade-down">
+                    <span
+                        class="inline-flex px-3 py-1 rounded-full bg-amber-100 text-amber-700 section-badge text-xs">DIREKOMENDASIKAN</span>
+                    <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Kegiatan Unggulan</h2>
+                    <div class="mt-4 h-1 w-20 bg-gradient-to-r from-emerald-600 to-emerald-500 mx-auto rounded-full"></div>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
+                        Kegiatan pilihan yang dirancang untuk memaksimalkan manfaat bagi Anda dan masyarakat
+                    </p>
                 </div>
 
-                <div class="flex flex-wrap items-stretch">
+                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($featuredActivities as $activity)
-                        <div class="w-full md:w-4/12 px-4 mb-12 transform transition duration-500 hover:-translate-y-2">
-                            <div
-                                class="relative flex flex-col h-full min-w-0 break-words bg-white w-full shadow-xl rounded-lg overflow-hidden">
-                                <div class="relative">
-                                    <div
-                                        class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black opacity-60 z-10">
-                                    </div>
-                                    <img alt="{{ $activity->title }}" src="{{ Storage::url($activity->featured_image) }}"
-                                        class="w-full align-middle rounded-t-lg h-64 object-cover">
-                                    <div class="absolute top-0 left-0 p-4 z-20">
-                                        <span
-                                            class="inline-block px-3 py-1 text-xs font-semibold bg-green-500 text-white rounded-full">
-                                            {{ $activity->program->title }}
-                                        </span>
-                                    </div>
-                                    <div class="absolute bottom-0 left-0 p-4 z-20">
-                                        <h6 class="text-2xl font-bold text-white">{{ $activity->title }}</h6>
-                                        @if ($activity->start_date)
-                                            <div class="flex items-center text-white opacity-80 text-sm mt-2">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                {{ \Carbon\Carbon::parse($activity->start_date)->format('d M Y') }}
-                                            </div>
-                                        @endif
-                                    </div>
+                        <article class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
+                            data-aos="fade-up" data-aos-delay="{{ $loop->index * 80 }}">
+                            <div class="relative">
+                                <img src="{{ Storage::url($activity->featured_image) }}" alt="{{ $activity->title }}"
+                                    class="card-image w-full h-56 object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent"></div>
+                                <div class="absolute top-4 left-4">
+                                    <span
+                                        class="inline-flex items-center gap-1 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        {{ $activity->program->title }}
+                                    </span>
                                 </div>
-                                <div class="px-6 py-6 flex-auto flex flex-col justify-between flex-grow">
-                                    <div>
-                                        <p class="text-gray-600 leading-relaxed">
-                                            {{ Str::limit($activity->description, 120) }}
-                                        </p>
-                                        @if ($activity->location)
-                                            <div class="flex items-center text-gray-500 text-sm mt-4">
-                                                <i class="fas fa-map-marker-alt mr-2 text-green-500"></i>
-                                                {{ $activity->location }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="mt-5 pt-5 border-t border-gray-200">
-                                        <a href="{{ route('activities.show', $activity->slug) }}"
-                                            class="inline-block bg-white border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 w-full text-center">
-                                            Selengkapnya <i class="fas fa-long-arrow-alt-right ml-2"></i>
-                                        </a>
-                                    </div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <h3 class="text-xl font-bold text-white">{{ $activity->title }}</h3>
+                                    @if ($activity->start_date)
+                                        <div class="flex items-center text-white/90 text-sm mt-2">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                            {{ \Carbon\Carbon::parse($activity->start_date)->format('d M Y') }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                        </div>
+                            <div class="p-6">
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    {{ Str::limit($activity->description, 120) }}
+                                </p>
+                                @if ($activity->location)
+                                    <div class="flex items-center text-gray-500 text-sm mt-3">
+                                        <svg class="w-4 h-4 mr-2 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        {{ $activity->location }}
+                                    </div>
+                                @endif
+                                <div class="mt-5 pt-5 border-t border-gray-200">
+                                    <a href="{{ route('activities.show', $activity->slug) }}"
+                                        class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
+                                        Selengkapnya
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-4 h-4">
+                                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
                     @endforeach
                 </div>
 
-                <!-- View All Button -->
-                <div class="text-center mt-6">
+                <div class="text-center mt-10" data-aos="fade-up">
                     <a href="{{ route('activities.index') }}"
-                        class="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-green-500 p-4 px-8 py-4 font-medium text-white transition duration-300 ease-out">
-                        <span class="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700"></span>
-                        <span
-                            class="ease absolute bottom-0 left-0 h-1 w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-                        <span
-                            class="ease absolute right-0 top-0 h-0 w-0 border-t-2 border-white transition-all duration-500 group-hover:w-full"></span>
-                        <span
-                            class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-white transition-all duration-500 group-hover:h-full"></span>
-                        <span
-                            class="ease absolute left-0 top-0 h-0 w-0 border-l-2 border-white transition-all duration-500 group-hover:h-full"></span>
-                        <span class="relative font-semibold tracking-wider">
-                            Lihat Semua Kegiatan <i class="fas fa-chevron-right ml-2"></i>
-                        </span>
+                        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition shadow hover:shadow-md">
+                        Lihat Semua Kegiatan
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                        </svg>
                     </a>
                 </div>
             </div>
         </section>
     @endif
 
-    <!-- Testimonial Section with Modern Cards -->
-    {{-- <section class="py-24 lg:px-32 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap justify-center text-center mb-16">
-                <div class="w-full lg:w-6/12 px-4">
-                    <h2 class="text-5xl font-bold mb-2">Apa Kata <span
-                            class="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-500">Mereka</span>
-                    </h2>
-                    <div class="h-1 w-24 bg-gradient-to-r from-green-600 to-emerald-500 mx-auto my-4"></div>
-                    <p class="text-xl leading-relaxed mt-6 text-gray-600">
-                        Pengalaman peserta program dakwah Masjid Salman ITB
-                    </p>
-                </div>
-            </div>
-
-            <div class="flex flex-wrap">
-                @for ($i = 0; $i < 3; $i++)
-                    <div class="w-full md:w-4/12 px-4 mb-8">
-                        <div class="bg-gray-50 rounded-lg p-8 shadow-md hover:shadow-xl transition-shadow duration-300">
-                            <div class="text-green-500 mb-4">
-                                <i class="fas fa-quote-left text-3xl"></i>
-                            </div>
-                            <p class="text-gray-700 italic mb-6 leading-relaxed">
-                                "Program ini telah mengubah cara pandang saya terhadap Islam. Saya belajar bahwa agama tidak
-                                hanya tentang ritual, tetapi juga tentang membangun peradaban dan memberikan manfaat kepada
-                                sesama."
-                            </p>
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center mr-4">
-                                    <span class="text-green-600 font-bold">{{ chr(65 + $i) }}</span>
-                                </div>
-                                <div>
-                                    <h6 class="font-semibold">Peserta Program {{ ['Taklim', 'Mentoring', 'Kajian'][$i] }}
-                                    </h6>
-                                    <p class="text-xs text-gray-500">
-                                        {{ ['Mahasiswa ITB', 'Alumni', 'Masyarakat Umum'][$i] }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endfor
-            </div>
-        </div>
-    </section> --}}
-
-    <!-- Call to Action with Modern Design -->
-    <section class="relative py-32">
-        <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-green-800">
-            <img src="https://picsum.photos/1920/500" alt="Background" class="w-full h-full object-cover opacity-20">
-        </div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="flex flex-wrap items-center">
-                <div class="w-full lg:w-7/12 px-4 ml-auto mr-auto text-center">
-                    <h2 class="text-white font-bold text-5xl mb-6">Siap untuk bergabung?</h2>
-                    <p class="text-xl text-gray-100 mb-8 leading-relaxed">
-                        Jadilah bagian dari perjalanan membangun peradaban Islam melalui program-program dakwah yang
-                        inspiratif dan bermanfaat
-                    </p>
+    {{-- ========================= CTA ========================= --}}
+    <section
+        class="relative py-16 bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-700 text-white overflow-hidden">
+        <div aria-hidden="true" class="absolute inset-0 dot-pattern opacity-20"></div>
+        <div class="soft-container relative">
+            <div class="text-center" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-extrabold">Siap untuk Bergabung?</h2>
+                <p class="mt-4 text-white/90 max-w-2xl mx-auto text-lg">
+                    Jadilah bagian dari perjalanan membangun peradaban Islam melalui program-program dakwah yang inspiratif
+                    dan bermanfaat
+                </p>
+                <div class="mt-8">
                     <a href="{{ route('contact') }}"
-                        class="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white p-4 px-8 py-4 font-medium text-green-700 transition duration-300 ease-out">
-                        <span class="absolute inset-0 bg-white"></span>
-                        <span
-                            class="ease absolute bottom-0 left-0 h-1 w-0 bg-green-500 transition-all duration-500 group-hover:w-full"></span>
-                        <span
-                            class="ease absolute right-0 top-0 h-0 w-0 border-t-2 border-green-500 transition-all duration-500 group-hover:w-full"></span>
-                        <span
-                            class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-green-500 transition-all duration-500 group-hover:h-full"></span>
-                        <span
-                            class="ease absolute left-0 top-0 h-0 w-0 border-l-2 border-green-500 transition-all duration-500 group-hover:h-full"></span>
-                        <span class="relative font-semibold tracking-wider">
-                            Daftar Sekarang <i class="fas fa-user-plus ml-2"></i>
-                        </span>
+                        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-emerald-700 font-semibold shadow hover:shadow-md transition">
+                        Daftar Sekarang
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                        </svg>
                     </a>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Newsletter Subscription with Modern Form -->
-    {{-- <section class="py-12 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap items-center">
-                <div class="w-full md:w-6/12 px-4 ml-auto mr-auto text-center md:text-left">
-                    <h4 class="text-2xl font-semibold mb-2">Dapatkan Informasi Terbaru</h4>
-                    <p class="text-gray-600">
-                        Berlangganan newsletter kami untuk mendapatkan informasi terbaru tentang program dan kegiatan dakwah
-                    </p>
-                </div>
-                <div class="w-full md:w-5/12 px-4 ml-auto mr-auto mt-8 md:mt-0">
-                    <form class="flex flex-col md:flex-row">
-                        <input type="email"
-                            class="rounded-l-lg md:rounded-r-none px-4 py-3 w-full md:w-2/3 focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-300"
-                            placeholder="Alamat Email Anda">
-                        <button
-                            class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-r-lg md:rounded-l-none px-6 py-3 w-full md:w-auto mt-3 md:mt-0 font-semibold hover:from-green-600 hover:to-emerald-700 transition duration-200">
-                            Berlangganan
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section> --}}
 @endsection

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Layanan Bidang Dakwah Masjid Salman ITB')
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
 <script>
@@ -9,127 +10,189 @@
         dataLayer.push(arguments);
     }
     gtag('js', new Date());
-
     gtag('config', 'G-WE2HFGE5VL');
 </script>
 
-@push('styles')
+@section('content')
     <style>
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        /* Subtle upgrades without changing data structure */
+        .soft-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1rem;
+            padding-right: 1rem
         }
 
-        .card-hover {
-            transition: all 0.3s ease;
+        . {
+            position: relative
+        }
+
+        .:before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 1rem;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, .6), rgba(59, 130, 246, .35));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05)
+        }
+
+        .card .card-image {
+            transition: transform .6s cubic-bezier(.2, .8, .2, 1)
+        }
+
+        .section-badge {
+            letter-spacing: .06em
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .65);
+            backdrop-filter: saturate(1.4) blur(8px)
+        }
+
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, .06) 1px, transparent 1px);
+            background-size: 16px 16px
         }
     </style>
-@endpush
 
-@section('content')
-    <!-- Hero Section -->
-    <section class="relative pt-16 pb-32 flex content-center items-center justify-center " style="min-height: 50vh;">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover" style='background-image: url("{{ asset('bd3.jpg') }}");'>
-            <span class="w-full h-full absolute opacity-50 bg-black"></span>
-        </div>
-        <div class="container relative mx-auto">
-            <div class="items-center flex flex-wrap">
-                <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
-                    <div class="pr-12" data-aos="fade-up">
-                        <h1 class="text-white font-semibold text-5xl">
-                            Layanan Kami
-                        </h1>
-                        <p class="mt-4 text-lg text-gray-200">
-                            Berbagai layanan untuk memenuhi kebutuhan spiritual dan sosial umat
-                        </p>
-                    </div>
-                </div>
+    {{-- ========================= HERO ========================= --}}
+    <section
+        class="relative isolate overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-700 text-white">
+        <!-- Decorative blobs -->
+        <div aria-hidden="true" class="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-emerald-500/30 blur-3xl"></div>
+        <div aria-hidden="true" class="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>
+
+        <div class="soft-container py-16 md:py-24">
+            <div class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <p
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 ring-1 ring-white/20 section-badge text-sm">
+                    <span class="i-lucide-sparkles"></span> Layanan Terbaik Untuk Umat
+                </p>
+                <h1 class="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">Layanan Kami</h1>
+                <p class="mt-4 text-lg text-white/90">
+                    Berbagai layanan untuk memenuhi kebutuhan spiritual dan sosial umat
+                </p>
             </div>
         </div>
     </section>
 
-    <!-- Services Grid -->
-    <section class="py-20 bg-gray-50 md:px-40">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-8" data-aos="fade-up">Layanan Yang Kami Sediakan</h2>
-            <p class="text-center max-w-3xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
-                Bidang Dakwah Salman ITB menyediakan berbagai layanan yang dirancang untuk memenuhi kebutuhan spiritual dan
-                sosial umat Islam di lingkungan Masjid Salman ITB dan sekitarnya.
-            </p>
+    {{-- ========================= SERVICES INTRO ========================= --}}
+    <section class="py-16 bg-white">
+        <div class="soft-container">
+            <div class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 section-badge text-xs">
+                    LAYANAN KAMI
+                </span>
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Layanan Yang Kami Sediakan</h2>
+                <p class="mt-4 text-gray-600">
+                    Bidang Dakwah Salman ITB menyediakan berbagai layanan yang dirancang untuk memenuhi kebutuhan spiritual
+                    dan sosial umat Islam di lingkungan Masjid Salman ITB dan sekitarnya.
+                </p>
+            </div>
+        </div>
+    </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {{-- ========================= SERVICES GRID ========================= --}}
+    <section class="py-16 bg-gray-50">
+        <div class="soft-container">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($services as $service)
-                    <div data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}" data-aos-duration="800"
-                        class="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl card-hover">
+                    <article class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
+                        data-aos="fade-up" data-aos-delay="{{ $loop->index * 80 }}">
                         <div class="p-6">
                             @if ($service->icon)
                                 <div
-                                    class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-green-400">
-                                    <i class="{{ $service->icon }}"></i>
+                                    class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg mb-5">
+                                    <i class="{{ $service->icon }} text-2xl"></i>
                                 </div>
                             @endif
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $service->title }}</h3>
 
-                            <!-- Divider -->
-                            <div class="h-0.5 bg-gray-200 w-1/3 mb-4"></div>
+                            <h3 class="text-xl font-semibold text-gray-900">{{ $service->title }}</h3>
 
-                            <p class="text-gray-600 mb-6">
+                            <div class="h-0.5 bg-gradient-to-r from-emerald-400 to-transparent w-16 my-4"></div>
+
+                            <p class="text-gray-600 text-sm leading-relaxed">
                                 {{ $service->description }}
                             </p>
 
                             @if ($service->link_url)
-                                <div class="flex justify-start mt-4">
+                                <div class="mt-6">
                                     <a href="{{ route('services.show', $service->slug) }}"
-                                        class="text-green-600 hover:text-green-800 font-medium flex items-center">
+                                        class="inline-flex items-center gap-2 text-emerald-700 font-semibold hover:text-emerald-800 transition">
                                         {{ $service->link_text ?? 'Selengkapnya' }}
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7"></path>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-4 h-4">
+                                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
                                         </svg>
                                     </a>
                                 </div>
                             @endif
                         </div>
-                    </div>
+                    </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="relative py-20 bg-white md:px-40">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap items-center">
-                <div class="w-full md:w-6/12 px-4 mr-auto ml-auto" data-aos="fade-right">
-                    <h3 class="text-3xl mb-2 font-semibold leading-normal">
+    {{-- ========================= CONTACT/CTA SECTION ========================= --}}
+    <section class="relative py-16 bg-white overflow-hidden">
+        <div class="soft-container">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div data-aos="fade-right">
+                    <span class="inline-flex px-3 py-1 rounded-full bg-sky-100 text-sky-700 section-badge text-xs">
+                        HUBUNGI KAMI
+                    </span>
+                    <h3 class="mt-3 text-3xl md:text-4xl font-bold leading-tight">
                         Butuh Informasi Lebih Lanjut?
                     </h3>
-                    <p class="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
+                    <p class="mt-4 text-gray-600 leading-relaxed">
                         Tim kami siap membantu Anda dengan informasi lebih detail tentang layanan-layanan yang kami
                         sediakan.
                     </p>
                     <div class="mt-8">
                         <a href="{{ route('contact') }}"
-                            class="bg-green-500 text-white px-6 py-3 rounded-md font-medium hover:bg-green-600 transition duration-300">
+                            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:shadow-md hover:bg-emerald-700 transition">
                             Hubungi Kami
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                            </svg>
                         </a>
                     </div>
                 </div>
 
-                <div class="w-full md:w-4/12 px-4 mr-auto ml-auto" data-aos="fade-left">
-                    <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-green-500">
-                        <img alt="Contact Us" src="{{ asset('bd2.jpg') }}" class="w-full align-middle rounded-t-lg">
+                <div class="relative" data-aos="fade-left" data-aos-delay="100">
+                    <div class=" rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 overflow-hidden shadow-xl">
+                        <div class="relative">
+                            <img alt="Contact Us" src="{{ asset('bd2.jpg') }}" class="w-full h-64 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent"></div>
+                        </div>
 
-                        <blockquote class="relative p-8 mb-4">
-                            <h4 class="text-xl font-bold text-white">
+                        <div class="p-8 text-white">
+                            <h4 class="text-2xl font-bold">
                                 Jam Operasional
                             </h4>
-                            <p class="text-md font-light mt-2 text-white">
-                                Senin - Jumat: 08:00 - 17:00<br>
-                                Sabtu: 09:00 - 15:00<br>
-                                Minggu: Tutup
-                            </p>
-                        </blockquote>
+                            <div class="mt-4 space-y-2 text-white/90">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-white/60"></div>
+                                    <p>Senin - Jumat: 08:00 - 17:00</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-white/60"></div>
+                                    <p>Sabtu: 09:00 - 15:00</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-white/60"></div>
+                                    <p>Minggu: Tutup</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -147,84 +147,250 @@
                             </div>
                         </form>
                     </div>
+
                     <div class="p-6">
-                        <h5 class="text-xl font-bold text-green-600 mb-4">Profil Alumni</h5>
+                        <!-- View Controls -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <h5 class="text-xl font-bold text-green-600">Profil Alumni</h5>
+
+                            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                                <!-- Per Page Selection -->
+                                <div class="flex items-center gap-2">
+                                    <label for="per_page"
+                                        class="text-sm text-gray-600 whitespace-nowrap">Tampilkan:</label>
+                                    <select id="per_page" name="per_page"
+                                        class="block w-full sm:w-auto pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 rounded-md">
+                                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10
+                                        </option>
+                                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25
+                                        </option>
+                                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50
+                                        </option>
+                                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- View Toggle -->
+                                <div class="flex items-center bg-gray-100 rounded-md p-1">
+                                    <button type="button" id="cardViewBtn"
+                                        class="view-toggle flex items-center px-3 py-2 text-sm font-medium rounded transition-colors {{ request('view', 'card') == 'card' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                                            </path>
+                                        </svg>
+                                        Card
+                                    </button>
+                                    <button type="button" id="listViewBtn"
+                                        class="view-toggle flex items-center px-3 py-2 text-sm font-medium rounded transition-colors {{ request('view') == 'list' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 6h16M4 12h16M4 18h16"></path>
+                                        </svg>
+                                        List
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         @if (count($profiles) > 0)
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                @foreach ($profiles as $profile)
-                                    <div
-                                        class="bg-white rounded-lg border shadow-sm hover:shadow-md transition duration-300 h-full">
-                                        <div class="p-6">
-                                            <div class="flex justify-center mb-4">
-                                                @if ($profile->photo_url)
-                                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
-                                                        class="w-24 h-24 rounded-full object-cover">
-                                                @else
-                                                    <div
-                                                        class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
-                                                        <svg class="w-12 h-12 text-gray-400" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- Card View -->
+                            <div id="cardView" class="{{ request('view') == 'list' ? 'hidden' : '' }}">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    @foreach ($profiles as $profile)
+                                        <div
+                                            class="bg-white rounded-lg border shadow-sm hover:shadow-md transition duration-300 h-full">
+                                            <div class="p-6">
+                                                <div class="flex justify-center mb-4">
+                                                    @if ($profile->photo_url)
+                                                        <img src="{{ $profile->photo_url }}"
+                                                            alt="{{ $profile->full_name }}"
+                                                            class="w-24 h-24 rounded-full object-cover">
+                                                    @else
+                                                        <div
+                                                            class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
+                                                            <svg class="w-12 h-12 text-gray-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                                </path>
+                                                            </svg>
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <h5 class="text-xl font-bold text-center mb-4">{{ $profile->full_name }}
+                                                </h5>
+
+                                                <div class="space-y-2">
+                                                    <div class="flex justify-between">
+                                                        <span class="text-gray-500">Usia:</span>
+                                                        <span>{{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
+                                                            tahun</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-gray-500">Domisili:</span>
+                                                        <span
+                                                            class="text-wrap text-right text-sm">{{ $profile->current_residence }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-gray-500">Pendidikan:</span>
+                                                        <span
+                                                            class="text-wrap text-right text-sm">{{ $profile->last_education }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-gray-500">Pekerjaan:</span>
+                                                        <span
+                                                            class="text-wrap text-right text-sm">{{ $profile->occupation }}</span>
+                                                    </div>
+                                                    @if ($profile->marriage_target_year)
+                                                        <div class="flex justify-between">
+                                                            <span class="text-gray-500">Target Menikah:</span>
+                                                            <span
+                                                                class="text-wrap text-right text-sm">{{ $profile->marriage_target_year }}</span>
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <div class="text-center mt-6">
+                                                    <a href="{{ route('taaruf.profile.show', $profile->id) }}"
+                                                        class="inline-flex items-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                            </path>
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 stroke-width="2"
-                                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
                                                             </path>
                                                         </svg>
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <h5 class="text-xl font-bold text-center mb-4">{{ $profile->full_name }}</h5>
-
-                                            <div class="space-y-2">
-                                                <div class="flex justify-between">
-                                                    <span class="text-gray-500">Usia:</span>
-                                                    <span>{{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
-                                                        tahun</span>
+                                                        Lihat Profil Lengkap
+                                                    </a>
                                                 </div>
-                                                <div class="flex justify-between">
-                                                    <span class="text-gray-500">Domisili:</span>
-                                                    <span
-                                                        class="text-wrap text-right text-sm">{{ $profile->current_residence }}</span>
-                                                </div>
-                                                <div class="flex justify-between">
-                                                    <span class="text-gray-500">Pendidikan:</span>
-                                                    <span
-                                                        class="text-wrap text-right text-sm">{{ $profile->last_education }}</span>
-                                                </div>
-                                                <div class="flex justify-between">
-                                                    <span class="text-gray-500">Pekerjaan:</span>
-                                                    <span
-                                                        class="text-wrap text-right text-sm">{{ $profile->occupation }}</span>
-                                                </div>
-                                                @if ($profile->marriage_target_year)
-                                                    <div class="flex justify-between">
-                                                        <span class="text-gray-500">Target Menikah:</span>
-                                                        <span
-                                                            class="text-wrap text-right text-sm">{{ $profile->marriage_target_year }}</span>
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <div class="text-center mt-6">
-                                                <a href="{{ route('taaruf.profile.show', $profile->id) }}"
-                                                    class="inline-flex items-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                        </path>
-                                                    </svg>
-                                                    Lihat Profil Lengkap
-                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
 
+                            <!-- Table View -->
+                            <div id="listView" class="{{ request('view') == 'list' ? '' : 'hidden' }}">
+                                <div class="bg-white rounded-lg border shadow-sm overflow-hidden">
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Foto
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Nama Lengkap
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Usia
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Domisili
+                                                    </th>
+                                                    {{-- <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Pendidikan
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Pekerjaan
+                                                    </th> --}}
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Target Menikah
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Aksi
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                @foreach ($profiles as $profile)
+                                                    <tr class="hover:bg-gray-50 transition duration-150">
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            @if ($profile->photo_url)
+                                                                <img src="{{ $profile->photo_url }}"
+                                                                    alt="{{ $profile->full_name }}"
+                                                                    class="w-12 h-12 rounded-full object-cover">
+                                                            @else
+                                                                <div
+                                                                    class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                                                    <svg class="w-6 h-6 text-gray-400" fill="none"
+                                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <div class="text-sm font-medium text-gray-900">
+                                                                {{ $profile->full_name }}</div>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <div class="text-sm text-gray-900">
+                                                                {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
+                                                                tahun
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <div class="text-sm text-gray-900">
+                                                                {{ $profile->current_residence }}</div>
+                                                        </td>
+                                                        {{-- <td class="px-6 py-4">
+                                                            <div class="text-sm text-gray-900">
+                                                                {{ $profile->last_education }}</div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <div class="text-sm text-gray-900">{{ $profile->occupation }}
+                                                            </div>
+                                                        </td> --}}
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <div class="text-sm text-gray-900">
+                                                                {{ $profile->marriage_target_year ?? '-' }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                            <a href="{{ route('taaruf.profile.show', $profile->id) }}"
+                                                                class="inline-flex items-center px-3 py-1.5 border border-green-600 rounded-md text-xs font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                                                <svg class="w-4 h-4 mr-1" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                                    </path>
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                                    </path>
+                                                                </svg>
+                                                                Lihat
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="flex justify-center mt-8">
                                 {{ $profiles->appends(request()->query())->links() }}
                             </div>
@@ -344,15 +510,31 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const filterSelect = document.getElementById('filter');
                 const filterOptions = document.querySelectorAll('.filter-options');
+                const perPageSelect = document.getElementById('per_page');
+                const cardViewBtn = document.getElementById('cardViewBtn');
+                const listViewBtn = document.getElementById('listViewBtn');
+                const cardView = document.getElementById('cardView');
+                const listView = document.getElementById('listView');
+
+                // Function to get current URL parameters
+                function getUrlParams() {
+                    const params = new URLSearchParams(window.location.search);
+                    return params;
+                }
+
+                // Function to update URL and reload page
+                function updateUrlAndReload(key, value) {
+                    const params = getUrlParams();
+                    params.set(key, value);
+                    window.location.search = params.toString();
+                }
 
                 // Function to show the appropriate filter options based on selection
                 function showFilterOptions() {
-                    // Hide all filter option divs first
                     filterOptions.forEach(option => {
                         option.classList.add('hidden');
                     });
 
-                    // Show the selected filter options if not "all"
                     const selectedFilter = filterSelect.value;
                     if (selectedFilter !== 'all') {
                         const optionsToShow = document.getElementById(selectedFilter + '-options');
@@ -367,6 +549,42 @@
 
                 // Update when the filter changes
                 filterSelect.addEventListener('change', showFilterOptions);
+
+                // Per page change handler
+                perPageSelect.addEventListener('change', function() {
+                    updateUrlAndReload('per_page', this.value);
+                });
+
+                // View toggle handlers
+                cardViewBtn.addEventListener('click', function() {
+                    if (!cardView.classList.contains('hidden')) return;
+
+                    cardView.classList.remove('hidden');
+                    listView.classList.add('hidden');
+
+                    cardViewBtn.classList.add('bg-white', 'text-green-600', 'shadow-sm');
+                    cardViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
+
+                    listViewBtn.classList.remove('bg-white', 'text-green-600', 'shadow-sm');
+                    listViewBtn.classList.add('text-gray-600', 'hover:text-gray-900');
+
+                    updateUrlAndReload('view', 'card');
+                });
+
+                listViewBtn.addEventListener('click', function() {
+                    if (!listView.classList.contains('hidden')) return;
+
+                    listView.classList.remove('hidden');
+                    cardView.classList.add('hidden');
+
+                    listViewBtn.classList.add('bg-white', 'text-green-600', 'shadow-sm');
+                    listViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
+
+                    cardViewBtn.classList.remove('bg-white', 'text-green-600', 'shadow-sm');
+                    cardViewBtn.classList.add('text-gray-600', 'hover:text-gray-900');
+
+                    updateUrlAndReload('view', 'list');
+                });
             });
         </script>
     @endpush

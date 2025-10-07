@@ -423,7 +423,7 @@ class TaarufController extends Controller
      */
     public function showList(Request $request)
     {
-        // Check if user is eligible
+        // --- eligibility checks (tetap) ---
         if (!$this->isEligibleForTaaruf()) {
             return redirect()->route('alumni.dashboard')
                 ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
@@ -442,62 +442,77 @@ class TaarufController extends Controller
                 ->with('error', 'Anda harus mengaktifkan profil Ta\'aruf terlebih dahulu.');
         }
 
-        // Get opposite gender profiles that are active
+        // --- perPage selector ---
+        $allowedPerPage = [10, 25, 50, 100];
+        $perPage = (int) $request->query('per_page', 12); // default lama 12 (boleh diganti 25)
+        if (!in_array($perPage, $allowedPerPage, true)) {
+            $perPage = 12; // fallback aman
+        }
+
+        // --- query utama ---
         $oppositeGender = $taarufProfile->gender === 'male' ? 'female' : 'male';
 
         $query = TaarufProfile::where('gender', $oppositeGender)
             ->where('is_active', true);
 
-        // Apply search by name if provided
-        if ($request->has('search') && !empty($request->search)) {
+        // search
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where('full_name', 'like', '%' . $search . '%');
         }
 
-        // Apply filters if selected
-        if ($request->has('filter') && $request->filter != 'all') {
+        // filter
+        if ($request->has('filter') && $request->filter !== 'all') {
             switch ($request->filter) {
                 case 'location':
-                    if ($request->has('location') && !empty($request->location)) {
+                    if ($request->filled('location')) {
                         $query->where('current_residence', $request->location);
                     }
                     break;
-
                 case 'education':
-                    if ($request->has('education') && !empty($request->education)) {
+                    if ($request->filled('education')) {
                         $query->where('last_education', $request->education);
                     }
                     break;
-
                 case 'marriage_year':
-                    if ($request->has('marriage_year') && !empty($request->marriage_year)) {
+                    if ($request->filled('marriage_year')) {
                         $query->where('marriage_target_year', $request->marriage_year);
                     }
                     break;
             }
         }
 
-        // Get unique locations and education levels for dropdowns
+        // dropdown sources (opsional: filter null)
         $locations = TaarufProfile::where('gender', $oppositeGender)
             ->where('is_active', true)
+            ->whereNotNull('current_residence')
             ->distinct()
             ->pluck('current_residence')
             ->toArray();
 
         $educations = TaarufProfile::where('gender', $oppositeGender)
             ->where('is_active', true)
+            ->whereNotNull('last_education')
             ->distinct()
             ->pluck('last_education')
             ->toArray();
 
-        // Get the profiles with pagination
-        $profiles = $query->with('user')->orderBy('full_name', 'asc')->paginate(12);
+        // paginate dengan perPage dinamis
+        $profiles = $query->with('user')
+            ->orderBy('full_name', 'asc')
+            ->paginate($perPage)
+            ->appends($request->except('page')); // pertahankan query-string
 
-        // Pass the user's own profile as myProfile
         $myProfile = $taarufProfile;
 
-        return view('taaruf.list', compact('profiles', 'myProfile', 'locations', 'educations'));
+        return view('taaruf.list', compact(
+            'profiles',
+            'myProfile',
+            'locations',
+            'educations'
+        ));
     }
+
 
     /**
      * Show a specific taaruf profile
