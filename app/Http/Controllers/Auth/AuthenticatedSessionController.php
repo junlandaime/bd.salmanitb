@@ -39,6 +39,15 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
+    public function createAuthor(): View
+    {
+        session(['role' => 'author']);
+        return view('auth.login', [
+            'role' => 'author',
+            'title' => 'Login Penulis'
+        ]);
+    }
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -46,8 +55,10 @@ class AuthenticatedSessionController extends Controller
 
         if (auth()->user()->hasRole('admin')) {
             return redirect()->intended(route('admin.dashboard', absolute: false));
-        } else {
+        } elseif (auth()->user()->hasRole('alumni')) {
             return redirect()->intended(route('alumni.dashboard', absolute: false));
+        } else {
+            return redirect()->intended(route('author.dashboard', absolute: false));
         }
     }
 

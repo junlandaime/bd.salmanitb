@@ -209,7 +209,7 @@
                                 <div class="flex-1">
                                     <p class="text-sm text-emerald-600 font-medium mb-1">{{ $program->title }}</p>
                                     <h3 class="text-xl font-bold text-gray-900">
-                                        Batch {{ $batch->batch_number ?? $loop->iteration }}
+                                        Batch {{ $batch->batch_ke ?? $loop->iteration }}
                                     </h3>
                                 </div>
 
@@ -280,7 +280,7 @@
                                 class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
                                 data-aos="zoom-in" data-aos-delay="{{ $loop->index * 80 }}">
                                 <a href="{{ route('articles.show', $article->slug) }}" class="block">
-                                    <img src="{{ Storage::url($article->image_url) ?? 'https://picsum.photos/600/400' }}"
+                                    <img src="{{ Storage::url($article->featured_image) ?? 'https://picsum.photos/600/400' }}"
                                         alt="{{ $article->title }}" class="card-image w-full h-44 object-cover">
                                     <div class="p-5">
                                         <p class="text-xs text-gray-500">{{ $article->published_at->format('d M Y') }}</p>

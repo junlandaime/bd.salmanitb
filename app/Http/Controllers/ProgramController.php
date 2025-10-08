@@ -22,7 +22,11 @@ class ProgramController extends Controller
 
     public function show($slug)
     {
-        $program = Program::with(['topics', 'schedules'])
+        $program = Program::with([
+            'topics',
+            'schedules',
+            'activities' => fn($q) => $q->where('status', 'published')->latest(),
+        ])
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();

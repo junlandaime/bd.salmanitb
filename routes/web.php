@@ -202,6 +202,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
 });
 
+// Author routes
+Route::middleware(['auth', 'role:author'])->prefix('author')->name('author.')->group(function () {
+
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Article Management
+    Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)->except(['show']);
+    Route::resource('article-categories', \App\Http\Controllers\Admin\ArticleCategoryController::class)->except(['show']);
+
+    // News Management
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class)->except(['show']);
+    Route::resource('news-categories', \App\Http\Controllers\Admin\NewsCategoryController::class)->except(['show']);
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
