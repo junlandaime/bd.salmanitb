@@ -33,6 +33,23 @@ class TaarufProfile extends Model
         'is_polygamy_intended',
         'has_debt',
         'has_dependents',
+
+
+        'origin_province',
+        'origin_city',
+        'origin_district',
+        'origin_village',
+        'residence_province',
+        'residence_city',
+        'residence_district',
+        'residence_village',
+
+
+
+        'education_level',
+        'university',
+        'custom_university',
+        'major',
     ];
 
     protected $casts = [

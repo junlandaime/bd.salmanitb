@@ -55,6 +55,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2">
+                {{-- Informasi Dasar (sudah ada) --}}
                 <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h5 class="text-xl font-bold text-green-600">Informasi Dasar</h5>
@@ -82,9 +83,6 @@
 
                                 <div class="space-y-2 mb-6">
                                     <p><span class="font-semibold">Nama Panggilan:</span> {{ $profile->nickname }}</p>
-                                    {{-- <p><span class="font-semibold">Tempat, Tanggal Lahir:</span>
-                                        {{ $profile->birth_place_date }}</p> --}}
-                                    {{-- <p class="mb-1"><strong>Usia:</strong> {{ \Carbon\Carbon::parse(explode(', ', $profile->birth_place_date)[1])->age }} tahun</p> --}}
                                     <p class="mb-1"><strong>Usia:</strong>
                                         {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
                                         tahun</p>
@@ -119,20 +117,323 @@
                     </div>
                 </div>
 
+                {{-- Asal Daerah --}}
+                <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100">
+                        <h5 class="text-xl font-bold text-green-700 flex items-center">
+                            <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Asal Daerah
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">Tempat asal kelahiran dan tumbuh kembang</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {{-- Provinsi Asal --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-green-100 text-green-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Provinsi</p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->origin_province ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kota/Kabupaten Asal --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-100 text-blue-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Kota/Kabupaten
+                                        </p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->origin_city ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kecamatan Asal --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-purple-100 text-purple-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Kecamatan</p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->origin_district ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kelurahan Asal --}}
+
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Domisili Saat Ini --}}
+                <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100">
+                        <h5 class="text-xl font-bold text-blue-700 flex items-center">
+                            <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Domisili Saat Ini
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">Tempat tinggal sekarang</p>
+                    </div>
+                    <div class="p-6">
+                        {{-- Alamat Lengkap --}}
+
+
+                        {{-- Detail Wilayah --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {{-- Provinsi Domisili --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-green-100 text-green-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Provinsi</p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->residence_province ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kota/Kabupaten Domisili --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-100 text-blue-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Kota/Kabupaten
+                                        </p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->residence_city ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kecamatan Domisili --}}
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="flex items-center justify-center h-10 w-10 rounded-lg bg-purple-100 text-purple-600">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Kecamatan</p>
+                                        <p class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $profile->residence_district ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h5 class="text-xl font-bold text-green-600">Pendidikan dan Pekerjaan</h5>
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Pendidikan Terakhir -->
                             <div>
-                                <h6 class="font-bold text-gray-800 mb-2">Pendidikan Terakhir</h6>
-                                <p class="text-gray-600">{{ $profile->last_education }}</p>
+                                <h6 class="font-bold text-gray-800 mb-3 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                        <path
+                                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                                    </svg>
+                                    Pendidikan Terakhir
+                                </h6>
+
+                                @if (!empty($profile->education_level) || !empty($profile->university) || !empty($profile->major))
+                                    <div
+                                        class="bg-gradient-to-br from-green-50 to-white rounded-lg p-4 border border-green-100">
+                                        <div class="space-y-2">
+                                            <!-- Strata -->
+                                            @if (!empty($profile->education_level))
+                                                <div class="flex items-center">
+                                                    <span
+                                                        class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-500 text-white text-xs font-bold mr-2">
+                                                        @php
+                                                            $strataIcon = [
+                                                                'SD' => 'SD',
+                                                                'SMP' => 'SM',
+                                                                'SMA' => 'SA',
+                                                                'SMK' => 'SK',
+                                                                'D3' => 'D3',
+                                                                'D4' => 'D4',
+                                                                'S1' => 'S1',
+                                                                'S2' => 'S2',
+                                                                'S3' => 'S3',
+                                                            ];
+                                                        @endphp
+                                                        {{ $strataIcon[$profile->education_level] ?? '' }}
+                                                    </span>
+                                                    <div>
+                                                        @php
+                                                            $educationLabels = [
+                                                                'SD' => 'SD/Sederajat',
+                                                                'SMP' => 'SMP/Sederajat',
+                                                                'SMA' => 'SMA/Sederajat',
+                                                                'SMK' => 'SMK',
+                                                                'D3' => 'Diploma 3',
+                                                                'D4' => 'Diploma 4',
+                                                                'S1' => 'Sarjana',
+                                                                'S2' => 'Magister',
+                                                                'S3' => 'Doktor',
+                                                            ];
+                                                        @endphp
+                                                        <p class="text-sm font-semibold text-gray-800">
+                                                            {{ $educationLabels[$profile->education_level] ?? $profile->education_level }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            <!-- Kampus -->
+                                            @if (!empty($profile->university))
+                                                <div class="pl-8">
+                                                    <p class="text-sm text-gray-600 font-medium">
+                                                        📚
+                                                        @if ($profile->university === 'Lainnya' && !empty($profile->custom_university))
+                                                            {{ $profile->custom_university }}
+                                                        @else
+                                                            {{ $profile->university }}
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            @endif
+
+                                            <!-- Jurusan -->
+                                            @if (!empty($profile->major))
+                                                <div class="pl-8">
+                                                    <p class="text-sm text-gray-600">
+                                                        🎓 {{ $profile->major }}
+                                                    </p>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @elseif(!empty($profile->last_education))
+                                    <!-- Fallback ke field lama -->
+                                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                        <p class="text-gray-600">{{ $profile->last_education }}</p>
+                                    </div>
+                                @else
+                                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                        <p class="text-gray-400 italic flex items-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Belum diisi
+                                        </p>
+                                    </div>
+                                @endif
                             </div>
 
+                            <!-- Pekerjaan -->
                             <div>
-                                <h6 class="font-bold text-gray-800 mb-2">Pekerjaan</h6>
-                                <p class="text-gray-600">{{ $profile->occupation }}</p>
+                                <h6 class="font-bold text-gray-800 mb-3 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    Pekerjaan
+                                </h6>
+
+                                @if (!empty($profile->occupation))
+                                    <div
+                                        class="bg-gradient-to-br from-blue-50 to-white rounded-lg p-4 border border-blue-100">
+                                        <p class="text-gray-700 font-medium">💼 {{ $profile->occupation }}</p>
+                                    </div>
+                                @else
+                                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                        <p class="text-gray-400 italic flex items-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Belum diisi
+                                        </p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -147,7 +448,8 @@
                             <div>
                                 <div class="mb-6">
                                     <h6 class="font-bold text-gray-800 mb-2">Target Tahun Menikah</h6>
-                                    <p class="text-gray-600">{{ $profile->marriage_target_year ?? 'Tidak disebutkan' }}</p>
+                                    <p class="text-gray-600">{{ $profile->marriage_target_year ?? 'Tidak disebutkan' }}
+                                    </p>
                                 </div>
 
                                 <div class="mb-6">
@@ -185,68 +487,7 @@
                     </div>
                 </div>
 
-                {{-- <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h5 class="text-xl font-bold text-green-600">Pertanyaan Tambahan</h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr>
-                                        <td class="px-4 py-3 bg-gray-50 text-gray-700 w-3/5">Sedang dalam proses ta'aruf
-                                            dengan orang lain?</td>
-                                        <td class="px-4 py-3">
-                                            <span
-                                                class="inline-flex px-3 py-1 rounded-full text-sm font-medium {{ $profile->is_in_taaruf_process ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ $profile->is_in_taaruf_process ? 'Ya' : 'Tidak' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 bg-gray-50 text-gray-700">Perokok?</td>
-                                        <td class="px-4 py-3">
-                                            <span
-                                                class="inline-flex px-3 py-1 rounded-full text-sm font-medium {{ $profile->is_smoker ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ $profile->is_smoker ? 'Ya' : 'Tidak' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @if ($profile->gender === 'male')
-                                        <tr>
-                                            <td class="px-4 py-3 bg-gray-50 text-gray-700">Berniat untuk berpoligami?</td>
-                                            <td class="px-4 py-3">
-                                                <span
-                                                    class="inline-flex px-3 py-1 rounded-full text-sm font-medium {{ $profile->is_polygamy_intended ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                                    {{ $profile->is_polygamy_intended ? 'Ya' : 'Tidak' }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                    <tr>
-                                        <td class="px-4 py-3 bg-gray-50 text-gray-700">Memiliki hutang yang signifikan?
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <span
-                                                class="inline-flex px-3 py-1 rounded-full text-sm font-medium {{ $profile->has_debt ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ $profile->has_debt ? 'Ya' : 'Tidak' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 bg-gray-50 text-gray-700">Memiliki tanggungan?</td>
-                                        <td class="px-4 py-3">
-                                            <span
-                                                class="inline-flex px-3 py-1 rounded-full text-sm font-medium {{ $profile->has_dependents ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ $profile->has_dependents ? 'Ya' : 'Tidak' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div> --}}
+
 
 
                 @php

@@ -114,7 +114,7 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-
+                                {{-- 
                                 <div class="mb-4">
                                     <label for="current_residence" class="block text-sm font-medium text-gray-700 mb-1">
                                         Domisili Saat Ini <span class="text-red-500">*</span>
@@ -126,30 +126,280 @@
                                     @error('current_residence')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
+                                </div> --}}
+
+
+
+                            </div>
+
+                        </div>
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                            <div class="p-6 border-b border-gray-200">
+                                <h2 class="text-xl font-bold text-gray-900">Asal Daerah</h2>
+                                <p class="text-sm text-gray-500 mt-1">Informasi detail tempat asal Anda</p>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Data detail ini digunakan untuk memudahkan filter tempat Asal Daerah, bagian
+                                    kelurahan tidak akan ditampilkan baik di profile dan filter, sebagai arsip pengelola
+                                </p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                    <!-- Provinsi Asal -->
+                                    <div>
+                                        <label for="origin_province" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Provinsi <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="origin_province" name="origin_province" required
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('origin_province') border-red-300 @enderror">
+                                            <option value="">Pilih Provinsi</option>
+                                        </select>
+                                        @error('origin_province')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Kota/Kabupaten Asal -->
+                                    <div>
+                                        <label for="origin_city" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kota/Kabupaten <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="origin_city" name="origin_city" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('origin_city') border-red-300 @enderror">
+                                            <option value="">Pilih Kota/Kabupaten</option>
+                                        </select>
+                                        @error('origin_city')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Kecamatan Asal -->
+                                    <div>
+                                        <label for="origin_district" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kecamatan <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="origin_district" name="origin_district" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('origin_district') border-red-300 @enderror">
+                                            <option value="">Pilih Kecamatan</option>
+                                        </select>
+                                        @error('origin_district')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Kelurahan Asal -->
+                                    <div>
+                                        <label for="origin_village" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kelurahan <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="origin_village" name="origin_village" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('origin_village') border-red-300 @enderror">
+                                            <option value="">Pilih Kelurahan</option>
+                                        </select>
+                                        @error('origin_village')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Pendidikan dan Pekerjaan -->
+                        <!-- Domisili Saat Ini (Detail) -->
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                             <div class="p-6 border-b border-gray-200">
-                                <h2 class="text-xl font-bold text-gray-900">Pendidikan dan Pekerjaan</h2>
+                                <h2 class="text-xl font-bold text-gray-900">Domisili Saat Ini</h2>
+                                <p class="text-sm text-gray-500 mt-1">Informasi detail tempat tinggal Anda saat ini
+                                </p>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Data detail ini digunakan untuk memudahkan filter tempat domisili saat ini, bagian
+                                    kelurahan tidak akan ditampilkan baik di profile dan filter, sebagai arsip pengelola
+                                </p>
                             </div>
                             <div class="p-6">
                                 <div class="mb-4">
-                                    <label for="last_education" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Pendidikan Terakhir <span class="text-red-500">*</span>
+                                    <label for="current_residence" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Alamat Lengkap <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="last_education" id="last_education"
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('last_education') border-red-300 @enderror"
-                                        value="{{ old('last_education', $profile->last_education) }}"
-                                        placeholder="Contoh: S1 Teknik Informatika" required>
-                                    @error('last_education')
+                                    <textarea name="current_residence" id="current_residence" rows="2"
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('current_residence') border-red-300 @enderror"
+                                        placeholder="Contoh: Jl. Merdeka No. 123, RT 01/RW 05" required>{{ old('current_residence', $profile->current_residence) }}</textarea>
+                                    @error('current_residence')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Data ini tidak akan ditampilkan pada profil, akan disimpan sebagai arsip di
+                                        pengelola, jika
+                                        tidak berkenan diisi bisa ditulis "-"
+                                    </p>
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                    <!-- Provinsi Domisili -->
+                                    <div>
+                                        <label for="residence_province"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Provinsi <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="residence_province" name="residence_province" required
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('residence_province') border-red-300 @enderror">
+                                            <option value="">Pilih Provinsi</option>
+                                        </select>
+                                        @error('residence_province')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Kota/Kabupaten Domisili -->
+                                    <div>
+                                        <label for="residence_city" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kota/Kabupaten <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="residence_city" name="residence_city" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('residence_city') border-red-300 @enderror">
+                                            <option value="">Pilih Kota/Kabupaten</option>
+                                        </select>
+                                        @error('residence_city')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Kecamatan Domisili -->
+                                    <div>
+                                        <label for="residence_district"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kecamatan <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="residence_district" name="residence_district" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('residence_district') border-red-300 @enderror">
+                                            <option value="">Pilih Kecamatan</option>
+                                        </select>
+                                        @error('residence_district')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Kelurahan Domisili -->
+                                    <div>
+                                        <label for="residence_village"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Kelurahan <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="residence_village" name="residence_village" required disabled
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('residence_village') border-red-300 @enderror">
+                                            <option value="">Pilih Kelurahan</option>
+                                        </select>
+                                        @error('residence_village')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION: Form Pendidikan Terakhir -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                            <div class="p-6 border-b border-gray-200">
+                                <h2 class="text-xl font-bold text-gray-900">Pendidikan Terakhir dan Pekerjaan Saat ini</h2>
+                                <p class="text-sm text-gray-500 mt-1">Informasi pendidikan formal terakhir Anda dan
+                                    Pekerjaan Anda saat ini</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Strata Pendidikan -->
+                                    <div>
+                                        <label for="education_level" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Strata Pendidikan <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="education_level" name="education_level" required
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('education_level') border-red-300 @enderror">
+                                            <option value="">Pilih Strata Pendidikan</option>
+                                            <option value="SD"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'SD' ? 'selected' : '' }}>
+                                                SD/Sederajat</option>
+                                            <option value="SMP"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'SMP' ? 'selected' : '' }}>
+                                                SMP/Sederajat</option>
+                                            <option value="SMA"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'SMA' ? 'selected' : '' }}>
+                                                SMA/Sederajat</option>
+                                            <option value="SMK"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'SMK' ? 'selected' : '' }}>
+                                                SMK</option>
+                                            <option value="D3"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'D3' ? 'selected' : '' }}>
+                                                Diploma 3 (D3)</option>
+                                            <option value="D4"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'D4' ? 'selected' : '' }}>
+                                                Diploma 4 (D4)</option>
+                                            <option value="S1"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'S1' ? 'selected' : '' }}>
+                                                Sarjana (S1)</option>
+                                            <option value="S2"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'S2' ? 'selected' : '' }}>
+                                                Magister (S2)</option>
+                                            <option value="S3"
+                                                {{ old('education_level', $profile->education_level ?? '') == 'S3' ? 'selected' : '' }}>
+                                                Doktor (S3)</option>
+                                        </select>
+                                        @error('education_level')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Nama Institusi/Kampus -->
+                                    <div>
+                                        <label for="university" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Nama Institusi/Kampus <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="university" name="university" required
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('university') border-red-300 @enderror">
+                                            <option value="">Memuat data kampus...</option>
+                                        </select>
+                                        @error('university')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                        <p class="mt-1 text-xs text-gray-500">
+                                            💡 Ketik untuk mencari kampus. Pilih "Lainnya" jika kampus tidak ada dalam
+                                            daftar
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Input Custom Kampus (Muncul jika pilih "Lainnya") -->
+                                <div id="custom_university_container" class="mt-4">
+                                    <label for="custom_university" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Kampus Lainnya <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="custom_university" name="custom_university"
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                                        placeholder="Masukkan nama kampus Anda"
+                                        value="{{ old('custom_university', $profile->custom_university ?? '') }}">
+                                    <p class="mt-1 text-xs text-gray-500">Tuliskan nama lengkap institusi pendidikan Anda
+                                    </p>
+                                </div>
+
+                                <!-- Jurusan -->
+                                <div class="mt-4">
+                                    <label for="major" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Jurusan/Program Studi <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="major" name="major" required
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('major') border-red-300 @enderror"
+                                        placeholder="Contoh: Teknik Informatika, Manajemen, Akuntansi"
+                                        value="{{ old('major', $profile->major ?? '') }}">
+                                    @error('major')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Untuk pendidikan SD-SMK, bisa dikosongkan atau tulis "Umum"
+                                    </p>
+                                </div>
+
+                                <!-- Pekerjaan -->
+                                <div class="mt-4">
                                     <label for="occupation" class="block text-sm font-medium text-gray-700 mb-1">
                                         Pekerjaan <span class="text-red-500">*</span>
                                     </label>
@@ -163,6 +413,16 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <input type="hidden" name="last_education" id="last_education"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 @error('last_education') border-red-300 @enderror"
+                            value="{{ old('last_education', $profile->last_education) }}"
+                            placeholder="Contoh: S1 Teknik Informatika" required>
+                        @error('last_education')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+
 
                         <!-- Informasi Tambahan -->
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
@@ -549,6 +809,83 @@
         </div>
     </div>
 
+
+
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery (diperlukan untuk Select2) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <!-- Custom Select2 Theme untuk match dengan Tailwind -->
+    <style>
+        /* Styling Select2 agar sesuai dengan tema Tailwind */
+        .select2-container--default .select2-selection--single {
+            height: 42px !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.375rem !important;
+            padding: 0.5rem 0.75rem !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 26px !important;
+            padding-left: 0 !important;
+            color: #374151 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px !important;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #10b981 !important;
+            outline: 2px solid transparent !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .select2-dropdown {
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.375rem !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #10b981 !important;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.375rem !important;
+            padding: 0.5rem !important;
+        }
+
+        .select2-search--dropdown .select2-search__field:focus {
+            border-color: #10b981 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-results__option {
+            padding: 8px 12px !important;
+        }
+
+        /* Style untuk input custom kampus */
+        #custom_university_container {
+            display: none;
+        }
+
+        #custom_university_container.show {
+            display: block;
+        }
+    </style>
+
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -590,6 +927,468 @@
                             fileNameDisplay.textContent = fileName;
                         }
                     });
+                }
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // ===== ASAL DAERAH =====
+                const originProvinsiSelect = document.getElementById('origin_province');
+                const originKotaSelect = document.getElementById('origin_city');
+                const originKecamatanSelect = document.getElementById('origin_district');
+                const originKelurahanSelect = document.getElementById('origin_village');
+
+                // Saved values dari database untuk Asal Daerah
+                const savedOriginProvince = "{{ old('origin_province', $profile->origin_province ?? '') }}";
+                const savedOriginCity = "{{ old('origin_city', $profile->origin_city ?? '') }}";
+                const savedOriginDistrict = "{{ old('origin_district', $profile->origin_district ?? '') }}";
+                const savedOriginVillage = "{{ old('origin_village', $profile->origin_village ?? '') }}";
+
+                // Load Provinsi Asal
+                fetch('https://ibnux.github.io/data-indonesia/provinsi.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        originProvinsiSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+                        data.forEach(prov => {
+                            const option = document.createElement('option');
+                            option.value = prov.nama;
+                            option.textContent = prov.nama;
+                            option.setAttribute('data-id', prov.id);
+                            if (prov.nama === savedOriginProvince) {
+                                option.selected = true;
+                            }
+                            originProvinsiSelect.appendChild(option);
+                        });
+
+                        // Trigger change jika ada nilai tersimpan
+                        if (savedOriginProvince) {
+                            originProvinsiSelect.dispatchEvent(new Event('change'));
+                        }
+                    })
+                    .catch(error => console.error('Error loading provinsi asal:', error));
+
+                // Event: Provinsi Asal dipilih
+                originProvinsiSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const provId = selected.getAttribute('data-id');
+
+                    originKotaSelect.innerHTML = '<option value="">Memuat...</option>';
+                    originKotaSelect.disabled = true;
+                    originKecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                    originKecamatanSelect.disabled = true;
+                    originKelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                    originKelurahanSelect.disabled = true;
+
+                    if (!provId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kabupaten/${provId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            originKotaSelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                            data.forEach(kota => {
+                                const option = document.createElement('option');
+                                option.value = kota.nama;
+                                option.textContent = kota.nama;
+                                option.setAttribute('data-id', kota.id);
+                                if (kota.nama === savedOriginCity) {
+                                    option.selected = true;
+                                }
+                                originKotaSelect.appendChild(option);
+                            });
+                            originKotaSelect.disabled = false;
+
+                            if (savedOriginCity) {
+                                originKotaSelect.dispatchEvent(new Event('change'));
+                            }
+                        })
+                        .catch(error => console.error('Error loading kota asal:', error));
+                });
+
+                // Event: Kota Asal dipilih
+                originKotaSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const kotaId = selected.getAttribute('data-id');
+
+                    originKecamatanSelect.innerHTML = '<option value="">Memuat...</option>';
+                    originKecamatanSelect.disabled = true;
+                    originKelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                    originKelurahanSelect.disabled = true;
+
+                    if (!kotaId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kecamatan/${kotaId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            originKecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                            data.forEach(kec => {
+                                const option = document.createElement('option');
+                                option.value = kec.nama;
+                                option.textContent = kec.nama;
+                                option.setAttribute('data-id', kec.id);
+                                if (kec.nama === savedOriginDistrict) {
+                                    option.selected = true;
+                                }
+                                originKecamatanSelect.appendChild(option);
+                            });
+                            originKecamatanSelect.disabled = false;
+
+                            if (savedOriginDistrict) {
+                                originKecamatanSelect.dispatchEvent(new Event('change'));
+                            }
+                        })
+                        .catch(error => console.error('Error loading kecamatan asal:', error));
+                });
+
+                // Event: Kecamatan Asal dipilih
+                originKecamatanSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const kecId = selected.getAttribute('data-id');
+
+                    originKelurahanSelect.innerHTML = '<option value="">Memuat...</option>';
+                    originKelurahanSelect.disabled = true;
+
+                    if (!kecId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kelurahan/${kecId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            originKelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                            data.forEach(kel => {
+                                const option = document.createElement('option');
+                                option.value = kel.nama;
+                                option.textContent = kel.nama;
+                                option.setAttribute('data-id', kel.id);
+                                if (kel.nama === savedOriginVillage) {
+                                    option.selected = true;
+                                }
+                                originKelurahanSelect.appendChild(option);
+                            });
+                            originKelurahanSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Error loading kelurahan asal:', error));
+                });
+
+                // ===== DOMISILI =====
+                const residenceProvinsiSelect = document.getElementById('residence_province');
+                const residenceKotaSelect = document.getElementById('residence_city');
+                const residenceKecamatanSelect = document.getElementById('residence_district');
+                const residenceKelurahanSelect = document.getElementById('residence_village');
+
+                // Saved values dari database untuk Domisili
+                const savedResidenceProvince = "{{ old('residence_province', $profile->residence_province ?? '') }}";
+                const savedResidenceCity = "{{ old('residence_city', $profile->residence_city ?? '') }}";
+                const savedResidenceDistrict = "{{ old('residence_district', $profile->residence_district ?? '') }}";
+                const savedResidenceVillage = "{{ old('residence_village', $profile->residence_village ?? '') }}";
+
+                // Load Provinsi Domisili
+                fetch('https://ibnux.github.io/data-indonesia/provinsi.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        residenceProvinsiSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+                        data.forEach(prov => {
+                            const option = document.createElement('option');
+                            option.value = prov.nama;
+                            option.textContent = prov.nama;
+                            option.setAttribute('data-id', prov.id);
+                            if (prov.nama === savedResidenceProvince) {
+                                option.selected = true;
+                            }
+                            residenceProvinsiSelect.appendChild(option);
+                        });
+
+                        if (savedResidenceProvince) {
+                            residenceProvinsiSelect.dispatchEvent(new Event('change'));
+                        }
+                    })
+                    .catch(error => console.error('Error loading provinsi domisili:', error));
+
+                // Event: Provinsi Domisili dipilih
+                residenceProvinsiSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const provId = selected.getAttribute('data-id');
+
+                    residenceKotaSelect.innerHTML = '<option value="">Memuat...</option>';
+                    residenceKotaSelect.disabled = true;
+                    residenceKecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                    residenceKecamatanSelect.disabled = true;
+                    residenceKelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                    residenceKelurahanSelect.disabled = true;
+
+                    if (!provId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kabupaten/${provId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            residenceKotaSelect.innerHTML =
+                                '<option value="">Pilih Kota/Kabupaten</option>';
+                            data.forEach(kota => {
+                                const option = document.createElement('option');
+                                option.value = kota.nama;
+                                option.textContent = kota.nama;
+                                option.setAttribute('data-id', kota.id);
+                                if (kota.nama === savedResidenceCity) {
+                                    option.selected = true;
+                                }
+                                residenceKotaSelect.appendChild(option);
+                            });
+                            residenceKotaSelect.disabled = false;
+
+                            if (savedResidenceCity) {
+                                residenceKotaSelect.dispatchEvent(new Event('change'));
+                            }
+                        })
+                        .catch(error => console.error('Error loading kota domisili:', error));
+                });
+
+                // Event: Kota Domisili dipilih
+                residenceKotaSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const kotaId = selected.getAttribute('data-id');
+
+                    residenceKecamatanSelect.innerHTML = '<option value="">Memuat...</option>';
+                    residenceKecamatanSelect.disabled = true;
+                    residenceKelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                    residenceKelurahanSelect.disabled = true;
+
+                    if (!kotaId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kecamatan/${kotaId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            residenceKecamatanSelect.innerHTML =
+                                '<option value="">Pilih Kecamatan</option>';
+                            data.forEach(kec => {
+                                const option = document.createElement('option');
+                                option.value = kec.nama;
+                                option.textContent = kec.nama;
+                                option.setAttribute('data-id', kec.id);
+                                if (kec.nama === savedResidenceDistrict) {
+                                    option.selected = true;
+                                }
+                                residenceKecamatanSelect.appendChild(option);
+                            });
+                            residenceKecamatanSelect.disabled = false;
+
+                            if (savedResidenceDistrict) {
+                                residenceKecamatanSelect.dispatchEvent(new Event('change'));
+                            }
+                        })
+                        .catch(error => console.error('Error loading kecamatan domisili:', error));
+                });
+
+                // Event: Kecamatan Domisili dipilih
+                residenceKecamatanSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const kecId = selected.getAttribute('data-id');
+
+                    residenceKelurahanSelect.innerHTML = '<option value="">Memuat...</option>';
+                    residenceKelurahanSelect.disabled = true;
+
+                    if (!kecId) return;
+
+                    fetch(`https://ibnux.github.io/data-indonesia/kelurahan/${kecId}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            residenceKelurahanSelect.innerHTML =
+                                '<option value="">Pilih Kelurahan</option>';
+                            data.forEach(kel => {
+                                const option = document.createElement('option');
+                                option.value = kel.nama;
+                                option.textContent = kel.nama;
+                                option.setAttribute('data-id', kel.id);
+                                if (kel.nama === savedResidenceVillage) {
+                                    option.selected = true;
+                                }
+                                residenceKelurahanSelect.appendChild(option);
+                            });
+                            residenceKelurahanSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Error loading kelurahan domisili:', error));
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Variabel untuk menyimpan data kampus
+                let universitiesData = [];
+
+                // Saved values dari database
+                const savedUniversity = "{{ old('university', $profile->university ?? '') }}";
+                const savedCustomUniversity = "{{ old('custom_university', $profile->custom_university ?? '') }}";
+                const savedEducationLevel = "{{ old('education_level', $profile->education_level ?? '') }}";
+
+                // Load data kampus dari GitHub
+                function loadUniversities() {
+                    const universitySelect = document.getElementById('university');
+                    universitySelect.innerHTML = '<option value="">Memuat data kampus...</option>';
+
+                    fetch(
+                            'https://raw.githubusercontent.com/aryomuzakki/api-perguruan-tinggi-di-indonesia/main/data/pt.json'
+                        )
+                        .then(response => response.json())
+                        .then(data => {
+                            universitiesData = data;
+
+                            // Populate dropdown
+                            const universities = data.map(pt => ({
+                                id: pt.nama,
+                                text: pt.nama
+                            }));
+
+                            // Sort alphabetically
+                            universities.sort((a, b) => a.text.localeCompare(b.text));
+
+                            // Inisialisasi Select2 setelah data dimuat
+                            if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
+                                // Destroy existing Select2 jika ada
+                                if (jQuery('#university').hasClass('select2-hidden-accessible')) {
+                                    jQuery('#university').select2('destroy');
+                                }
+
+                                // Clear dan rebuild options
+                                universitySelect.innerHTML = '<option value="">Pilih Kampus</option>';
+
+                                // Add universities
+                                universities.forEach(uni => {
+                                    const option = document.createElement('option');
+                                    option.value = uni.id;
+                                    option.textContent = uni.text;
+                                    universitySelect.appendChild(option);
+                                });
+
+                                // Add "Lainnya" option at the end
+                                const otherOption = document.createElement('option');
+                                otherOption.value = 'Lainnya';
+                                otherOption.textContent = '➕ Lainnya (Tulis Manual)';
+                                universitySelect.appendChild(otherOption);
+
+                                // Initialize Select2 with search
+                                jQuery('#university').select2({
+                                    placeholder: "Ketik untuk mencari kampus...",
+                                    allowClear: true,
+                                    width: '100%',
+                                    language: {
+                                        noResults: function() {
+                                            return "Kampus tidak ditemukan";
+                                        },
+                                        searching: function() {
+                                            return "Mencari...";
+                                        },
+                                        inputTooShort: function() {
+                                            return "Ketik minimal 2 karakter";
+                                        }
+                                    },
+                                    minimumInputLength: 0,
+                                    matcher: function(params, data) {
+                                        // Jika tidak ada query pencarian, tampilkan semua
+                                        if (jQuery.trim(params.term) === '') {
+                                            return data;
+                                        }
+
+                                        // Skip jika tidak ada text
+                                        if (typeof data.text === 'undefined') {
+                                            return null;
+                                        }
+
+                                        // Pencarian case-insensitive dan flexible
+                                        const term = params.term.toLowerCase();
+                                        const text = data.text.toLowerCase();
+
+                                        // Cek apakah text mengandung term yang dicari
+                                        if (text.indexOf(term) > -1) {
+                                            return data;
+                                        }
+
+                                        return null;
+                                    }
+                                });
+
+                                // Set saved value jika ada
+                                if (savedUniversity) {
+                                    jQuery('#university').val(savedUniversity).trigger('change');
+
+                                    // Jika value adalah "Lainnya", tampilkan input custom
+                                    if (savedUniversity === 'Lainnya') {
+                                        showCustomUniversityInput();
+                                    }
+                                }
+
+                                // Event listener untuk perubahan
+                                jQuery('#university').on('select2:select', function(e) {
+                                    const selectedValue = e.params.data.id;
+
+                                    if (selectedValue === 'Lainnya') {
+                                        showCustomUniversityInput();
+                                    } else {
+                                        hideCustomUniversityInput();
+                                    }
+                                });
+
+                                jQuery('#university').on('select2:clear', function(e) {
+                                    hideCustomUniversityInput();
+                                });
+
+                                console.log('✅ Berhasil memuat ' + universities.length + ' kampus');
+                            } else {
+                                console.error('❌ jQuery atau Select2 belum dimuat');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('❌ Error loading universities:', error);
+                            universitySelect.innerHTML = '<option value="">Gagal memuat data kampus</option>';
+                        });
+                }
+
+                // Show custom university input
+                function showCustomUniversityInput() {
+                    const container = document.getElementById('custom_university_container');
+                    const input = document.getElementById('custom_university');
+
+                    container.classList.add('show');
+                    input.setAttribute('required', 'required');
+
+                    // Set value jika ada saved custom university
+                    if (savedCustomUniversity) {
+                        input.value = savedCustomUniversity;
+                    }
+                }
+
+                // Hide custom university input
+                function hideCustomUniversityInput() {
+                    const container = document.getElementById('custom_university_container');
+                    const input = document.getElementById('custom_university');
+
+                    container.classList.remove('show');
+                    input.removeAttribute('required');
+                    input.value = '';
+                }
+
+                // Inisialisasi saat page load
+                setTimeout(function() {
+                    loadUniversities();
+                }, 100);
+
+                // Education level change handler (opsional untuk logika tambahan)
+                const educationLevelSelect = document.getElementById('education_level');
+                educationLevelSelect.addEventListener('change', function() {
+                    const level = this.value;
+                    const majorInput = document.getElementById('major');
+
+                    // Untuk SD-SMK, major tidak wajib
+                    if (['SD', 'SMP', 'SMA', 'SMK'].includes(level)) {
+                        majorInput.removeAttribute('required');
+                        majorInput.placeholder = "Opsional - Bisa dikosongkan atau tulis 'Umum'";
+                    } else {
+                        majorInput.setAttribute('required', 'required');
+                        majorInput.placeholder = "Contoh: Teknik Informatika, Manajemen, Akuntansi";
+                    }
+                });
+
+                // Trigger education level change untuk set initial state
+                if (savedEducationLevel) {
+                    educationLevelSelect.dispatchEvent(new Event('change'));
                 }
             });
         </script>

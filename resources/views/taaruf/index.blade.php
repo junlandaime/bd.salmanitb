@@ -44,7 +44,7 @@
                 </div>
             @endif
 
-            @if (isset($needsProfileUpdate) && $needsProfileUpdate)
+            {{-- @if (isset($needsProfileUpdate) && $needsProfileUpdate)
                 <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -71,6 +71,116 @@
                                     </svg>
                                 </a>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            @endif --}}
+
+            @if (isset($needsProfileUpdate) && $needsProfileUpdate)
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-r-lg shadow-sm" role="alert">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="text-sm font-semibold text-yellow-800">
+                                ⚠️ Profil Ta'aruf Anda Belum Lengkap
+                            </h3>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p class="mb-2">Silakan lengkapi data berikut untuk meningkatkan peluang Ta'aruf Anda:</p>
+
+
+                                @if (isset($missingFields) && count($missingFields) > 0)
+                                    <div class="bg-white rounded-md p-3 mt-3 border border-yellow-200">
+                                        <p class="font-medium text-yellow-800 mb-2 flex items-center">
+                                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                            </svg>
+                                            Data yang belum dilengkapi ({{ count($missingFields) }} item):
+                                        </p>
+                                        <ul class="list-none space-y-1 ml-5">
+                                            @foreach ($missingFields as $field)
+                                                <li class="flex items-start text-gray-700">
+                                                    <svg class="h-4 w-4 text-yellow-500 mr-2 mt-0.5 flex-shrink-0"
+                                                        fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span>{{ $field }}</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    {{-- Completion Progress Bar --}}
+                                    @php
+                                        // Calculate total required fields dynamically
+                                        // Base fields: 2 (Visi Misi, Kelebihan Kekurangan)
+                                        // Location fields: 8 (4 Asal + 4 Domisili)
+                                        // Education fields: 3 (Strata, Kampus, Jurusan - untuk pendidikan tinggi)
+                                        // Total: 13 fields
+
+                                        $totalFields = 13;
+
+                                        // Adjust total if education level is SD-SMK (major not required)
+                                        if (!empty($taarufProfile->education_level)) {
+                                            $lowEducationLevels = ['SD', 'SMP', 'SMA', 'SMK'];
+                                            if (in_array($taarufProfile->education_level, $lowEducationLevels)) {
+                                                $totalFields = 12; // Exclude major from total
+                                            }
+                                        }
+
+                                        $completedFields = $totalFields - count($missingFields);
+                                        $percentage =
+                                            $completedFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
+                                    @endphp
+
+                                    <div class="mt-4">
+                                        <div class="flex justify-between text-xs text-yellow-700 mb-1">
+                                            <span class="font-medium">Kelengkapan Profil</span>
+                                            <span class="font-bold">{{ $percentage }}%</span>
+                                        </div>
+                                        <div class="w-full bg-yellow-200 rounded-full h-2.5">
+                                            <div class="bg-yellow-600 h-2.5 rounded-full transition-all duration-300"
+                                                style="width: {{ $percentage }}%"></div>
+                                        </div>
+                                        <p class="text-xs text-yellow-600 mt-1 text-center">
+                                            {{ $completedFields }} dari {{ $totalFields }} data telah dilengkapi
+                                        </p>
+                                    </div>
+                                @endif
+                                <p class="mb-2 text-green-500">Melengkapi data-data ini akan mempermudah proses fungsi
+                                    filter
+                                    baru:</p>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <a href="{{ route('taaruf.profile.edit') }}"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition ease-in-out duration-150 shadow-sm">
+                                    <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    Lengkapi Profil Sekarang
+                                </a>
+
+                                <button type="button" onclick="this.closest('[role=alert]').remove()"
+                                    class="inline-flex items-center px-3 py-2 border border-yellow-300 text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition ease-in-out duration-150">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    <span class="ml-1">Nanti Saja</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +243,8 @@
                                 <div class="text-center py-4">
                                     <div class="mb-4">
                                         @if ($taarufProfile->photo_url)
-                                            <img src="{{ $taarufProfile->photo_url }}" alt="{{ $taarufProfile->full_name }}"
+                                            <img src="{{ $taarufProfile->photo_url }}"
+                                                alt="{{ $taarufProfile->full_name }}"
                                                 class="h-24 w-24 rounded-full object-cover mx-auto border-4 border-green-100">
                                         @else
                                             <div
