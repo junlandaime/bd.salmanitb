@@ -34,6 +34,11 @@ use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Author\DashboardController as AuthorDashboardController;
+use App\Http\Controllers\Author\NewsController as AuthorNewsController;
+
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Front-end routes
 Route::get('/programs', [ProgramController::class, 'index'])->name('programs.index');
@@ -61,13 +66,13 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 // SEO Routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.xml');
 
-Route::get('/login/admin', function () {
-    return view('auth.login', ['role' => 'admin']);
-})->name('login.admin');
+// Route::get('/login/admin', function () {
+//     return view('auth.login', ['role' => 'admin']);
+// })->name('login.admin');
 
-Route::get('/login/alumni', function () {
-    return view('auth.login', ['role' => 'alumni']);
-})->name('login.alumni');
+// Route::get('/login/alumni', function () {
+//     return view('auth.login', ['role' => 'alumni']);
+// })->name('login.alumni');
 
 // Account Activation Routes
 Route::get('/activation', [ActivationController::class, 'showEmailForm'])->name('activation.email.form');
@@ -117,6 +122,15 @@ Route::middleware(['auth', 'verified', 'role:alumni'])->prefix('taaruf')->name('
     Route::post('/questions/{id}/toggle-public', [TaarufQuestionController::class, 'togglePublic'])->name('questions.toggle-public');
     Route::delete('/questions/{id}', [TaarufQuestionController::class, 'destroy'])->name('questions.destroy');
 });
+
+// Author routes
+Route::middleware(['auth', 'role:author'])->prefix('author')->name('author.')->group(function () {
+    Route::get('/dashboard', AuthorDashboardController::class)->name('dashboard');
+
+    Route::resource('articles', AuthorArticleController::class)->except(['show']);
+    Route::resource('news', AuthorNewsController::class)->except(['show']);
+});
+
 
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -203,18 +217,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Author routes
-Route::middleware(['auth', 'role:author'])->prefix('author')->name('author.')->group(function () {
+// Route::middleware(['auth', 'role:author'])->prefix('author')->name('author.')->group(function () {
 
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+//     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Article Management
-    Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)->except(['show']);
-    Route::resource('article-categories', \App\Http\Controllers\Admin\ArticleCategoryController::class)->except(['show']);
+//     // Article Management
+//     Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)->except(['show']);
+//     Route::resource('article-categories', \App\Http\Controllers\Admin\ArticleCategoryController::class)->except(['show']);
 
-    // News Management
-    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class)->except(['show']);
-    Route::resource('news-categories', \App\Http\Controllers\Admin\NewsCategoryController::class)->except(['show']);
-});
+//     // News Management
+//     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class)->except(['show']);
+//     Route::resource('news-categories', \App\Http\Controllers\Admin\NewsCategoryController::class)->except(['show']);
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');

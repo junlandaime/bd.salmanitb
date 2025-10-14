@@ -111,58 +111,24 @@
 
             {{-- Quick stats (animated) --}}
             <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4" data-aos="fade-up">
-                <div class="glass rounded-2xl p-6 text-center">
-                    <p class="text-4xl font-extrabold" x-data="{ c: 0, t: 0 }" x-init="let end = {{ (int) ($landingpage->stats1_count ?? 0) }};
-                    const step = Math.max(1, Math.floor(end / 60));
-                    t = setInterval(() => {
-                        c += step;
-                        if (c >= end) {
-                            c = end;
-                            clearInterval(t)
+                @foreach ([['count' => $landingpage->stats1_count ?? 0, 'label' => $landingpage->stats1], ['count' => $landingpage->stats2_count ?? 0, 'label' => $landingpage->stats2], ['count' => $landingpage->stats3_count ?? 0, 'label' => $landingpage->stats3], ['count' => $landingpage->stats4_count ?? 0, 'label' => $landingpage->stats4]] as $stat)
+                    <div class="glass rounded-2xl p-6 text-center" x-data="{
+                        count: 0,
+                        target: {{ (int) $stat['count'] }}
+                    }" x-init="let step = Math.max(1, Math.floor(target / 60));
+                    let interval = setInterval(() => {
+                        count += step;
+                        if (count >= target) {
+                            count = target;
+                            clearInterval(interval);
                         }
-                    }, 20)"><span
-                            x-text="c">0</span>+</p>
-                    <p class="text-sm opacity-80 mt-1">{{ $landingpage->stats1 }}</p>
-                </div>
-                <div class="glass rounded-2xl p-6 text-center">
-                    <p class="text-4xl font-extrabold" x-data="{ c: 0, t: 0 }" x-init="let end = {{ (int) ($landingpage->stats2_count ?? 0) }};
-                    const step = Math.max(1, Math.floor(end / 60));
-                    t = setInterval(() => {
-                        c += step;
-                        if (c >= end) {
-                            c = end;
-                            clearInterval(t)
-                        }
-                    }, 20)"><span
-                            x-text="c">0</span>+</p>
-                    <p class="text-sm opacity-80 mt-1">{{ $landingpage->stats2 }}</p>
-                </div>
-                <div class="glass rounded-2xl p-6 text-center">
-                    <p class="text-4xl font-extrabold" x-data="{ c: 0, t: 0 }" x-init="let end = {{ (int) ($landingpage->stats3_count ?? 0) }};
-                    const step = Math.max(1, Math.floor(end / 60));
-                    t = setInterval(() => {
-                        c += step;
-                        if (c >= end) {
-                            c = end;
-                            clearInterval(t)
-                        }
-                    }, 20)"><span
-                            x-text="c">0</span>+</p>
-                    <p class="text-sm opacity-80 mt-1">{{ $landingpage->stats3 }}</p>
-                </div>
-                <div class="glass rounded-2xl p-6 text-center">
-                    <p class="text-4xl font-extrabold" x-data="{ c: 0, t: 0 }" x-init="let end = {{ (int) ($landingpage->stats4_count ?? 0) }};
-                    const step = Math.max(1, Math.floor(end / 60));
-                    t = setInterval(() => {
-                        c += step;
-                        if (c >= end) {
-                            c = end;
-                            clearInterval(t)
-                        }
-                    }, 20)"><span
-                            x-text="c">0</span>+</p>
-                    <p class="text-sm opacity-80 mt-1">{{ $landingpage->stats4 }}</p>
-                </div>
+                    }, 20)">
+                        <p class="text-4xl font-extrabold">
+                            <span x-text="count">0</span>+
+                        </p>
+                        <p class="text-sm opacity-80 mt-1">{{ $stat['label'] }}</p>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -264,64 +230,106 @@
     </section>
 
     {{-- ========================= ARTIKEL & BERITA ========================= --}}
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-gray-50">
         <div class="soft-container">
-            <div class="grid lg:grid-cols-5 gap-10 items-start">
-                <div class="lg:col-span-3">
-                    <div class="mb-6">
+            <div class="grid lg:grid-cols-3 gap-12 items-start">
+                {{-- Artikel Pilihan Section --}}
+                <div class="lg:col-span-2">
+                    <div class="mb-8">
                         <span
-                            class="inline-flex px-3 py-1 rounded-full bg-blue-100 text-blue-700 section-badge text-xs">ARTIKEL
-                            PILIHAN</span>
-                        <h2 class="mt-3 text-3xl font-bold">Wawasan & Tadabbur</h2>
+                            class="inline-flex px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 font-medium text-xs uppercase tracking-wide">
+                            Artikel Pilihan
+                        </span>
+                        <h2 class="mt-4 text-4xl font-bold text-gray-900">Wawasan & Tadabbur</h2>
                     </div>
-                    <div class="grid gap-6 sm:grid-cols-2">
+
+                    <div class="grid gap-8 sm:grid-cols-2">
                         @foreach ($featuredArticles as $article)
                             <article
-                                class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
+                                class="group rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
                                 data-aos="zoom-in" data-aos-delay="{{ $loop->index * 80 }}">
                                 <a href="{{ route('articles.show', $article->slug) }}" class="block">
-                                    <img src="{{ Storage::url($article->featured_image) ?? 'https://picsum.photos/600/400' }}"
-                                        alt="{{ $article->title }}" class="card-image w-full h-44 object-cover">
-                                    <div class="p-5">
-                                        <p class="text-xs text-gray-500">{{ $article->published_at->format('d M Y') }}</p>
-                                        <h3 class="mt-1 text-lg font-semibold">{{ $article->title }}</h3>
-                                        <p class="mt-2 text-gray-600 text-sm">{{ Str::limit($article->content, 100) }}</p>
+                                    <div class="relative overflow-hidden">
+                                        <img src="{{ Storage::url($article->featured_image) ?? 'https://picsum.photos/600/400' }}"
+                                            alt="{{ $article->title }}"
+                                            class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                                            {{ $article->published_at->format('d M Y') }}
+                                        </p>
+                                        <h3
+                                            class="mt-2 text-xl font-bold text-gray-900 leading-tight group-hover:text-emerald-700 transition-colors">
+                                            {{ $article->title }}
+                                        </h3>
+                                        <p class="mt-3 text-gray-600 text-sm leading-relaxed line-clamp-2">
+                                            {!! Str::limit(strip_tags($article->content), 80) !!}
+                                        </p>
                                         <span
-                                            class="mt-3 inline-flex items-center gap-2 text-emerald-700 font-semibold">Read
-                                            More</span>
+                                            class="mt-4 inline-flex items-center gap-2 text-emerald-700 font-semibold text-sm group-hover:gap-3 transition-all">
+                                            Baca Selengkapnya
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </span>
                                     </div>
                                 </a>
                             </article>
                         @endforeach
                     </div>
                 </div>
-                <div class="lg:col-span-2">
-                    <div class="mb-6">
+
+                {{-- Berita Terbaru Section --}}
+                <div class="lg:col-span-1">
+                    <div class="mb-8">
                         <span
-                            class="inline-flex px-3 py-1 rounded-full bg-blue-100 text-blue-700 section-badge text-xs">BERITA
-                            TERBARU</span>
-                        <h2 class="mt-3 text-3xl font-bold">Kabar Salman</h2>
+                            class="inline-flex px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-700 font-medium text-xs uppercase tracking-wide">
+                            Berita Terbaru
+                        </span>
+                        <h2 class="mt-4 text-4xl font-bold text-gray-900">Kabar Salman</h2>
                     </div>
-                    <div class="space-y-5">
+
+                    <div class="space-y-6">
                         @foreach ($latestNews as $news)
-                            <article class=" rounded-2xl bg-white shadow-sm hover:shadow-md transition overflow-hidden"
+                            <article
+                                class="group rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
                                 data-aos="fade-left" data-aos-delay="{{ $loop->index * 80 }}">
-                                <a href="{{ route('news.show', $news->slug) }}" class="flex gap-4">
-                                    <img src="{{ Storage::url($news->featured_image) ?? 'https://picsum.photos/320/240' }}"
-                                        alt="{{ $news->title }}"
-                                        class="card-image w-32 h-24 md:w-36 md:h-28 object-cover rounded-xl">
-                                    <div class="py-3 pr-4">
-                                        <p class="text-xs text-gray-500">{{ $news->published_at->format('d M Y') }}</p>
-                                        <h3 class="text-base font-semibold leading-snug">{{ $news->title }}</h3>
-                                        <p class="mt-1 text-gray-600 line-clamp-2 text-sm">{!! Str::limit($news->content, 100) !!}</p>
+                                <a href="{{ route('news.show', $news->slug) }}" class="flex gap-4 p-4">
+                                    <div class="flex-shrink-0 overflow-hidden rounded-lg">
+                                        <img src="{{ Storage::url($news->featured_image) ?? 'https://picsum.photos/320/240' }}"
+                                            alt="{{ $news->title }}"
+                                            class="w-28 h-28 object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                                            {{ $news->published_at->format('d M Y') }}
+                                        </p>
+                                        <h3
+                                            class="mt-1 text-base font-bold text-gray-900 leading-snug group-hover:text-emerald-700 transition-colors line-clamp-2">
+                                            {{ $news->title }}
+                                        </h3>
+                                        <p class="mt-2 text-gray-600 text-xs leading-relaxed line-clamp-2">
+                                            {!! Str::limit(strip_tags($news->content), 70) !!}
+                                        </p>
                                     </div>
                                 </a>
                             </article>
                         @endforeach
                     </div>
-                    <div class="mt-6">
+
+                    <div class="mt-8">
                         <a href="{{ route('news.index') }}"
-                            class="inline-flex items-center gap-2 text-emerald-700 font-semibold">Lihat semua berita</a>
+                            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-emerald-700 text-white font-semibold hover:bg-emerald-800 transition-colors shadow-md hover:shadow-lg">
+                            Lihat Semua Berita
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -474,4 +482,6 @@
             </div>
         </div>
     </section>
+
+
 @endsection

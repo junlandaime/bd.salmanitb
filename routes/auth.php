@@ -40,6 +40,8 @@ Route::middleware('guest')->group(function () {
         ->name('login.admin');
     Route::get('login/alumni', [AuthenticatedSessionController::class, 'createAlumni'])
         ->name('login.alumni');
+    Route::get('login/author', [AuthenticatedSessionController::class, 'createAuthor'])
+        ->name('login.author');
 });
 
 Route::middleware('auth')->group(function () {

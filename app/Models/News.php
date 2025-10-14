@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -44,6 +46,19 @@ class News extends Model
     public function tags()
     {
         return $this->belongsToMany(NewsTag::class, 'news_tag');
+    }
+
+    public function scopeOwnedBy(Builder $query, Authenticatable|int|null $author): Builder
+    {
+        if ($author instanceof Authenticatable) {
+            $author = $author->getAuthIdentifier();
+        }
+
+        if ($author === null) {
+            return $query;
+        }
+
+        return $query->where('author_id', $author);
     }
 
     public function getStatusBadgeAttribute()

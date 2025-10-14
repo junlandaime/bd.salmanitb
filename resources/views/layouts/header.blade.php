@@ -157,6 +157,17 @@
                                     Alumni Dashboard
                                 </a>
                             @endif
+                            @if (auth()->user()->hasRole('author'))
+                                <a href="{{ route('author.dashboard') }}"
+                                    class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    Author Dashboard
+                                </a>
+                            @endif
+
                             <a href="{{ route('alumni.password.change') }}"
                                 class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +177,7 @@
                                 </svg>
                                 Ubah Password
                             </a>
-                            <div class="border-t border-gray-100 my-1"></div>
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
@@ -342,6 +353,16 @@
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
                             Alumni Dashboard
+                        </a>
+                    @endif
+                    @if (auth()->user()->hasRole('author'))
+                        <a href="{{ route('author.dashboard') }}"
+                            class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-base font-medium text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Author Dashboard
                         </a>
                     @endif
                     <a href="{{ route('alumni.password.change') }}"

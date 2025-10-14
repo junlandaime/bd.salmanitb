@@ -48,7 +48,7 @@ class TaarufController extends Controller
 
         if ($taarufProfile) {
             if (empty($taarufProfile->visi_misi)) {
-                $missingFields[] = 'Visi Misi';
+                $missingFields[] = 'Kriteria Pasangan';
             }
             if (empty($taarufProfile->kelebihan_kekurangan)) {
                 $missingFields[] = 'Kelebihan & Kekurangan';
