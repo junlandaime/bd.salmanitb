@@ -158,7 +158,7 @@ class ArticleController extends Controller
 
     protected function authorizeArticle(Article $article): void
     {
-        abort_if($article->author_id !== auth()->id(), 403);
+        abort_if((int) $article->author_id !== (int) auth()->id(), 403);
     }
 
     protected function syncTags(Article $article, array $tags): void

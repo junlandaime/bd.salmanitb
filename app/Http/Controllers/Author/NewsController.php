@@ -164,7 +164,7 @@ class NewsController extends Controller
 
     protected function authorizeNews(News $news): void
     {
-        abort_if($news->author_id !== auth()->id(), 403);
+        abort_if((int) $news->author_id !== (int) auth()->id(), 403);
     }
 
     protected function syncTags(News $news, array $tags): void
