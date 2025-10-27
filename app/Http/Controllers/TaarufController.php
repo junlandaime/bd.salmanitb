@@ -524,8 +524,90 @@ class TaarufController extends Controller
     /**
      * Store a newly created taaruf profile
      */
+    // public function storeProfile(Request $request)
+    // {
+    //     if (!$this->isEligibleForTaaruf()) {
+    //         return redirect()->route('alumni.dashboard')
+    //             ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
+    //     }
+
+    //     $request->validate([
+    //         'gender' => 'required|in:male,female',
+    //         'full_name' => 'required|string|max:255',
+    //         'nickname' => 'required|string|max:100',
+    //         'birth_place_date' => 'required|string|max:255',
+    //         'origin_province' => 'required|string|max:255',
+    //         'origin_city' => 'required|string|max:255',
+    //         'origin_district' => 'required|string|max:255',
+    //         'origin_village' => 'required|string|max:255',
+    //         'current_residence' => 'required|string|max:255',
+    //         'residence_province' => 'required|string|max:255',
+    //         'residence_city' => 'required|string|max:255',
+    //         'residence_district' => 'required|string|max:255',
+    //         'residence_village' => 'required|string|max:255',
+    //         'last_education' => 'required|string|max:255',
+    //         'occupation' => 'required|string|max:255',
+    //         'marriage_target_year' => 'nullable|integer|min:2025|max:2050',
+    //         'personality' => 'nullable|string|max:255',
+    //         'expectation' => 'nullable|string',
+    //         'ideal_partner_criteria' => 'nullable|string',
+    //         'visi_misi' => 'nullable|string',
+    //         'kelebihan_kekurangan' => 'nullable|string',
+    //         'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    //         'instagram' => 'nullable|string|max:255',
+    //         'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     $photoUrl = null;
+    //     if ($request->hasFile('photo')) {
+    //         $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
+    //         $photoUrl = Storage::url($photoPath);
+    //     }
+
+    //     $informedConsentUrl = null;
+    //     if ($request->hasFile('informed_consent')) {
+    //         $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
+    //         $informedConsentUrl = Storage::url($consentPath);
+    //     }
+
+    //     $taarufProfile = TaarufProfile::create([
+    //         'user_id' => $user->id,
+    //         'is_active' => true,
+    //         'gender' => $request->gender,
+    //         'full_name' => $request->full_name,
+    //         'nickname' => $request->nickname,
+    //         'birth_place_date' => $request->birth_place_date,
+    //         'origin_province' => $request->origin_province,
+    //         'origin_city' => $request->origin_city,
+    //         'origin_district' => $request->origin_district,
+    //         'origin_village' => $request->origin_village,
+    //         'current_residence' => $request->current_residence,
+    //         'residence_province' => $request->residence_province,
+    //         'residence_city' => $request->residence_city,
+    //         'residence_district' => $request->residence_district,
+    //         'residence_village' => $request->residence_village,
+    //         'last_education' => $request->last_education,
+    //         'occupation' => $request->occupation,
+    //         'marriage_target_year' => $request->marriage_target_year,
+    //         'personality' => $request->personality,
+    //         'expectation' => $request->expectation,
+    //         'ideal_partner_criteria' => $request->ideal_partner_criteria,
+    //         'visi_misi' => $request->visi_misi,
+    //         'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
+    //         'photo_url' => $photoUrl,
+    //         'instagram' => $request->instagram,
+    //         'informed_consent_url' => $informedConsentUrl,
+    //     ]);
+
+    //     return redirect()->route('taaruf.questions')
+    //         ->with('success', 'Profil Ta\'aruf berhasil dibuat. Silakan lengkapi pertanyaan berikut.');
+    // }
+
     public function storeProfile(Request $request)
     {
+        // Check if user is eligible
         if (!$this->isEligibleForTaaruf()) {
             return redirect()->route('alumni.dashboard')
                 ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
@@ -536,15 +618,7 @@ class TaarufController extends Controller
             'full_name' => 'required|string|max:255',
             'nickname' => 'required|string|max:100',
             'birth_place_date' => 'required|string|max:255',
-            'origin_province' => 'required|string|max:255',
-            'origin_city' => 'required|string|max:255',
-            'origin_district' => 'required|string|max:255',
-            'origin_village' => 'required|string|max:255',
             'current_residence' => 'required|string|max:255',
-            'residence_province' => 'required|string|max:255',
-            'residence_city' => 'required|string|max:255',
-            'residence_district' => 'required|string|max:255',
-            'residence_village' => 'required|string|max:255',
             'last_education' => 'required|string|max:255',
             'occupation' => 'required|string|max:255',
             'marriage_target_year' => 'nullable|integer|min:2025|max:2050',
@@ -560,18 +634,21 @@ class TaarufController extends Controller
 
         $user = Auth::user();
 
+        // Handle photo upload
         $photoUrl = null;
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
             $photoUrl = Storage::url($photoPath);
         }
 
+        // Handle informed consent upload
         $informedConsentUrl = null;
         if ($request->hasFile('informed_consent')) {
             $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
             $informedConsentUrl = Storage::url($consentPath);
         }
 
+        // Create taaruf profile
         $taarufProfile = TaarufProfile::create([
             'user_id' => $user->id,
             'is_active' => true,
@@ -579,15 +656,7 @@ class TaarufController extends Controller
             'full_name' => $request->full_name,
             'nickname' => $request->nickname,
             'birth_place_date' => $request->birth_place_date,
-            'origin_province' => $request->origin_province,
-            'origin_city' => $request->origin_city,
-            'origin_district' => $request->origin_district,
-            'origin_village' => $request->origin_village,
             'current_residence' => $request->current_residence,
-            'residence_province' => $request->residence_province,
-            'residence_city' => $request->residence_city,
-            'residence_district' => $request->residence_district,
-            'residence_village' => $request->residence_village,
             'last_education' => $request->last_education,
             'occupation' => $request->occupation,
             'marriage_target_year' => $request->marriage_target_year,
