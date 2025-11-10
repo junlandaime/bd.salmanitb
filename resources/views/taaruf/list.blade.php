@@ -454,6 +454,11 @@
                             <div id="cardView" class="{{ request('view') == 'list' ? 'hidden' : '' }}">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     @foreach ($profiles as $profile)
+                                        @php
+                                            $age = \App\Helpers\DateHelper::getAgeFromBirthPlaceDate(
+                                                $profile->birth_place_date,
+                                            );
+                                        @endphp
                                         <div
                                             class="bg-white rounded-lg border shadow-sm hover:shadow-md transition duration-300 h-full">
                                             <div class="p-6">
@@ -482,8 +487,15 @@
                                                 <div class="space-y-2">
                                                     <div class="flex justify-between">
                                                         <span class="text-gray-500">Usia:</span>
-                                                        <span>{{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
-                                                            tahun</span>
+                                                        <span
+                                                            class="{{ $age === null ? 'text-red-600 font-semibold' : '' }}"
+                                                            @if ($age === null) title="Lengkapi data tempat & tanggal lahir agar usia tampil" @endif>
+                                                            @if ($age === null)
+                                                                N/A
+                                                            @else
+                                                                {{ $age }} tahun
+                                                            @endif
+                                                        </span>
                                                     </div>
                                                     <div class="flex justify-between">
                                                         <span class="text-gray-500">Domisili:</span>
@@ -1241,7 +1253,7 @@
 
                     fetch(
                             'https://raw.githubusercontent.com/aryomuzakki/api-perguruan-tinggi-di-indonesia/main/data/pt.json'
-                            )
+                        )
                         .then(response => response.json())
                         .then(data => {
                             universitiesData = data;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\DateHelper;
 use App\Models\ActivityBatch;
 use App\Models\TaarufProfile;
 use App\Models\TaarufQuestion;
@@ -46,9 +47,15 @@ class TaarufController extends Controller
         $taarufProfile = $user->taarufProfile;
 
         $needsProfileUpdate = false;
+        $needsBirthDateWarning = false;
         $missingFields = [];
 
         if ($taarufProfile) {
+
+            if (empty($taarufProfile->birth_place_date) || DateHelper::getAgeFromBirthPlaceDate($taarufProfile->birth_place_date) === null) {
+                $needsBirthDateWarning = true;
+                $missingFields[] = 'Tempat & Tanggal Lahir (format: Kota, 4 Oktober 1995)';
+            }
             if (empty($taarufProfile->visi_misi)) {
                 $missingFields[] = 'Kriteria Pasangan';
             }
@@ -121,6 +128,7 @@ class TaarufController extends Controller
         return view('taaruf.index', compact(
             'taarufProfile',
             'needsProfileUpdate',
+            'needsBirthDateWarning',
             'missingFields',
             'unreadQuestionsCount'
         ));
@@ -613,6 +621,15 @@ class TaarufController extends Controller
         if (!$this->isEligibleForTaaruf()) {
             return redirect()->route('alumni.dashboard')
                 ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
+        }
+
+
+        $user = Auth::user();
+
+        if ($user->taarufProfile()->exists()) {
+            return redirect()
+                ->route('taaruf.profile.edit') // atau route lain yang tepat
+                ->with('error', 'Profil Ta\'aruf Anda sudah ada. Silakan perbarui profil tersebut.');
         }
 
         $request->validate([
