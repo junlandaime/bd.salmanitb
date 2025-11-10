@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\ActivityBatch;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Support\UploadSanitizer;
 
 class ActivityBatchController extends Controller
 {
@@ -39,8 +40,9 @@ class ActivityBatchController extends Controller
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('batchs', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('batchs', 'public');
+            // $validated['featured_image'] = $path;
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'batchs');
         }
 
         $activity->batches()->create($validated);
@@ -73,8 +75,9 @@ class ActivityBatchController extends Controller
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('batchs', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('batchs', 'public');
+            // $validated['featured_image'] = $path;
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'batchs');
         }
 
         $batch->update($validated);

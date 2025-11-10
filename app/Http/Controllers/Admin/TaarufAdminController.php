@@ -7,6 +7,7 @@ use App\Models\TaarufProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 
 class TaarufAdminController extends Controller
 {
@@ -150,8 +151,10 @@ class TaarufAdminController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
 
-            $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-            $profile->photo_url = Storage::url($photoPath);
+            // $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
+            // $profile->photo_url = Storage::url($photoPath);
+            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
+            $profile->photo_url = Storage::disk('public')->url($photoPath);
         } elseif ($request->has('remove_photo') && $request->remove_photo) {
             // Remove existing photo if checkbox is checked
             if ($profile->photo_url) {

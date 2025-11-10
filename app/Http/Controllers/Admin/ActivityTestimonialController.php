@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ActivityTestimonial;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 
 class ActivityTestimonialController extends Controller
 {
@@ -28,7 +29,8 @@ class ActivityTestimonialController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            // $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            $validated['image'] = UploadSanitizer::store($request->file('image'), 'testimonials');
         }
 
         ActivityTestimonial::create($validated);
@@ -61,7 +63,8 @@ class ActivityTestimonialController extends Controller
             if ($activityTestimonial->image) {
                 Storage::disk('public')->delete($activityTestimonial->image);
             }
-            $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            // $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            $validated['image'] = UploadSanitizer::store($request->file('image'), 'testimonials');
         }
 
         $activityTestimonial->update($validated);

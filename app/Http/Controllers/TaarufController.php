@@ -10,6 +10,8 @@ use App\Models\TaarufProfile;
 use App\Models\TaarufQuestion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
+
 
 class TaarufController extends Controller
 {
@@ -629,7 +631,7 @@ class TaarufController extends Controller
             'kelebihan_kekurangan' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'instagram' => 'nullable|string|max:255',
-            'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
         $user = Auth::user();
@@ -637,15 +639,30 @@ class TaarufController extends Controller
         // Handle photo upload
         $photoUrl = null;
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-            $photoUrl = Storage::url($photoPath);
+            // $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
+            // $photoUrl = Storage::url($photoPath);
+            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
+            $photoUrl = Storage::disk('public')->url($photoPath);
         }
 
         // Handle informed consent upload
         $informedConsentUrl = null;
         if ($request->hasFile('informed_consent')) {
-            $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
-            $informedConsentUrl = Storage::url($consentPath);
+
+            // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
+            // $informedConsentUrl = Storage::url($consentPath);
+
+            $consentPath = UploadSanitizer::store(
+                $request->file('informed_consent'),
+                'taaruf/consents',
+                'public',
+                [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                ]
+            );
+            $informedConsentUrl = Storage::disk('public')->url($consentPath);
         }
 
         // Create taaruf profile
@@ -712,7 +729,7 @@ class TaarufController extends Controller
             'kelebihan_kekurangan' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'instagram' => 'nullable|string|max:255',
-            'informed_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'informed_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
         $user = Auth::user();
@@ -727,8 +744,11 @@ class TaarufController extends Controller
                 $oldPath = str_replace('/storage/', '', $taarufProfile->photo_url);
                 Storage::disk('public')->delete($oldPath);
             }
-            $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-            $taarufProfile->photo_url = Storage::url($photoPath);
+            // $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
+            // $taarufProfile->photo_url = Storage::url($photoPath);
+
+            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
+            $taarufProfile->photo_url = Storage::disk('public')->url($photoPath);
         } elseif ($request->has('remove_photo') && $request->remove_photo) {
             if ($taarufProfile->photo_url) {
                 $oldPath = str_replace('/storage/', '', $taarufProfile->photo_url);
@@ -742,8 +762,20 @@ class TaarufController extends Controller
                 $oldPath = str_replace('/storage/', '', $taarufProfile->informed_consent_url);
                 Storage::disk('public')->delete($oldPath);
             }
-            $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
-            $taarufProfile->informed_consent_url = Storage::url($consentPath);
+            // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
+            // $taarufProfile->informed_consent_url = Storage::url($consentPath);
+
+            $consentPath = UploadSanitizer::store(
+                $request->file('informed_consent'),
+                'taaruf/consents',
+                'public',
+                [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                ]
+            );
+            $taarufProfile->informed_consent_url = Storage::disk('public')->url($consentPath);
         }
 
         $taarufProfile->update([

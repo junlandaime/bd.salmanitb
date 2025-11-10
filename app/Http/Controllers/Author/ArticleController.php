@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Support\UploadSanitizer;
+
 
 class ArticleController extends Controller
 {
@@ -47,7 +49,8 @@ class ArticleController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $imagePath = $request->file('featured_image')->store('articles', 'public');
+        // $imagePath = $request->file('featured_image')->store('articles', 'public');
+        $imagePath = UploadSanitizer::store($request->file('featured_image'), 'articles');
 
         // Tentukan tanggal terbit
         $publishedAt = null;
@@ -110,7 +113,8 @@ class ArticleController extends Controller
                 Storage::disk('public')->delete($imagePath);
             }
 
-            $imagePath = $request->file('featured_image')->store('articles', 'public');
+            // $imagePath = $request->file('featured_image')->store('articles', 'public');
+            $imagePath = UploadSanitizer::store($request->file('featured_image'), 'articles');
         }
 
         // Tentukan tanggal terbit

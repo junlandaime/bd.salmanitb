@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Support\UploadSanitizer;
 
 class NewsController extends Controller
 {
@@ -49,7 +50,9 @@ class NewsController extends Controller
         ]);
 
         $imagePath = $request->hasFile('featured_image')
-            ? $request->file('featured_image')->store('news', 'public')
+            // ? $request->file('featured_image')->store('news', 'public')
+            // : null;
+            ? UploadSanitizer::store($request->file('featured_image'), 'news')
             : null;
 
         // Tentukan tanggal terbit
@@ -115,7 +118,8 @@ class NewsController extends Controller
                 Storage::disk('public')->delete($imagePath);
             }
 
-            $imagePath = $request->file('featured_image')->store('news', 'public');
+            // $imagePath = $request->file('featured_image')->store('news', 'public');
+            $imagePath = UploadSanitizer::store($request->file('featured_image'), 'news');
         }
 
         // Tentukan tanggal terbit

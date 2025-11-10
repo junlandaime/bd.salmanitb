@@ -9,6 +9,7 @@ use App\Models\ArticleTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Support\UploadSanitizer;
 
 class ArticleController extends Controller
 {
@@ -42,7 +43,8 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
         ]);
 
-        $imagePath = $request->file('featured_image')->store('articles', 'public');
+        // $imagePath = $request->file('featured_image')->store('articles', 'public');
+        $imagePath = UploadSanitizer::store($request->file('featured_image'), 'articles');
 
         $article = Article::create([
             'title' => $request->title,
@@ -110,9 +112,16 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
         ]);
 
+        $imagePath = $article->featured_image;
+
         if ($request->hasFile('featured_image')) {
-            Storage::disk('public')->delete($article->featured_image);
-            $imagePath = $request->file('featured_image')->store('articles', 'public');
+            // Storage::disk('public')->delete($article->featured_image);
+            // $imagePath = $request->file('featured_image')->store('articles', 'public');
+
+            if ($article->featured_image) {
+                Storage::disk('public')->delete($article->featured_image);
+            }
+            $imagePath = UploadSanitizer::store($request->file('featured_image'), 'articles');
         }
 
         $article->update([
@@ -120,7 +129,8 @@ class ArticleController extends Controller
             'slug' => Str::slug($request->title),
             'content' => $request->content,
             'excerpt' => $request->excerpt,
-            'featured_image' => $request->hasFile('featured_image') ? $imagePath : $article->featured_image,
+            // 'featured_image' => $request->hasFile('featured_image') ? $imagePath : $article->featured_image,
+            'featured_image' => $imagePath,
             'reading_time' => $request->reading_time,
             'is_featured' => $request->is_featured ?? false,
             'status' => $request->status,

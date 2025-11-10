@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Support\UploadSanitizer;
 use Spatie\Permission\Middleware\RoleMiddleware;
 
 class ProgramController extends Controller
@@ -39,8 +40,9 @@ class ProgramController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('programs', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('programs', 'public');
+            // $validated['featured_image'] = $path;
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'programs');
         }
 
         $program = Program::create($validated);
@@ -65,8 +67,9 @@ class ProgramController extends Controller
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('programs', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('programs', 'public');
+            // $validated['featured_image'] = $path;
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'programs');
         }
 
         $program->update($validated);

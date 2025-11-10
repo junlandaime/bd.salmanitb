@@ -9,6 +9,7 @@ use App\Models\NewsTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Support\UploadSanitizer;
 
 class NewsController extends Controller
 {
@@ -42,9 +43,11 @@ class NewsController extends Controller
             'news_category_id' => 'required|exists:news_categories,id',
             'tags' => 'nullable|array',
         ]);
-        dd($request);
 
-        $imagePath = $request->file('featured_image')->store('news', 'public');
+        // $imagePath = $request->file('featured_image')->store('news', 'public');
+        $imagePath = $request->hasFile('featured_image')
+            ? UploadSanitizer::store($request->file('featured_image'), 'news')
+            : null;
 
         $news = News::create([
             'title' => $request->title,
@@ -114,9 +117,15 @@ class NewsController extends Controller
             'tags' => 'nullable|array',
         ]);
 
+        $imagePath = $news->featured_image;
+
         if ($request->hasFile('featured_image')) {
-            Storage::disk('public')->delete($news->featured_image);
-            $imagePath = $request->file('featured_image')->store('news', 'public');
+            // Storage::disk('public')->delete($news->featured_image);
+            // $imagePath = $request->file('featured_image')->store('news', 'public');
+            if ($news->featured_image) {
+                Storage::disk('public')->delete($news->featured_image);
+            }
+            $imagePath = UploadSanitizer::store($request->file('featured_image'), 'news');
         }
 
         $news->update([
@@ -124,7 +133,8 @@ class NewsController extends Controller
             'slug' => Str::slug($request->title),
             'content' => $request->content,
             'excerpt' => $request->excerpt,
-            'featured_image' => $request->hasFile('featured_image') ? $imagePath : $news->featured_image,
+            // 'featured_image' => $request->hasFile('featured_image') ? $imagePath : $news->featured_image,
+            'featured_image' => $imagePath,
             'event_date' => $request->event_date,
             'location' => $request->location,
             'is_featured' => $request->is_featured ?? false,

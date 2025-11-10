@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LandingPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 
 class LandingPageController extends Controller
 {
@@ -58,7 +59,8 @@ class LandingPageController extends Controller
             if ($landingPage->hero_image) {
                 Storage::disk('public')->delete($landingPage->hero_image);
             }
-            $validated['hero_image'] = $request->file('hero_image')->store('landing-page', 'public');
+            // $validated['hero_image'] = $request->file('hero_image')->store('landing-page', 'public');
+            $validated['hero_image'] = UploadSanitizer::store($request->file('hero_image'), 'landing-page');
         }
 
         $landingPage->update($validated);

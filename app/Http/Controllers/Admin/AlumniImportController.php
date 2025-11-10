@@ -7,6 +7,7 @@ use App\Models\ActivityBatch;
 use App\Services\ExcelImportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 
 class AlumniImportController extends Controller
 {
@@ -43,8 +44,11 @@ class AlumniImportController extends Controller
         try {
             // Store file temporarily
             $file = $request->file('file');
-            $filePath = $file->storeAs('temp', $file->getClientOriginalName());
-            $fullPath = Storage::path($filePath);
+            // $filePath = $file->storeAs('temp', $file->getClientOriginalName());
+            // $fullPath = Storage::path($filePath);
+
+            $filePath = UploadSanitizer::store($file, 'temp', 'local');
+            $fullPath = Storage::disk('local')->path($filePath);
 
             // Import data
             $stats = $this->excelImportService->importAlumniData(
@@ -53,7 +57,8 @@ class AlumniImportController extends Controller
             );
 
             // Delete temp file
-            Storage::delete($filePath);
+            // Storage::delete($filePath);
+            Storage::disk('local')->delete($filePath);
 
             return redirect()->route('admin.alumni.import.form')
                 ->with('success', "Import completed: {$stats['created']} new users, {$stats['updated']} updated users, {$stats['failed']} failed.")
@@ -89,8 +94,11 @@ class AlumniImportController extends Controller
         try {
             // Store file temporarily
             $file = $request->file('file');
-            $filePath = $file->storeAs('temp', $file->getClientOriginalName());
-            $fullPath = Storage::path($filePath);
+            // $filePath = $file->storeAs('temp', $file->getClientOriginalName());
+            // $fullPath = Storage::path($filePath);
+
+            $filePath = UploadSanitizer::store($file, 'temp', 'local');
+            $fullPath = Storage::disk('local')->path($filePath);
 
             // Import data
             $stats = $this->excelImportService->importBatchMaterials(
@@ -99,7 +107,8 @@ class AlumniImportController extends Controller
             );
 
             // Delete temp file
-            Storage::delete($filePath);
+            // Storage::delete($filePath);
+            Storage::disk('local')->delete($filePath);
 
             return redirect()->route('admin.alumni.materials.import.form')
                 ->with('success', "Import completed: {$stats['created']} materials imported, {$stats['failed']} failed.")

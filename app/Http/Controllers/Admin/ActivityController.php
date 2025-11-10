@@ -7,6 +7,8 @@ use App\Models\Activity;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 use Spatie\Permission\Middleware\RoleMiddleware;
 
 class ActivityController extends Controller
@@ -71,8 +73,9 @@ class ActivityController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('activities', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('activities', 'public');
+            // $validated['featured_image'] = $path;
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'activities');
         }
 
         $activity = Activity::create($validated);
@@ -141,8 +144,12 @@ class ActivityController extends Controller
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('activities', 'public');
-            $validated['featured_image'] = $path;
+            // $path = $request->file('featured_image')->store('activities', 'public');
+            // $validated['featured_image'] = $path;
+            if ($activity->featured_image) {
+                Storage::disk('public')->delete($activity->featured_image);
+            }
+            $validated['featured_image'] = UploadSanitizer::store($request->file('featured_image'), 'activities');
         }
 
         $activity->update($validated);

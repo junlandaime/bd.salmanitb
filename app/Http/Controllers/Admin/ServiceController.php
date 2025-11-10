@@ -8,6 +8,7 @@ use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Support\UploadSanitizer;
 
 class ServiceController extends Controller
 {
@@ -38,12 +39,13 @@ class ServiceController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('services', 'public');
-            $validated['image'] = $path;
+            // $path = $request->file('image')->store('services', 'public');
+            // $validated['image'] = $path;
+            $validated['image'] = UploadSanitizer::store($request->file('image'), 'services');
         }
 
         $validated['slug'] = Str::slug($validated['title']);
-        
+
         Service::create($validated);
 
         return redirect()->route('admin.services.index')
@@ -74,12 +76,13 @@ class ServiceController extends Controller
             if ($service->image) {
                 Storage::disk('public')->delete($service->image);
             }
-            $path = $request->file('image')->store('services', 'public');
-            $validated['image'] = $path;
+            // $path = $request->file('image')->store('services', 'public');
+            // $validated['image'] = $path;
+            $validated['image'] = UploadSanitizer::store($request->file('image'), 'services');
         }
 
         $validated['slug'] = Str::slug($validated['title']);
-        
+
         $service->update($validated);
 
         return redirect()->route('admin.services.index')
@@ -91,7 +94,7 @@ class ServiceController extends Controller
         if ($service->image) {
             Storage::disk('public')->delete($service->image);
         }
-        
+
         $service->delete();
 
         return redirect()->route('admin.services.index')
