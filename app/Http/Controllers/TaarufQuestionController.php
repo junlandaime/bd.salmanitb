@@ -35,10 +35,10 @@ class TaarufQuestionController extends Controller
     public function store(Request $request, $id)
     {
         // Validate the request
-        $validator = Validator::make($request->all(), [
+        $validated = Validator::make($request->all(), [
             'question' => 'required|string|max:500',
             'is_anonymous' => 'sometimes|boolean',
-        ]);
+        ])->validate();
 
         // Find the profile
         $profile = TaarufProfile::findOrFail($id);
@@ -48,11 +48,24 @@ class TaarufQuestionController extends Controller
             return Redirect::back()->with('error', 'Anda tidak dapat mengajukan pertanyaan pada profil Anda sendiri.');
         }
 
+        $questionText = trim($validated['question']);
+
+        $existingQuestion = TaarufQuestion::where('profile_id', $profile->id)
+            ->where('asked_by_user_id', Auth::id())
+            ->whereRaw('LOWER(TRIM(question)) = ?', [mb_strtolower($questionText)])
+            ->first();
+
+        if ($existingQuestion) {
+            return Redirect::back()
+                ->withInput()
+                ->with('error', 'Anda sudah mengirim pertanyaan yang sama sebelumnya.');
+        }
+
         // Create the question
         $question = TaarufQuestion::create([
             'profile_id' => $profile->id,
             'asked_by_user_id' => Auth::id(),
-            'question' => $request->question,
+            'question' => $questionText,
             'is_anonymous' => true,
             'is_answered' => false,
         ]);
