@@ -663,22 +663,34 @@ class TaarufController extends Controller
         }
 
         // Handle informed consent upload
+        $allowedConsentMimes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+        ];
+
         $informedConsentUrl = null;
         if ($request->hasFile('informed_consent')) {
 
             // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
             // $informedConsentUrl = Storage::url($consentPath);
 
-            $consentPath = UploadSanitizer::store(
-                $request->file('informed_consent'),
-                'taaruf/consents',
-                'public',
-                [
-                    'application/pdf',
-                    'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                ]
-            );
+            try {
+                $consentPath = UploadSanitizer::store(
+                    $request->file('informed_consent'),
+                    'taaruf/consents',
+                    'public',
+                    $allowedConsentMimes
+                );
+            } catch (\RuntimeException $exception) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors([
+                        'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
+                    ]);
+            }
             $informedConsentUrl = Storage::disk('public')->url($consentPath);
         }
 
@@ -774,6 +786,14 @@ class TaarufController extends Controller
             }
         }
 
+        $allowedConsentMimes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+        ];
+
         if ($request->hasFile('informed_consent')) {
             if ($taarufProfile->informed_consent_url) {
                 $oldPath = str_replace('/storage/', '', $taarufProfile->informed_consent_url);
@@ -782,16 +802,20 @@ class TaarufController extends Controller
             // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
             // $taarufProfile->informed_consent_url = Storage::url($consentPath);
 
-            $consentPath = UploadSanitizer::store(
-                $request->file('informed_consent'),
-                'taaruf/consents',
-                'public',
-                [
-                    'application/pdf',
-                    'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                ]
-            );
+            try {
+                $consentPath = UploadSanitizer::store(
+                    $request->file('informed_consent'),
+                    'taaruf/consents',
+                    'public',
+                    $allowedConsentMimes
+                );
+            } catch (\RuntimeException $exception) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors([
+                        'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
+                    ]);
+            }
             $taarufProfile->informed_consent_url = Storage::disk('public')->url($consentPath);
         }
 
