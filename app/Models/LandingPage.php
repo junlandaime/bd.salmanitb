@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\HtmlSanitizer;
 use Illuminate\Database\Eloquent\Model;
 
 class LandingPage extends Model
@@ -44,4 +45,34 @@ class LandingPage extends Model
         'stats_projects' => 'integer',
         'stats_partners' => 'integer',
     ];
+
+    public function getHeroSubtitleSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->hero_subtitle) ?? '';
+    }
+
+    public function getAboutContentSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->about_content) ?? '';
+    }
+
+    public function getMissionContentSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->mission_content) ?? '';
+    }
+
+    public function getVisionContentSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->vision_content) ?? '';
+    }
+
+    public function getFooterDescriptionSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->footer_description) ?? '';
+    }
+
+    public function getMetaDescriptionSanitizedAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->meta_description) ?? '';
+    }
 }

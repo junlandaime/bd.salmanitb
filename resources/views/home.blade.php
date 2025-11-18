@@ -85,7 +85,7 @@
                     <h1 class="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">BIDANG DAKWAH</h1>
                     <h2 class="mt-2 text-2xl md:text-3xl font-semibold">Yayasan Pembina Masjid (YPM) Salman ITB</h2>
                     <div class="mt-6 text-white/90 prose prose-invert max-w-none">
-                        {!! $landingpage->hero_subtitle !!}
+                        {!! $landingpage->hero_subtitle_sanitized !!}
                     </div>
                     <div class="mt-8 flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="200">
                         <a href="{{ route('programs.index') }}"

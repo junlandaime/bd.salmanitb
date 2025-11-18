@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\HtmlSanitizer;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,4 +75,9 @@ class Article extends Model
     // {
     //     return $value . ' menit baca';
     // }
+
+    public function getSanitizedContentAttribute(): string
+    {
+        return HtmlSanitizer::sanitize($this->content) ?? '';
+    }
 }

@@ -127,33 +127,30 @@ class TaarufQuestionController extends Controller
     public function answer(Request $request, $id)
     {
         // Validate the request
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'answer' => 'required|string|max:1000',
             'is_public' => 'sometimes|boolean',
-        ]);
+        ])->validate();
 
         // Find the question
         $question = TaarufQuestion::findOrFail($id);
 
         // Check if the user owns the profile
         $profile = TaarufProfile::findOrFail($question->profile_id);
-        // if ($profile->user_id !== Auth::id()) {
-        //     return Redirect::route('taaruf.questions.index')->with('error', 'Anda tidak memiliki izin untuk menjawab pertanyaan ini.');
-        // }
+        if ($profile->user_id !== Auth::id()) {
+            return Redirect::route('taaruf.questions.index')->with('error', 'Anda tidak memiliki izin untuk menjawab pertanyaan ini.');
+        }
 
         // Update the question
         $question->update([
             'answer' => $request->answer,
             'is_answered' => true,
-            'is_public' => $request->has('is_public') ? true : false,
+            'is_public' => $request->boolean('is_public'),
         ]);
 
 
         // Send notification to the user who asked the question
-        // $asker = User::find($question->user_id);
-        // $asker->notify(new TaarufQuestionAnswered($question));
-
-        $asker = User::find($question->user_id);
+        $asker = User::find($question->asked_by_user_id);
         if ($asker) {
             $asker->notify(new TaarufQuestionAnswered($question));
         }
