@@ -224,7 +224,7 @@
 
                     <!-- Article Body -->
                     <div class="article-content">
-                        {!! $news->sanitized_content !!}
+                        {!! $news->content !!}
                     </div>
 
                     <!-- Tags -->

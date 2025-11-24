@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\LandingPage;
-use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Support\UploadSanitizer;
@@ -54,22 +53,6 @@ class LandingPageController extends Controller
         ]);
 
         $landingPage = LandingPage::firstOrFail();
-
-        $richTextFields = [
-            'hero_subtitle',
-            'about_content',
-            'mission_content',
-            'vision_content',
-            'footer_description',
-            'meta_description',
-        ];
-
-        foreach ($richTextFields as $field) {
-            if (array_key_exists($field, $validated)) {
-                $validated[$field] = HtmlSanitizer::sanitize($validated[$field]);
-            }
-        }
-
 
         if ($request->hasFile('hero_image')) {
             // Delete old image if exists

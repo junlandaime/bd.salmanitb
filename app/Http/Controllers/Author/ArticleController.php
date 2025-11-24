@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\ArticleTag;
-use App\Support\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -62,7 +61,7 @@ class ArticleController extends Controller
         $article = Article::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
-            'content' => HtmlSanitizer::sanitize($request->content),
+            'content' => $request->content,
             'excerpt' => $request->excerpt,
             'featured_image' => $imagePath,
             'reading_time' => $request->reading_time ?? '5 min read',
@@ -131,7 +130,7 @@ class ArticleController extends Controller
         $article->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
-            'content' => HtmlSanitizer::sanitize($request->content),
+            'content' => $request->content,
             'excerpt' => $request->excerpt,
             'featured_image' => $imagePath,
             'reading_time' => $request->reading_time ?? '5 min read',

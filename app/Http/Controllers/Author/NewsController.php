@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsCategory;
 use App\Models\NewsTag;
-use App\Support\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -65,7 +64,7 @@ class NewsController extends Controller
         $news = News::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
-            'content' => HtmlSanitizer::sanitize($request->content),
+            'content' => $request->content,
             'excerpt' => $request->excerpt,
             'featured_image' => $imagePath,
             'event_date' => $request->event_date,
@@ -136,7 +135,7 @@ class NewsController extends Controller
         $news->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
-            'content' => HtmlSanitizer::sanitize($request->content),
+            'content' => $request->content,
             'excerpt' => $request->excerpt,
             'featured_image' => $imagePath,
             'event_date' => $request->event_date,

@@ -203,7 +203,7 @@
             <div class="max-w-4xl mx-auto">
                 <div class=" rounded-2xl bg-white p-8 md:p-12 shadow-sm" data-aos="fade-up">
                     <div class="article-content">
-                        {!! $article->sanitized_content !!}
+                        {!! $article->content !!}
                     </div>
 
                     {{-- Share Section --}}
