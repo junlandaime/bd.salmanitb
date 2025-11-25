@@ -7,7 +7,7 @@ use App\Models\Activity;
 use App\Models\ActivityGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Support\UploadSanitizer;
+// use App\Support\UploadSanitizer;
 
 class ActivityGalleryController extends Controller
 {
@@ -27,10 +27,10 @@ class ActivityGalleryController extends Controller
             'order' => 'nullable|integer|min:0'
         ]);
 
-        // $validated['image_url'] = $request->file('image')->store('gallery', 'public');
+        $validated['image_url'] = $request->file('image')->store('gallery', 'public');
 
-        $validated['image_url'] = UploadSanitizer::store($request->file('image'), 'gallery');
-        unset($validated['image']);
+        // $validated['image_url'] = UploadSanitizer::store($request->file('image'), 'gallery');
+        // unset($validated['image']);
 
         ActivityGallery::create($validated);
 
@@ -58,20 +58,20 @@ class ActivityGalleryController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image only if it exists
-            // if (!empty($activityGallery->image)) {
-            //     Storage::disk('public')->delete($activityGallery->image);
-            if (!empty($activityGallery->image_url)) {
-                Storage::disk('public')->delete($activityGallery->image_url);
+            if (!empty($activityGallery->image)) {
+                Storage::disk('public')->delete($activityGallery->image);
+                // if (!empty($activityGallery->image_url)) {
+                //     Storage::disk('public')->delete($activityGallery->image_url);
             }
             // Store the new image
-            // $validated['image'] = $request->file('image')->store('gallery', 'public');
+            $validated['image'] = $request->file('image')->store('gallery', 'public');
 
-            $validated['image_url'] = UploadSanitizer::store($request->file('image'), 'gallery');
+            // $validated['image_url'] = UploadSanitizer::store($request->file('image'), 'gallery');
         }
 
-        unset($validated['image']);
+        // unset($validated['image']);
 
-        $activityGallery->update($validated);
+        // $activityGallery->update($validated);
 
         return redirect()
             ->route('admin.activities.edit', $activityGallery->activity_id)
