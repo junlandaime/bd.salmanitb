@@ -27,7 +27,7 @@ class ActivityGalleryController extends Controller
             'order' => 'nullable|integer|min:0'
         ]);
 
-        $validated['image_url'] = $request->file('image')->store('gallery', 'public');
+        $validated['image'] = $request->file('image')->store('gallery', 'public');
 
         // $validated['image_url'] = UploadSanitizer::store($request->file('image'), 'gallery');
         // unset($validated['image']);
@@ -71,7 +71,7 @@ class ActivityGalleryController extends Controller
 
         // unset($validated['image']);
 
-        // $activityGallery->update($validated);
+        $activityGallery->update($validated);
 
         return redirect()
             ->route('admin.activities.edit', $activityGallery->activity_id)
