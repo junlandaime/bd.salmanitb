@@ -1,453 +1,223 @@
 @extends('layouts.app')
 
-@section('title', 'Pertanyaan Ta\'aruf Saya')
+@section('title', 'Pertanyaan Ta\'aruf Saya - Bidang Dakwah Salman ITB')
 
 @section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="mb-8">
-            <nav class="mb-4">
-                <ol class="flex text-sm">
-                    <li class="flex items-center">
-                        <a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                            Alumni</a>
-                        <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </li>
-                    <li class="flex items-center">
-                        <a href="{{ route('taaruf.index') }}" class="text-green-600 hover:text-green-700">Ta'aruf</a>
-                        <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </li>
-                    <li class="text-gray-500">Pertanyaan Saya</li>
-                </ol>
-            </nav>
-            <h2 class="text-3xl font-bold text-green-600">Pertanyaan Ta'aruf Saya</h2>
-            <p class="text-gray-500 mt-2">Kelola pertanyaan yang diterima pada profil Ta'aruf Anda</p>
-        </div>
+<div class="min-h-screen bg-gray-50/70 py-8" x-data="{ activeTab: 'received' }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-pink-950 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <nav class="flex items-center gap-2 text-xs text-rose-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <a href="{{ route('taaruf.index') }}" class="hover:text-white transition">Ta'aruf</a>
+                    <span>/</span>
+                    <span class="text-white font-semibold">Pertanyaan Masuk &amp; Diajukan</span>
+                </nav>
 
-        <!-- Wrap both navigation and content in the same x-data context -->
-        <div x-data="{ activeTab: 'received' }">
-            <!-- Tab Navigation -->
-            <div class="mb-6">
-                <div class="border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-8">
-                        <button @click="activeTab = 'received'"
-                            :class="{ 'border-green-500 text-green-600': activeTab === 'received', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'received' }"
-                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                            Pertanyaan Diterima
-                        </button>
-                        <button @click="activeTab = 'sent'"
-                            :class="{ 'border-green-500 text-green-600': activeTab === 'sent', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'sent' }"
-                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                            Pertanyaan Yang Saya Ajukan
-                        </button>
-                    </nav>
-                </div>
-            </div>
-
-            <!-- Content area - should be in the same Alpine.js context -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                <div class="p-6 border-b flex justify-between items-center">
-                    <h5 class="text-xl font-bold text-green-600" x-show="activeTab === 'received'">Daftar Pertanyaan
-                        Diterima</h5>
-                    <h5 class="text-xl font-bold text-green-600" x-show="activeTab === 'sent'">Daftar Pertanyaan Yang Saya
-                        Ajukan</h5>
-                </div>
-                <div class="p-6">
-                    @if (session('success'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                            <p>{{ session('success') }}</p>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 text-xs font-semibold mb-2">
+                            <span>💬</span>
+                            <span>Q&amp;A Ta'aruf</span>
                         </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                            <p>{{ session('error') }}</p>
-                        </div>
-                    @endif
-                    <!-- Content for tabs -->
-                    <!-- Received Questions Tab -->
-                    <div x-show="activeTab === 'received'">
-                        @if (count($questions) > 0)
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead>
-                                        <tr class="bg-gray-50">
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Tanggal</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Pertanyaan</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Jawaban</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Status</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($questions as $question)
-                                            <tr class="hover:bg-gray-50">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $question->created_at->format('d M Y') }}
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    {{ $question->question }}
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    @if ($question->is_answered)
-                                                        {{ $question->answer }}
-                                                    @else
-                                                        <span
-                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                            Belum dijawab
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    @if ($question->is_answered)
-                                                        <div class="flex flex-col space-y-1">
-                                                            <span
-                                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                Sudah dijawab
-                                                            </span>
-                                                            <span
-                                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $question->is_public ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
-                                                                {{ $question->is_public ? 'Publik' : 'Privat' }}
-                                                            </span>
-                                                        </div>
-                                                    @else
-                                                        <span
-                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                            Belum dijawab
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    @if (!$question->is_answered)
-                                                        <button type="button"
-                                                            class="inline-flex items-center px-3 py-1.5 border border-green-600 rounded-md text-sm font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                                            x-data=""
-                                                            x-on:click="$dispatch('open-modal', 'answer-modal-{{ $question->id }}')">
-                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6">
-                                                                </path>
-                                                            </svg>
-                                                            Jawab
-                                                        </button>
-                                                    @else
-                                                        <div class="flex space-x-2">
-                                                            <!-- Toggle Public/Private Button -->
-                                                            <form
-                                                                action="{{ route('taaruf.questions.toggle-public', $question->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <button type="submit"
-                                                                    class="inline-flex items-center px-3 py-1.5 border {{ $question->is_public ? 'border-blue-600 text-blue-600 hover:bg-blue-50' : 'border-gray-600 text-gray-600 hover:bg-gray-50' }} rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                                    <svg class="w-4 h-4 mr-1" fill="none"
-                                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                                            stroke-width="2"
-                                                                            d="{{ $question->is_public ? 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' : 'M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21' }}">
-                                                                        </path>
-                                                                    </svg>
-                                                                    {{ $question->is_public ? 'Publik' : 'Privat' }}
-                                                                </button>
-                                                            </form>
-
-                                                            <!-- Options Menu -->
-                                                            <div x-data="{ open: false }"
-                                                                class="relative inline-block text-left">
-                                                                <button type="button"
-                                                                    class="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                                                    @click="open = !open" @click.away="open = false">
-                                                                    <svg class="w-4 h-4" fill="none"
-                                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
-                                                                        </path>
-                                                                    </svg>
-                                                                </button>
-                                                                <div x-show="open"
-                                                                    x-transition:enter="transition ease-out duration-100"
-                                                                    x-transition:enter-start="transform opacity-0 scale-95"
-                                                                    x-transition:enter-end="transform opacity-100 scale-100"
-                                                                    x-transition:leave="transition ease-in duration-75"
-                                                                    x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                                                                    x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                                                    class="origin-top-right absolute left-full ml-2 top-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-10"
-                                                                    role="menu">
-                                                                    <div class="py-1" role="none">
-                                                                        <button type="button"
-                                                                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                                                                            role="menuitem"
-                                                                            @click="$dispatch('open-modal', 'answer-modal-{{ $question->id }}')">
-                                                                            <svg class="mr-3 h-4 w-4 text-gray-500 group-hover:text-gray-600"
-                                                                                fill="none" stroke="currentColor"
-                                                                                viewBox="0 0 24 24">
-                                                                                <path stroke-linecap="round"
-                                                                                    stroke-linejoin="round"
-                                                                                    stroke-width="2"
-                                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                                                </path>
-                                                                            </svg>
-                                                                            Edit Jawaban
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="py-1" role="none">
-                                                                        <form
-                                                                            action="{{ route('taaruf.questions.destroy', $question->id) }}"
-                                                                            method="POST" class="w-full">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                class="group flex items-center px-4 py-2 text-sm text-red-700 hover:bg-red-50 hover:text-red-900 w-full text-left"
-                                                                                role="menuitem"
-                                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?')">
-                                                                                <svg class="mr-3 h-4 w-4 text-red-500 group-hover:text-red-600"
-                                                                                    fill="none" stroke="currentColor"
-                                                                                    viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round"
-                                                                                        stroke-linejoin="round"
-                                                                                        stroke-width="2"
-                                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                                                    </path>
-                                                                                </svg>
-                                                                                Hapus
-                                                                            </button>
-                                                                        </form>
-                                                                    </div>
-                                                                    <div class="py-1" role="none">
-                                                                        <form
-                                                                            action="{{ route('taaruf.questions.toggle-public', $question->id) }}"
-                                                                            method="POST" class="w-full">
-                                                                            @csrf
-                                                                            <button type="submit"
-                                                                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                                                                                role="menuitem">
-                                                                                <svg class="mr-3 h-4 w-4 text-gray-500 group-hover:text-gray-600"
-                                                                                    fill="none" stroke="currentColor"
-                                                                                    viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round"
-                                                                                        stroke-linejoin="round"
-                                                                                        stroke-width="2"
-                                                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                                                    </path>
-                                                                                    <path stroke-linecap="round"
-                                                                                        stroke-linejoin="round"
-                                                                                        stroke-width="2"
-                                                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                                                    </path>
-                                                                                </svg>
-                                                                                {{ $question->is_public ? 'Sembunyikan dari Profil' : 'Tampilkan di Profil' }}
-                                                                            </button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                </td>
-                                            </tr>
-
-                                            <!-- Answer Modal -->
-                                            <div id="answer-modal-{{ $question->id }}" x-data="{ open: false }"
-                                                x-show="open" x-cloak
-                                                @open-modal.window="if ($event.detail == 'answer-modal-{{ $question->id }}') open = true"
-                                                @keydown.escape.window="open = false"
-                                                class="fixed inset-0 overflow-y-auto z-50">
-                                                <div
-                                                    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                                                    <div x-show="open" x-transition:enter="ease-out duration-300"
-                                                        x-transition:enter-start="opacity-0"
-                                                        x-transition:enter-end="opacity-100"
-                                                        x-transition:leave="ease-in duration-200"
-                                                        x-transition:leave-start="opacity-100"
-                                                        x-transition:leave-end="opacity-0"
-                                                        class="fixed inset-0 transition-opacity" @click="open = false">
-                                                        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                                                    </div>
-
-                                                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
-                                                        aria-hidden="true">&#8203;</span>
-
-                                                    <div x-show="open" x-transition:enter="ease-out duration-300"
-                                                        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                                        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                                                        x-transition:leave="ease-in duration-200"
-                                                        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                                                        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                                        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                                                        @click.away="open = false">
-                                                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                                            <div class="sm:flex sm:items-start">
-                                                                <div
-                                                                    class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                                                    <h3 class="text-lg leading-6 font-medium text-gray-900"
-                                                                        id="modal-title">
-                                                                        {{ $question->is_answered ? 'Edit Jawaban' : 'Jawab Pertanyaan' }}
-                                                                    </h3>
-                                                                    <div class="mt-4">
-                                                                        <form
-                                                                            action="{{ route('taaruf.questions.answer', $question->id) }}"
-                                                                            method="POST">
-                                                                            @csrf
-                                                                            <div class="mb-4">
-                                                                                <label
-                                                                                    class="block text-sm font-medium text-gray-700 mb-2">Pertanyaan:</label>
-                                                                                <p class="text-gray-600">
-                                                                                    {{ $question->question }}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div class="mb-4">
-                                                                                <label for="answer{{ $question->id }}"
-                                                                                    class="block text-sm font-medium text-gray-700 mb-2">
-                                                                                    Jawaban Anda:
-                                                                                </label>
-                                                                                <textarea
-                                                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
-                                                                                    id="answer{{ $question->id }}" name="answer" rows="5" required>{{ $question->answer }}</textarea>
-                                                                            </div>
-                                                                            <div class="mb-4">
-                                                                                <div class="flex items-center">
-                                                                                    <input
-                                                                                        id="is_public{{ $question->id }}"
-                                                                                        name="is_public" type="checkbox"
-                                                                                        value="1"
-                                                                                        class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                                                                                        {{ $question->is_public ? 'checked' : '' }}>
-                                                                                    <label
-                                                                                        for="is_public{{ $question->id }}"
-                                                                                        class="ml-2 block text-sm text-gray-700">
-                                                                                        Tampilkan pertanyaan dan jawaban ini
-                                                                                        di
-                                                                                        profil publik saya
-                                                                                    </label>
-                                                                                </div>
-                                                                                <p class="mt-1 text-sm text-gray-500">Jika
-                                                                                    dicentang, pertanyaan dan jawaban ini
-                                                                                    akan
-                                                                                    terlihat oleh pengunjung profil Ta'aruf
-                                                                                    Anda
-                                                                                </p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
-                                                                                <button type="submit"
-                                                                                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                                                                    Simpan Jawaban
-                                                                                </button>
-                                                                                <button type="button"
-                                                                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                                                                    @click="open = false">
-                                                                                    Batal
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="mt-4">
-                                {{ $questions->links() }}
-                            </div>
-                        @else
-                            <div class="flex items-center p-4 bg-blue-50 rounded-lg">
-                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="text-blue-600">Belum ada pertanyaan yang diterima pada profil Ta'aruf Anda.</p>
-                            </div>
-                        @endif
+                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                            Pertanyaan Ta'aruf Saya
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                            Kelola pertanyaan anonim yang masuk ke profil Anda atau pantau pertanyaan yang telah Anda ajukan.
+                        </p>
                     </div>
 
-                    <!-- Sent Questions Tab -->
-                    <div x-show="activeTab === 'sent'">
-                        @if (count($myQuestions) > 0)
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead>
-                                        <tr class="bg-gray-50">
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Tanggal</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Profil</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Pertanyaan</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Jawaban</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($myQuestions as $myQuestion)
-                                            <tr class="hover:bg-gray-50">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $myQuestion->created_at->format('d M Y') }}
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    <a href="{{ route('taaruf.profile.show', $myQuestion->profile->id) }}"
-                                                        class="text-green-600 hover:text-green-700">
-                                                        {{ $myQuestion->profile->user->name }}
-                                                    </a>
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    {{ $myQuestion->question }}
-                                                </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500">
-                                                    @if ($myQuestion->is_answered)
-                                                        {{ $myQuestion->answer }}
-                                                    @else
-                                                        <span
-                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                            Belum dijawab
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <div class="flex items-center p-4 bg-blue-50 rounded-lg">
-                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="text-blue-600">Anda belum mengajukan pertanyaan kepada profil Ta'aruf lain.</p>
-                            </div>
-                        @endif
-                    </div>
+                    <a href="{{ route('taaruf.index') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-xs self-start md:self-auto">
+                        &larr; Dashboard Ta'aruf
+                    </a>
                 </div>
             </div>
         </div>
 
+        @if (session('success'))
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <span class="text-sm font-medium">{{ session('success') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">✕</button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <span class="text-sm font-medium">{{ session('error') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+        @endif
+
+        <!-- Tab Controls -->
+        <div class="flex items-center gap-2 border-b border-gray-200 pb-2">
+            <button @click="activeTab = 'received'"
+                :class="activeTab === 'received' ? 'bg-rose-600 text-white font-bold shadow-sm' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2">
+                <span>📥 Pertanyaan Diterima</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] {{ count($questions ?? []) > 0 ? 'bg-white/20 text-white font-bold' : 'bg-gray-100 text-gray-500' }}">
+                    {{ count($questions ?? []) }}
+                </span>
+            </button>
+            <button @click="activeTab = 'sent'"
+                :class="activeTab === 'sent' ? 'bg-rose-600 text-white font-bold shadow-sm' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2">
+                <span>📤 Pertanyaan Yang Saya Ajukan</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] {{ count($myQuestions ?? []) > 0 ? 'bg-white/20 text-white font-bold' : 'bg-gray-100 text-gray-500' }}">
+                    {{ count($myQuestions ?? []) }}
+                </span>
+            </button>
+        </div>
+
+        <!-- Main Card Container -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7">
+            
+            <!-- Tab 1: Received Questions -->
+            <div x-show="activeTab === 'received'" class="space-y-4">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Pertanyaan Diterima</h2>
+                        <p class="text-xs text-gray-500">Pertanyaan yang diajukan oleh alumni lain pada profil Anda.</p>
+                    </div>
+                </div>
+
+                @if (empty($questions) || count($questions) === 0)
+                    <div class="text-center py-14 bg-gray-50/60 rounded-2xl border border-dashed border-gray-200">
+                        <div class="w-12 h-12 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center text-xl mx-auto mb-2">
+                            📭
+                        </div>
+                        <h3 class="text-sm font-bold text-gray-900">Belum Ada Pertanyaan Masuk</h3>
+                        <p class="text-xs text-gray-500 mt-1">Pertanyaan yang dikirimkan peserta lain akan tampil di sini.</p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach ($questions as $question)
+                            <div class="bg-gray-50/70 border border-gray-200/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="text-gray-400">{{ $question->created_at->format('d M Y, H:i') }}</span>
+                                        @if ($question->is_answered)
+                                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold text-[10px]">
+                                                Sudah Dijawab
+                                            </span>
+                                            <span class="px-2.5 py-0.5 rounded-full {{ $question->is_public ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-600 border border-gray-200' }} font-semibold text-[10px]">
+                                                {{ $question->is_public ? 'Tampil di Profil (Publik)' : 'Privat' }}
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold text-[10px]">
+                                                Menunggu Jawaban
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        @if ($question->is_answered)
+                                            <form action="{{ route('taaruf.questions.toggle-public', $question->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="px-2.5 py-1 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-[11px] font-semibold transition">
+                                                    {{ $question->is_public ? 'Jadikan Privat' : 'Jadikan Publik' }}
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <form action="{{ route('taaruf.questions.destroy', $question->id) }}" method="POST"
+                                            onsubmit="return confirm('Hapus pertanyaan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="px-2.5 py-1 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 text-[11px] font-semibold transition">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="text-xs font-bold text-gray-900 bg-white p-3.5 rounded-xl border border-gray-200">
+                                    <span class="text-rose-600 mr-1.5 font-bold">Q:</span>
+                                    <span>{{ $question->question }}</span>
+                                </div>
+
+                                @if ($question->is_answered)
+                                    <div class="text-xs text-gray-700 bg-emerald-50/50 p-3.5 rounded-xl border border-emerald-200">
+                                        <span class="text-emerald-700 font-bold mr-1.5">Jawaban Anda:</span>
+                                        <span class="leading-relaxed">{{ $question->answer }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Answer Form -->
+                                <form action="{{ route('taaruf.questions.answer', $question->id) }}" method="POST" class="pt-2">
+                                    @csrf
+                                    <div class="flex flex-col sm:flex-row gap-2">
+                                        <textarea name="answer" rows="2" required placeholder="{{ $question->is_answered ? 'Ubah jawaban Anda...' : 'Tuliskan jawaban santun Anda...' }}"
+                                            class="flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ $question->answer }}</textarea>
+                                        <button type="submit"
+                                            class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-xs transition self-end sm:self-auto shrink-0">
+                                            {{ $question->is_answered ? 'Perbarui Jawaban' : 'Kirim Jawaban' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <!-- Tab 2: Sent Questions -->
+            <div x-show="activeTab === 'sent'" class="space-y-4">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Pertanyaan Yang Saya Ajukan</h2>
+                        <p class="text-xs text-gray-500">Daftar pertanyaan yang telah Anda kirimkan ke profil alumni lain.</p>
+                    </div>
+                </div>
+
+                @if (empty($myQuestions) || count($myQuestions) === 0)
+                    <div class="text-center py-14 bg-gray-50/60 rounded-2xl border border-dashed border-gray-200">
+                        <div class="w-12 h-12 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center text-xl mx-auto mb-2">
+                            ✉️
+                        </div>
+                        <h3 class="text-sm font-bold text-gray-900">Belum Ada Pertanyaan Diajukan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Jelajahi profil alumni di Daftar Ta'aruf untuk mengajukan pertanyaan.</p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach ($myQuestions as $q)
+                            <div class="bg-gray-50/70 border border-gray-200/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex items-center justify-between text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-gray-800">Ditujukan ke: {{ $q->profile->full_name ?? 'Peserta' }}</span>
+                                        <span class="text-gray-400">&bull; {{ $q->created_at->format('d M Y') }}</span>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full {{ $q->is_answered ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200' }} text-[10px] font-bold">
+                                        {{ $q->is_answered ? 'Sudah Dijawab' : 'Menunggu Jawaban' }}
+                                    </span>
+                                </div>
+
+                                <div class="text-xs text-gray-800 bg-white p-3 rounded-xl border border-gray-200">
+                                    <span class="font-bold text-rose-600 mr-1">Pertanyaan:</span>
+                                    <span>{{ $q->question }}</span>
+                                </div>
+
+                                @if ($q->is_answered)
+                                    <div class="text-xs text-emerald-900 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                        <span class="font-bold mr-1">Jawaban:</span>
+                                        <span>{{ $q->answer }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+        </div>
 
     </div>
+</div>
 @endsection

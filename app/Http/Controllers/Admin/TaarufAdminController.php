@@ -271,6 +271,62 @@ class TaarufAdminController extends Controller
         $debtProfiles = TaarufProfile::where('has_debt', true)->count();
         $dependentProfiles = TaarufProfile::where('has_dependents', true)->count();
 
+        // Target Tahun Menikah
+        $marriageTargets = TaarufProfile::select('marriage_target_year', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->whereNotNull('marriage_target_year')
+            ->where('marriage_target_year', '!=', '')
+            ->groupBy('marriage_target_year')
+            ->orderBy('marriage_target_year')
+            ->take(5)
+            ->get();
+
+        // Top Kota Domisili
+        $topCities = TaarufProfile::select(\Illuminate\Support\Facades\DB::raw('UPPER(residence_city) as city'), \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->whereNotNull('residence_city')
+            ->where('residence_city', '!=', '')
+            ->groupBy(\Illuminate\Support\Facades\DB::raw('UPPER(residence_city)'))
+            ->orderByDesc('count')
+            ->take(6)
+            ->get();
+
+        // Pertanyaan Kuesioner
+        $totalQuestions = \App\Models\TaarufQuestion::count();
+        $answeredQuestions = \App\Models\TaarufQuestion::where('is_answered', true)->count();
+        $unansweredQuestions = $totalQuestions - $answeredQuestions;
+
+        // Kelengkapan Berkas
+        $withPhoto = TaarufProfile::whereNotNull('photo_url')->where('photo_url', '!=', '')->count();
+        $withConsent = TaarufProfile::whereNotNull('informed_consent_url')->where('informed_consent_url', '!=', '')->count();
+
+        // Tingkat Pendidikan
+        $eduS3 = TaarufProfile::where('last_education', 'like', '%S3%')->orWhere('last_education', 'like', '%Doktor%')->count();
+        $eduS2 = TaarufProfile::where(function($q) {
+            $q->where('last_education', 'like', '%S2%')
+              ->orWhere('last_education', 'like', '%Magister%')
+              ->orWhere('last_education', 'like', '%Master%')
+              ->orWhere('last_education', 'like', '%MSc%');
+        })->where('last_education', 'not like', '%S3%')->count();
+        $eduS1 = TaarufProfile::where(function($q) {
+            $q->where('last_education', 'like', '%S1%')
+              ->orWhere('last_education', 'like', '%Sarjana%')
+              ->orWhere('last_education', 'like', '%Bachelor%');
+        })->where('last_education', 'not like', '%S2%')->where('last_education', 'not like', '%S3%')->count();
+        $eduDiploma = TaarufProfile::where(function($q) {
+            $q->where('last_education', 'like', '%D3%')
+              ->orWhere('last_education', 'like', '%D4%')
+              ->orWhere('last_education', 'like', '%DIV%')
+              ->orWhere('last_education', 'like', '%Diploma%');
+        })->count();
+        $eduOther = max(0, $totalProfiles - ($eduS3 + $eduS2 + $eduS1 + $eduDiploma));
+
+        $educationStats = [
+            'S3 (Doktor)' => $eduS3,
+            'S2 (Magister)' => $eduS2,
+            'S1 (Sarjana)' => $eduS1,
+            'Diploma (D3/D4)' => $eduDiploma,
+            'SMA/SMK/Lainnya' => $eduOther,
+        ];
+
         return view('admin.taaruf.statistics', compact(
             'totalProfiles',
             'activeProfiles',
@@ -282,7 +338,15 @@ class TaarufAdminController extends Controller
             'smokerProfiles',
             'polygamyIntendedProfiles',
             'debtProfiles',
-            'dependentProfiles'
+            'dependentProfiles',
+            'marriageTargets',
+            'topCities',
+            'totalQuestions',
+            'answeredQuestions',
+            'unansweredQuestions',
+            'withPhoto',
+            'withConsent',
+            'educationStats'
         ));
     }
 }

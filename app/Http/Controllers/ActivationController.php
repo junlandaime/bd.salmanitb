@@ -117,14 +117,30 @@ class ActivationController extends Controller
 
         $user = $this->activationService->activateAccount($token, $request->password);
 
-        // if (!$user) {
-        //     return redirect()->route('activation.invalid');
-        // }
+        if (!$user) {
+            return redirect()->route('activation.invalid');
+        }
 
-        $user->assignRole('alumni');
+        // Hanya beri role alumni jika user memang terdaftar sebagai alumni di batch_alumni
+        if ($user->batchAlumni()->exists()) {
+            if (!$user->hasRole('alumni')) {
+                $user->assignRole('alumni');
+            }
+        }
 
-        // Tidak perlu login, langsung tampilkan halaman sukses statis
-        return view('auth.activation.success', ['email' => $user->email]);
+        // Auto login user after activation
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        $isAlumni = $user->hasRole('alumni');
+        $isPeserta = \App\Models\SpnRegistration::where('user_id', $user->id)->exists();
+
+        // Tampilkan halaman sukses aktivasi dengan info dan link dashboard yang sesuai
+        return view('auth.activation.success', [
+            'email' => $user->email,
+            'isAlumni' => $isAlumni,
+            'isPeserta' => $isPeserta,
+        ]);
     }
 
     /**

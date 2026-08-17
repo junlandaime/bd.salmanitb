@@ -70,7 +70,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'roles' => ['required', 'array']
+            'roles' => ['nullable', 'array']
         ]);
 
         $user = User::create([
@@ -79,10 +79,12 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->syncRoles($request->roles);
+        if ($request->filled('roles')) {
+            $user->syncRoles($request->roles);
+        }
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', 'User berhasil dibuat.');
     }
 
     public function edit(User $user)
@@ -97,7 +99,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Password::defaults()],
-            'roles' => ['required', 'array']
+            'roles' => ['nullable', 'array']
         ]);
 
         $user->update([
@@ -111,10 +113,11 @@ class UserController extends Controller
             ]);
         }
 
-        $user->syncRoles($request->roles);
+        // Sync roles or empty them if none checked
+        $user->syncRoles($request->input('roles', []));
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'Data user berhasil diperbarui.');
     }
 
     public function destroy(User $user)

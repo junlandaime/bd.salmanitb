@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Panel — SPN Salman Offline Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          serif: ["Lora", "ui-serif", "Georgia", "serif"],
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        },
+      },
+    },
+  };
+</script>
+<script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<script src="assets/data.js"></script>
+<link rel="stylesheet" href="assets/app.css" />
+</head>
+<body class="min-h-screen bg-[#faf9f5] font-sans text-gray-800 antialiased">
+
+<div x-data="dashboardPage()" x-cloak>
+
+  <!-- ===== Header ===== -->
+  <header class="sticky top-0 z-30 border-b border-gray-200 bg-[#faf9f5]/95 backdrop-blur">
+    <div class="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white shadow-sm">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <h1 class="font-serif text-lg font-bold leading-tight text-gray-900">Admin Panel</h1>
+          <p class="text-xs text-gray-500">SPN Salman Offline Batch 49</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="#" class="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+          <span class="hidden sm:inline">Lihat Halaman</span>
+        </a>
+        <button type="button" onclick="location.reload()" class="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+      </div>
+    </div>
+    <nav class="mx-auto max-w-[1400px] px-4 pb-4 sm:px-6">
+      <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 p-1">
+        <a href="dashboard.html" class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-gray-900 shadow-sm">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="pendaftar.html" class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-gray-500 transition hover:text-gray-800">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Pendaftar
+        </a>
+        <a href="log-aktivitas.html" class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-gray-500 transition hover:text-gray-800">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 9h1"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+          Log Aktivitas
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== Main ===== -->
+  <main class="mx-auto max-w-[1400px] space-y-6 px-4 py-6 sm:px-6">
+
+    <!-- Stat cards row -->
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <template x-for="card in statCards" :key="card.label">
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg" :class="card.iconBg">
+            <span x-html="card.icon" :class="card.iconColor" class="h-[18px] w-[18px]"></span>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500" x-text="card.label"></p>
+          <p class="mt-1 font-serif text-2xl font-bold" :class="card.numColor" x-text="card.value"></p>
+        </div>
+      </template>
+    </div>
+
+    <!-- Total tracking + conversion rate -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Total Event Tracking</p>
+        <p class="mt-2 font-serif text-3xl font-bold text-gray-900" x-text="s.totalEventTracking"></p>
+      </div>
+      <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Conversion Rate (Klik → WA)</p>
+        <p class="mt-2 flex items-baseline gap-2">
+          <span class="font-serif text-3xl font-bold text-emerald-700" x-text="s.conversionRate + '%'"></span>
+          <span class="text-sm text-gray-500">dari klik daftar</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Ringkasan Infak -->
+    <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <h2 class="font-serif text-lg font-bold text-gray-900">Ringkasan Infak</h2>
+
+      <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 10a2 2 0 0 1 2-2h1.5a1.5 1.5 0 0 1 0 3H11a1.5 1.5 0 0 0 0 3h1.5a2 2 0 0 0 2-2"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-amber-800">Total Infak</p>
+          <p class="mt-1 font-serif text-xl font-bold text-amber-900" x-text="fmtRupiah(s.totalInfak)"></p>
+          <p class="text-xs text-amber-700" x-text="s.payers.length + ' pembayar'"></p>
+        </div>
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 11v7M17 7v11"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">Rata-rata</p>
+          <p class="mt-1 font-serif text-xl font-bold text-emerald-900" x-text="fmtRupiah(s.rataRata)"></p>
+          <p class="text-xs text-emerald-700">per pendaftar</p>
+        </div>
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-emerald-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12a10 10 0 1 1-6.5-9.4"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-amber-800">Terkonfirmasi WA</p>
+          <p class="mt-1 font-serif text-xl font-bold text-emerald-900" x-text="fmtRupiah(s.terkonfirmasiWA)"></p>
+          <p class="text-xs text-amber-700" x-text="s.confirmedWA + ' konfirmasi'"></p>
+        </div>
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">Sisa Kuota</p>
+          <p class="mt-1 font-serif text-xl font-bold text-gray-900" x-text="s.sisaKuota"></p>
+          <p class="text-xs text-emerald-700" x-text="'dari ' + totalKuota + ' kuota'"></p>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <div class="flex items-center justify-between">
+            <span class="flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <span class="h-2 w-2 rounded-full bg-amber-400"></span> Early Bird
+            </span>
+            <span class="text-sm text-gray-500" x-text="s.earlyBird.count + ' orang'"></span>
+          </div>
+          <p class="mt-2 font-serif text-2xl font-bold text-gray-900" x-text="fmtRupiah(s.earlyBird.total)"></p>
+          <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
+            <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
+              <div class="h-full rounded-full bg-amber-400" :style="'width:' + earlyBirdWidth + '%'"></div>
+            </div>
+            <span class="ml-3 whitespace-nowrap" x-text="fmtRupiah(s.earlyBird.pax) + '/pax'"></span>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <div class="flex items-center justify-between">
+            <span class="flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <span class="h-2 w-2 rounded-full bg-slate-600"></span> Normal Bird
+            </span>
+            <span class="text-sm text-gray-500" x-text="s.normalBird.count + ' orang'"></span>
+          </div>
+          <p class="mt-2 font-serif text-2xl font-bold text-gray-900" x-text="fmtRupiah(s.normalBird.total)"></p>
+          <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
+            <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
+              <div class="h-full rounded-full bg-slate-600" :style="'width:' + normalBirdWidth + '%'"></div>
+            </div>
+            <span class="ml-3 whitespace-nowrap" x-text="fmtRupiah(s.normalBird.pax) + '/pax'"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conversion Funnel -->
+    <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <h2 class="font-serif text-lg font-bold text-gray-900">Conversion Funnel</h2>
+      <div class="mt-4 space-y-1">
+        <template x-for="(row, i) in s.funnel" :key="row.key">
+          <div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="flex items-center gap-2 font-medium text-gray-800">
+                <span class="h-2 w-2 rounded-full" :style="'background-color:' + row.dot"></span>
+                <span x-text="row.label"></span>
+              </span>
+              <span class="flex items-center gap-2">
+                <span class="font-semibold text-gray-900" x-text="row.value"></span>
+                <span x-show="row.drop !== null && row.drop < 0" class="text-xs font-medium text-rose-500" x-text="row.pct + '% ' "></span>
+              </span>
+            </div>
+            <div class="mt-1.5 h-4 w-full overflow-hidden rounded-full bg-gray-100">
+              <div class="flex h-full items-center justify-end rounded-full pr-2 text-[10px] font-semibold text-white" :style="'width:' + row.pct + '%; background-color:' + row.dot" x-text="row.pct + '%'"></div>
+            </div>
+            <div class="flex justify-start py-1 pl-1" x-show="i < s.funnel.length - 1">
+              <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Statistik Kode Referral -->
+    <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <div class="flex items-center justify-between">
+        <h2 class="font-serif text-lg font-bold text-gray-900">Statistik Kode Referral</h2>
+        <span class="text-xs text-gray-500" x-text="'dari ' + s.payers.length + ' pendaftar'"></span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 text-gray-600">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Pakai Referral</p>
+          <p class="mt-1 font-serif text-xl font-bold text-gray-900" x-text="s.referralUsers.length"></p>
+          <p class="text-xs text-gray-500" x-text="s.pctReferral + '% dari pendaftar'"></p>
+        </div>
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">Kode Valid</p>
+          <p class="mt-1 font-serif text-xl font-bold text-emerald-900" x-text="s.validReferral.length"></p>
+          <p class="text-xs text-emerald-700" x-text="'dapat diskon Rp' + REFERRAL_DISCOUNT.toLocaleString('id-ID')"></p>
+        </div>
+        <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-rose-700">Kode Invalid</p>
+          <p class="mt-1 font-serif text-xl font-bold text-rose-700" x-text="s.invalidReferral.length"></p>
+          <p class="text-xs text-rose-600">tidak dapat diskon</p>
+        </div>
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M8.5 9.5a2.5 2.5 0 0 1 2.5-2h1a2.5 2.5 0 0 1 0 5h-1a2.5 2.5 0 0 0 0 5h1a2.5 2.5 0 0 0 2.5-2"/></svg>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">Total Diskon</p>
+          <p class="mt-1 font-serif text-xl font-bold text-emerald-900" x-text="fmtRupiah(s.totalDiskon)"></p>
+          <p class="text-xs text-emerald-700" x-text="s.validReferral.length + ' x Rp' + REFERRAL_DISCOUNT.toLocaleString('id-ID')"></p>
+        </div>
+      </div>
+
+      <template x-if="s.validReferral.length > 0">
+        <div class="mt-5">
+          <p class="mb-2 flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span x-text="'Kode Valid (' + s.validReferral.length + ')'"></span>
+          </p>
+          <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="w-full min-w-[560px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-gray-200 bg-gray-50 text-[11px] uppercase tracking-wide text-gray-500">
+                  <th class="px-3 py-2 font-semibold">Nama</th>
+                  <th class="px-3 py-2 font-semibold">Kode</th>
+                  <th class="px-3 py-2 font-semibold">Paket</th>
+                  <th class="px-3 py-2 font-semibold">Total</th>
+                  <th class="px-3 py-2 font-semibold">Waktu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="p in s.validReferral" :key="p.idx">
+                  <tr class="border-b border-gray-100 last:border-0">
+                    <td class="px-3 py-2.5 font-medium text-gray-900" x-text="p.nama"></td>
+                    <td class="px-3 py-2.5 font-mono text-emerald-700" x-text="p.kodeReferral"></td>
+                    <td class="px-3 py-2.5 text-gray-600" x-text="p.paket"></td>
+                    <td class="px-3 py-2.5 font-semibold text-gray-900" x-text="fmtRupiah(p.harga)"></td>
+                    <td class="px-3 py-2.5 text-gray-500" x-text="fmtShortDate(p.tsKw || p.tsPy)"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </template>
+
+      <template x-if="s.invalidReferral.length > 0">
+        <div class="mt-5">
+          <p class="mb-2 flex items-center gap-1.5 text-sm font-semibold text-rose-600">
+            <span class="h-2 w-2 rounded-full bg-rose-500"></span>
+            <span x-text="'Kode Invalid — Perlu Dicek (' + s.invalidReferral.length + ')'"></span>
+          </p>
+          <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="w-full min-w-[560px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-gray-200 bg-gray-50 text-[11px] uppercase tracking-wide text-gray-500">
+                  <th class="px-3 py-2 font-semibold">Nama</th>
+                  <th class="px-3 py-2 font-semibold">Kode</th>
+                  <th class="px-3 py-2 font-semibold">Paket</th>
+                  <th class="px-3 py-2 font-semibold">Total</th>
+                  <th class="px-3 py-2 font-semibold">Waktu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="p in s.invalidReferral" :key="p.idx">
+                  <tr class="border-b border-gray-100 last:border-0">
+                    <td class="px-3 py-2.5 font-medium text-gray-900" x-text="p.nama"></td>
+                    <td class="px-3 py-2.5 font-mono text-rose-600" x-text="p.kodeReferral"></td>
+                    <td class="px-3 py-2.5 text-gray-600" x-text="p.paket"></td>
+                    <td class="px-3 py-2.5 font-semibold text-gray-900" x-text="fmtRupiah(p.harga)"></td>
+                    <td class="px-3 py-2.5 text-gray-500" x-text="fmtShortDate(p.tsKw || p.tsPy)"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </template>
+
+      <template x-if="s.payers.length === 0">
+        <p class="mt-4 rounded-lg bg-gray-50 px-4 py-6 text-center text-sm text-gray-400">Belum ada data referral.</p>
+      </template>
+    </section>
+
+    <!-- Ringkasan Funnel -->
+    <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <h2 class="font-serif text-lg font-bold text-gray-900">Ringkasan Funnel</h2>
+      <div class="mt-4 overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full min-w-[560px] text-left text-sm">
+          <thead>
+            <tr class="border-b border-gray-200 bg-gray-50 text-[11px] uppercase tracking-wide text-gray-500">
+              <th class="px-3 py-2 font-semibold">Tahap</th>
+              <th class="px-3 py-2 font-semibold">Jumlah</th>
+              <th class="px-3 py-2 font-semibold">% dari tahap sebelumnya</th>
+              <th class="px-3 py-2 font-semibold">Drop-off</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in s.funnel" :key="row.key">
+              <tr class="border-b border-gray-100 last:border-0">
+                <td class="px-3 py-2.5">
+                  <span class="flex items-center gap-2 font-medium text-gray-800">
+                    <span class="h-2 w-2 rounded-full" :style="'background-color:' + row.dot"></span>
+                    <span x-text="row.label"></span>
+                  </span>
+                </td>
+                <td class="px-3 py-2.5 font-semibold text-gray-900" x-text="row.value"></td>
+                <td class="px-3 py-2.5 text-gray-600" x-text="row.of ? row.pct + '%' : '-'"></td>
+                <td class="px-3 py-2.5" :class="row.drop < 0 ? 'text-rose-500 font-medium' : 'text-gray-400'" x-text="row.drop === null ? '-' : (row.drop === 0 ? '-' : row.drop)"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Danger Zone -->
+    <div x-data="dangerZone()">
+      <section class="flex flex-col items-start justify-between gap-4 rounded-2xl border border-rose-200 bg-rose-50 p-5 sm:flex-row sm:items-center">
+        <div>
+          <p class="flex items-center gap-2 text-sm font-semibold text-rose-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            Danger Zone
+          </p>
+          <p class="mt-1 text-sm text-rose-600">Hapus seluruh data tracking dari localStorage. Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+        <button @click="open = true" type="button" class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+          Hapus Semua Data
+        </button>
+      </section>
+
+      <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" @keydown.escape.window="open=false">
+        <div @click.outside="open=false" x-show="open" x-transition class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+          <p class="flex items-center gap-2 font-serif text-lg font-bold text-gray-900">
+            <svg viewBox="0 0 24 24" class="h-5 w-5 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            Hapus semua data?
+          </p>
+          <p class="mt-2 text-sm text-gray-600">Semua data pendaftar dan log aktivitas akan dihapus permanen dari localStorage perangkat ini. Tindakan ini tidak dapat dibatalkan.</p>
+          <div class="mt-5 flex justify-end gap-2">
+            <button @click="open=false" type="button" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">Batal</button>
+            <button @click="doDelete()" type="button" class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">Ya, Hapus Semua</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

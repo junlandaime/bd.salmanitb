@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log Aktivitas — Admin Panel SPN Salman Offline Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          serif: ["Lora", "ui-serif", "Georgia", "serif"],
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        },
+      },
+    },
+  };
+</script>
+<script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<script src="assets/data.js"></script>
+<link rel="stylesheet" href="assets/app.css" />
+</head>
+<body class="min-h-screen bg-[#faf9f5] font-sans text-gray-800 antialiased">
+
+<div x-data="{}" x-cloak>
+
+  <!-- ===== Header ===== -->
+  <header class="sticky top-0 z-30 border-b border-gray-200 bg-[#faf9f5]/95 backdrop-blur">
+    <div class="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white shadow-sm">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <h1 class="font-serif text-lg font-bold leading-tight text-gray-900">Admin Panel</h1>
+          <p class="text-xs text-gray-500">SPN Salman Offline Batch 49</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="#" class="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+          <span class="hidden sm:inline">Lihat Halaman</span>
+        </a>
+        <button type="button" onclick="location.reload()" class="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+      </div>
+    </div>
+    <nav class="mx-auto max-w-[1400px] px-4 pb-4 sm:px-6">
+      <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 p-1">
+        <a href="dashboard.html" class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-gray-500 transition hover:text-gray-800">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="pendaftar.html" class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-gray-500 transition hover:text-gray-800">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Pendaftar
+        </a>
+        <a href="log-aktivitas.html" class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-gray-900 shadow-sm">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 9h1"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+          Log Aktivitas
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== Main ===== -->
+  <main class="mx-auto max-w-[1400px] space-y-6 px-4 py-6 sm:px-6" x-data="logPage()">
+
+    <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 class="font-serif text-lg font-bold text-gray-900">Log Aktivitas</h2>
+          <p class="text-sm text-gray-500" x-text="total + ' event tercatat'"></p>
+        </div>
+        <div class="flex flex-col gap-2 sm:flex-row">
+          <div class="relative w-full sm:w-64">
+            <svg viewBox="0 0 24 24" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input x-model="query" type="text" placeholder="Cari event, pengguna, detail..." class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm text-gray-700 placeholder:text-gray-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100" />
+          </div>
+          <select x-model="tahapFilter" class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 sm:w-56">
+            <option value="all">Semua tahap</option>
+            <template x-for="opt in tahapOptions" :key="opt.value">
+              <option :value="opt.value" x-text="opt.label"></option>
+            </template>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-5 overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full min-w-[860px] text-left text-sm">
+          <thead>
+            <tr class="border-b border-gray-200 bg-gray-50 text-[11px] uppercase tracking-wide text-gray-500">
+              <th class="px-3 py-2.5 font-semibold">Event ID</th>
+              <th class="px-3 py-2.5 font-semibold">Tahap</th>
+              <th class="px-3 py-2.5 font-semibold">Pengguna</th>
+              <th class="px-3 py-2.5 font-semibold">Detail</th>
+              <th class="px-3 py-2.5 font-semibold">Waktu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in filteredRows" :key="row.id">
+              <tr class="border-b border-gray-100 last:border-0">
+                <td class="px-3 py-2.5 font-mono text-xs text-gray-500" x-text="row.id"></td>
+                <td class="px-3 py-2.5">
+                  <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold" :class="TAHAP_BADGE[row.tahap]" x-text="row.tahapLabel"></span>
+                </td>
+                <td class="px-3 py-2.5 text-gray-600" x-text="row.pengguna"></td>
+                <td class="px-3 py-2.5 max-w-[280px] truncate text-gray-700" :title="row.detail" x-text="row.detail"></td>
+                <td class="px-3 py-2.5 text-gray-500" x-text="fmtLogDate(row.ts)"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <template x-if="filteredRows.length === 0">
+        <p class="mt-4 rounded-lg bg-gray-50 px-4 py-6 text-center text-sm text-gray-400">Belum ada aktivitas tercatat.</p>
+      </template>
+    </section>
+
+    <!-- Danger Zone -->
+    <div x-data="dangerZone()">
+      <section class="flex flex-col items-start justify-between gap-4 rounded-2xl border border-rose-200 bg-rose-50 p-5 sm:flex-row sm:items-center">
+        <div>
+          <p class="flex items-center gap-2 text-sm font-semibold text-rose-700">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            Danger Zone
+          </p>
+          <p class="mt-1 text-sm text-rose-600">Hapus seluruh data tracking dari localStorage. Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+        <button @click="open = true" type="button" class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+          Hapus Semua Data
+        </button>
+      </section>
+
+      <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" @keydown.escape.window="open=false">
+        <div @click.outside="open=false" x-show="open" x-transition class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+          <p class="flex items-center gap-2 font-serif text-lg font-bold text-gray-900">
+            <svg viewBox="0 0 24 24" class="h-5 w-5 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            Hapus semua data?
+          </p>
+          <p class="mt-2 text-sm text-gray-600">Semua data pendaftar dan log aktivitas akan dihapus permanen dari localStorage perangkat ini. Tindakan ini tidak dapat dibatalkan.</p>
+          <div class="mt-5 flex justify-end gap-2">
+            <button @click="open=false" type="button" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">Batal</button>
+            <button @click="doDelete()" type="button" class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">Ya, Hapus Semua</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

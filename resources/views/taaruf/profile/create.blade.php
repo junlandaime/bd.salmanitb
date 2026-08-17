@@ -1,546 +1,459 @@
 @extends('layouts.app')
 
-@section('title', 'Buat Profil Ta\'aruf')
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+@section('title', 'Buat Profil Ta\'aruf - Bidang Dakwah Salman ITB')
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
 @section('content')
-    <main class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Breadcrumb Navigation -->
-            <nav class="mb-6">
-                <ol class="flex text-sm text-gray-500">
-                    <li class="flex items-center">
-                        <a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                            Alumni</a>
-                        <svg class="h-4 w-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </li>
-                    <li class="flex items-center">
-                        <a href="{{ route('taaruf.index') }}" class="text-green-600 hover:text-green-700">Ta'aruf</a>
-                        <svg class="h-4 w-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </li>
-                    <li class="text-gray-700 font-medium">Buat Profil</li>
-                </ol>
-            </nav>
+    <div class="min-h-screen bg-gray-50/70 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            <!-- Page Header -->
-            <div class="mb-10">
-                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                    <span class="block text-green-600">Buat Profil Ta'aruf</span>
-                </h1>
-                <p class="mt-3 text-lg text-gray-500">Lengkapi informasi diri Anda dengan jujur dan akurat</p>
+            <!-- Header Card -->
+            <div
+                class="bg-gradient-to-br from-slate-900 via-rose-950 to-pink-950 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+                <div
+                    class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]">
+                </div>
+
+                <div class="relative z-10">
+                    <nav class="flex items-center gap-2 text-xs text-rose-300/80 mb-3 font-medium">
+                        <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                        <span>/</span>
+                        <a href="{{ route('taaruf.index') }}" class="hover:text-white transition">Ta'aruf</a>
+                        <span>/</span>
+                        <span class="text-white font-semibold">Buat Profil</span>
+                    </nav>
+
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 text-xs font-semibold mb-2">
+                                <span>📝</span>
+                                <span>Pendaftaran Biodata Ta'aruf</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                                Lengkapi Profil Ta'aruf Anda
+                            </h1>
+                            <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                                Lengkapi informasi diri dan kriteria pasangan yang Anda harapkan dengan jujur dan amanah.
+                            </p>
+                        </div>
+
+                        <a href="{{ route('taaruf.index') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-xs self-start md:self-auto">
+                            &larr; Dashboard Ta'aruf
+                        </a>
+                    </div>
+                </div>
             </div>
 
             @if (session('error'))
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-red-700">{{ session('error') }}</p>
-                        </div>
-                    </div>
+                <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm flex items-center justify-between"
+                    role="alert">
+                    <span class="text-sm font-medium">{{ session('error') }}</span>
+                    <button type="button" onclick="this.parentElement.remove()"
+                        class="text-red-500 hover:text-red-700">✕</button>
                 </div>
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Form Column -->
+
+                <!-- Left 2 Columns: Form Fields -->
                 <div class="lg:col-span-2">
                     <form action="{{ route('taaruf.profile.store') }}" method="POST" enctype="multipart/form-data"
-                        class="space-y-8">
+                        class="space-y-6">
                         @csrf
 
-                        <!-- Informasi Dasar Card -->
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <div class="px-6 py-4 bg-green-600">
-                                <h2 class="text-xl font-bold text-white">Informasi Dasar</h2>
-                            </div>
-                            <div class="p-6 space-y-4">
+                        <!-- 1. Informasi Dasar Card -->
+                        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7 space-y-4">
+                            <h2
+                                class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                                <span>👤</span>
+                                <span>Informasi Dasar Diri</span>
+                            </h2>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="gender" class="block text-sm font-medium text-gray-700">
-                                        Jenis Kelamin <span class="text-red-500">*</span>
+                                    <label for="gender" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Jenis Kelamin <span class="text-rose-500">*</span>
                                     </label>
-                                    <select name="gender" id="gender"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('gender') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        required>
+                                    <select name="gender" id="gender" required
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('gender') border-red-500 @enderror">
                                         <option value="">-- Pilih Jenis Kelamin --</option>
-                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Laki-laki
-                                        </option>
-                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Perempuan
-                                        </option>
+                                        <option value="male"
+                                            {{ old('gender', $prefill['gender'] ?? '') == 'male' ? 'selected' : '' }}>
+                                            Laki-laki (Ikhwan)</option>
+                                        <option value="female"
+                                            {{ old('gender', $prefill['gender'] ?? '') == 'female' ? 'selected' : '' }}>
+                                            Perempuan (Akhwat)</option>
                                     </select>
                                     @error('gender')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div>
-                                    <label for="full_name" class="block text-sm font-medium text-gray-700">
-                                        Nama Lengkap <span class="text-red-500">*</span>
+                                    <label for="nickname" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Nama Panggilan <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="full_name" id="full_name"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('full_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('full_name') }}" required>
-                                    @error('full_name')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <label for="nickname" class="block text-sm font-medium text-gray-700">
-                                        Nama Panggilan <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" name="nickname" id="nickname"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('nickname') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('nickname') }}" required>
+                                    <input type="text" name="nickname" id="nickname" required
+                                        value="{{ old('nickname', $prefill['nickname'] ?? '') }}"
+                                        placeholder="Contoh: Fulan"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('nickname') border-red-500 @enderror">
                                     @error('nickname')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+                            </div>
 
+                            <div>
+                                <label for="full_name" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Nama Lengkap <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" name="full_name" id="full_name" required
+                                    value="{{ old('full_name', $prefill['full_name'] ?? '') }}"
+                                    placeholder="Nama lengkap sesuai KTP"
+                                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('full_name') border-red-500 @enderror">
+                                @error('full_name')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="birth_place_date" class="block text-sm font-medium text-gray-700">
-                                        Tempat, Tanggal Lahir <span class="text-red-500">*</span>
+                                    <label for="birth_place_date" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Tempat &amp; Tanggal Lahir <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="birth_place_date" id="birth_place_date"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('birth_place_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+                                    <input type="text" name="birth_place_date" id="birth_place_date" required
                                         value="{{ old('birth_place_date') }}"
-                                        placeholder="Contoh: Jakarta, 15 Januari 1995" required>
+                                        placeholder="Contoh: Bandung, 15 Januari 1998"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('birth_place_date') border-red-500 @enderror">
                                     @error('birth_place_date')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div>
-                                    <label for="current_residence" class="block text-sm font-medium text-gray-700">
-                                        Domisili Saat Ini <span class="text-red-500">*</span>
+                                    <label for="current_residence" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Domisili Saat Ini <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="current_residence" id="current_residence"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('current_residence') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('current_residence') }}" placeholder="Contoh: Bandung, Jawa Barat"
-                                        required>
+                                    <input type="text" name="current_residence" id="current_residence" required
+                                        value="{{ old('current_residence', $prefill['current_residence'] ?? '') }}"
+                                        placeholder="Contoh: Coblong, Kota Bandung, Jawa Barat"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('current_residence') border-red-500 @enderror">
                                     @error('current_residence')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-
-
                             </div>
                         </div>
 
-                        <!-- Pendidikan dan Pekerjaan Card -->
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <div class="px-6 py-4 bg-green-600">
-                                <h2 class="text-xl font-bold text-white">Pendidikan dan Pekerjaan</h2>
-                            </div>
-                            <div class="p-6 space-y-4">
+                        <!-- 2. Pendidikan & Pekerjaan Card -->
+                        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7 space-y-4">
+                            <h2
+                                class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                                <span>🎓</span>
+                                <span>Pendidikan &amp; Pekerjaan</span>
+                            </h2>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="last_education" class="block text-sm font-medium text-gray-700">
-                                        Pendidikan Terakhir <span class="text-red-500">*</span>
+                                    <label for="last_education" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Pendidikan Terakhir <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="last_education" id="last_education"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('last_education') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('last_education') }}" placeholder="Contoh: S1 Teknik Informatika"
-                                        required>
+                                    <input type="text" name="last_education" id="last_education" required
+                                        value="{{ old('last_education', $prefill['last_education'] ?? '') }}"
+                                        placeholder="Contoh: S1 Teknik Elektro ITB"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('last_education') border-red-500 @enderror">
                                     @error('last_education')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div>
-                                    <label for="occupation" class="block text-sm font-medium text-gray-700">
-                                        Pekerjaan <span class="text-red-500">*</span>
+                                    <label for="occupation" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Profesi / Pekerjaan <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="occupation" id="occupation"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('occupation') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('occupation') }}" placeholder="Contoh: Software Engineer" required>
+                                    <input type="text" name="occupation" id="occupation" required
+                                        value="{{ old('occupation', $prefill['occupation'] ?? '') }}"
+                                        placeholder="Contoh: Software Engineer / ASN / Wiraswasta"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition @error('occupation') border-red-500 @enderror">
                                     @error('occupation')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Informasi Tambahan Card -->
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <div class="px-6 py-4 bg-green-600">
-                                <h2 class="text-xl font-bold text-white">Informasi Tambahan</h2>
-                            </div>
-                            <div class="p-6 space-y-4">
+                        <!-- 3. Visi & Kriteria Card -->
+                        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7 space-y-4">
+                            <h2
+                                class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                                <span>💍</span>
+                                <span>Visi, Kriteria &amp; Harapan Pernikahan</span>
+                            </h2>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="marriage_target_year" class="block text-sm font-medium text-gray-700">
+                                    <label for="marriage_target_year" class="block text-xs font-bold text-gray-700 mb-1">
                                         Target Tahun Menikah
                                     </label>
-                                    <input type="number" name="marriage_target_year" id="marriage_target_year"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('marriage_target_year') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        value="{{ old('marriage_target_year') }}" min="2025" max="2050"
-                                        placeholder="Contoh: 2026">
+                                    <input type="text" name="marriage_target_year" id="marriage_target_year"
+                                        value="{{ old('marriage_target_year') }}"
+                                        placeholder="Contoh: 2026 / Insya Allah Segera"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">
                                     @error('marriage_target_year')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div>
-                                    <label for="personality" class="block text-sm font-medium text-gray-700">
-                                        Kepribadian
+                                    <label for="personality" class="block text-xs font-bold text-gray-700 mb-1">
+                                        Gambaran Kepribadian
                                     </label>
                                     <input type="text" name="personality" id="personality"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('personality') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
                                         value="{{ old('personality') }}"
-                                        placeholder="Contoh: Introvert, Extrovert, Ambivert, dll">
+                                        placeholder="Contoh: Tenang, pendengar yang baik, suka kerapian"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">
                                     @error('personality')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label for="expectation" class="block text-sm font-medium text-gray-700">
-                                        Harapan dalam Pernikahan
-                                    </label>
-                                    <textarea name="expectation" id="expectation" rows="3"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('expectation') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        placeholder="Tuliskan harapan Anda dalam pernikahan">{{ old('expectation') }}</textarea>
-                                    @error('expectation')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            <div>
+                                <label for="ideal_partner_criteria" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Visi Misi Pernikahan
+                                </label>
+                                <textarea name="ideal_partner_criteria" id="ideal_partner_criteria" rows="3"
+                                    placeholder="Jelaskan visi keluarga yang ingin dibangun (tujuan berumah tangga, pendidikan anak, dll)..."
+                                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ old('ideal_partner_criteria') }}</textarea>
+                                @error('ideal_partner_criteria')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                                <div>
-                                    <label for="ideal_partner_criteria" class="block text-sm font-medium text-gray-700">
-                                        Visi Misi Pernikahan
-                                    </label>
-                                    <textarea name="ideal_partner_criteria" id="ideal_partner_criteria" rows="3"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('ideal_partner_criteria') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        placeholder="Tuliskan Visi Misi Pernikahan menurut Anda">{{ old('ideal_partner_criteria') }}</textarea>
-                                    @error('ideal_partner_criteria')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            <div>
+                                <label for="visi_misi" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Kriteria Pasangan yang Diharapkan
+                                </label>
+                                <textarea name="visi_misi" id="visi_misi" rows="3"
+                                    placeholder="Kriteria agama, akhlak, domisili, atau kriteria lain yang menjadi ikhtiar Anda..."
+                                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ old('visi_misi') }}</textarea>
+                                @error('visi_misi')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                                <div>
-                                    <label for="visi_misi" class="block text-sm font-medium text-gray-700">
-                                        Kriteria Pasangan
-                                    </label>
-                                    <textarea name="visi_misi" id="visi_misi" rows="3"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('visi_misi') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        placeholder="Tuliskan Kriteria Pasangan menurut Anda">{{ old('visi_misi') }}</textarea>
-                                    @error('visi_misi')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            <div>
+                                <label for="expectation" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Harapan Khusus dalam Rumah Tangga
+                                </label>
+                                <textarea name="expectation" id="expectation" rows="2"
+                                    placeholder="Harapan saling mendukung ibadah, karir, keluarga besar, dll..."
+                                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ old('expectation') }}</textarea>
+                                @error('expectation')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                                <div>
-                                    <label for="kelebihan_kekurangan" class="block text-sm font-medium text-gray-700">
-                                        Kelebihan dan Kekurangan Diri
-                                    </label>
-                                    <textarea name="kelebihan_kekurangan" id="kelebihan_kekurangan" rows="3"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('kelebihan_kekurangan') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        placeholder="Tuliskan Kelebihan dan Kekurangan Diri Anda">{{ old('kelebihan_kekurangan') }}</textarea>
-                                    @error('kelebihan_kekurangan')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            <div>
+                                <label for="kelebihan_kekurangan" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Kelebihan &amp; Kekurangan Diri
+                                </label>
+                                <textarea name="kelebihan_kekurangan" id="kelebihan_kekurangan" rows="2"
+                                    placeholder="Tuliskan refleksi kelebihan serta hal yang sedang Anda perbaiki dari diri Anda..."
+                                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ old('kelebihan_kekurangan') }}</textarea>
+                                @error('kelebihan_kekurangan')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
-                        <!-- Kontak dan Media Card -->
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <div class="px-6 py-4 bg-green-600">
-                                <h2 class="text-xl font-bold text-white">Kontak dan Media</h2>
+                        <!-- 4. Media & Dokumen Card -->
+                        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7 space-y-4">
+                            <h2
+                                class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                                <span>📸</span>
+                                <span>Foto &amp; Informed Consent</span>
+                            </h2>
+
+                            <div>
+                                <label for="instagram" class="block text-xs font-bold text-gray-700 mb-1">
+                                    Akun Instagram (Opsional)
+                                </label>
+                                <div class="flex rounded-xl shadow-2xs">
+                                    <span
+                                        class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-xs font-semibold">
+                                        @
+                                    </span>
+                                    <input type="text" name="instagram" id="instagram"
+                                        value="{{ old('instagram', $prefill['instagram'] ?? '') }}"
+                                        placeholder="username_instagram"
+                                        class="w-full px-3.5 py-2.5 text-xs rounded-r-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">
+                                </div>
+                                @error('instagram')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div class="p-6 space-y-4">
-                                <div>
-                                    <label for="instagram" class="block text-sm font-medium text-gray-700">
-                                        Akun Instagram
-                                    </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <span
-                                            class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                                            @
-                                        </span>
-                                        <input type="text" name="instagram" id="instagram"
-                                            class="flex-1 block w-full rounded-none rounded-r-md border-gray-300 focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 @error('instagram') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
-                                            value="{{ old('instagram') }}" placeholder="username_instagram">
-                                    </div>
-                                    @error('instagram')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
 
-                                <!-- Photo Upload with Alpine.js -->
-                                <div>
-                                    <label for="photo" class="block text-sm font-medium text-gray-700">
-                                        Foto Profil
-                                    </label>
-                                    <div x-data="photoUploader()" x-on:dragover.prevent="dragover = true"
-                                        x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
-                                        x-bind:class="{ 'border-green-500 bg-green-50': dragover }"
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md transition duration-150">
-                                        <div class="space-y-1 text-center">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
-                                                fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                                <path
-                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            <div class="flex text-sm text-gray-600">
-                                                <label for="photo"
-                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
-                                                    <span>Upload file</span>
-                                                    <input id="photo" name="photo" type="file" class="sr-only"
-                                                        accept="image/jpeg,image/png,image/jpg"
-                                                        x-on:change="handleFileSelect()">
-                                                </label>
-                                                <p class="pl-1">atau drag and drop</p>
-                                            </div>
-                                            <p class="text-xs text-gray-500">
-                                                Format: JPG, JPEG, PNG. Maksimal 2MB. Disarankan foto setengah badan dengan
-                                                wajah terlihat jelas.
-                                            </p>
-                                            <!-- Container untuk preview foto -->
-                                            <div x-show="preview" id="photoPreviewContainer" class="mt-3">
-                                                <img id="photoPreview" class="max-h-48 rounded-md mx-auto"
-                                                    x-bind:src="preview" alt="Preview foto">
-                                                <button type="button" x-on:click="removeFile()"
-                                                    class="mt-2 text-sm text-red-600 hover:text-red-800">Hapus</button>
-                                            </div>
+                            <!-- Photo Upload Dropzone with Alpine -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">
+                                    Foto Profil Peserta
+                                </label>
+                                <div x-data="photoUploader()" x-on:dragover.prevent="dragover = true"
+                                    x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
+                                    :class="dragover ? 'border-rose-500 bg-rose-50/30' : 'border-gray-300 bg-gray-50/50'"
+                                    class="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-2xl transition duration-150 text-center">
+
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-white text-rose-500 border border-gray-200 flex items-center justify-center text-lg mb-2 shadow-2xs">
+                                        📷
+                                    </div>
+                                    <div class="text-xs text-gray-600 flex items-center gap-1">
+                                        <label for="photo"
+                                            class="cursor-pointer font-bold text-rose-600 hover:text-rose-700 hover:underline">
+                                            Pilih File Foto
+                                            <input id="photo" name="photo" type="file" class="sr-only"
+                                                accept="image/jpeg,image/png,image/jpg" x-on:change="handleFileSelect()">
+                                        </label>
+                                        <span>atau tarik ke area ini</span>
+                                    </div>
+                                    <p class="text-[11px] text-gray-400 mt-1">Format JPG, JPEG, PNG. Maksimal 2MB.</p>
+
+                                    <div x-show="preview" class="mt-3">
+                                        <img class="max-h-40 rounded-xl mx-auto border border-gray-200 shadow-sm"
+                                            :src="preview" alt="Preview Foto">
+                                        <button type="button" x-on:click="removeFile()"
+                                            class="mt-2 text-xs text-red-600 hover:underline font-semibold">
+                                            Hapus Foto
+                                        </button>
+                                    </div>
+                                </div>
+                                @error('photo')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Informed Consent Document Dropzone -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">
+                                    Dokumen Informed Consent <span class="text-rose-500">*</span>
+                                </label>
+                                <div x-data="documentUploader()" x-on:dragover.prevent="dragover = true"
+                                    x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
+                                    :class="dragover ? 'border-rose-500 bg-rose-50/30' : 'border-gray-300 bg-gray-50/50'"
+                                    class="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-2xl transition duration-150 text-center">
+
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-white text-rose-500 border border-gray-200 flex items-center justify-center text-lg mb-2 shadow-2xs">
+                                        📄
+                                    </div>
+                                    <div class="text-xs text-gray-600 flex items-center gap-1">
+                                        <label for="informed_consent"
+                                            class="cursor-pointer font-bold text-rose-600 hover:text-rose-700 hover:underline">
+                                            Unggah Dokumen Consent
+                                            <input id="informed_consent" name="informed_consent" type="file" required
+                                                class="sr-only" accept="application/pdf,image/jpeg,image/png,image/jpg"
+                                                x-on:change="handleFileSelect()">
+                                        </label>
+                                        <span>atau tarik ke sini</span>
+                                    </div>
+                                    <p class="text-[11px] text-gray-400 mt-1">
+                                        Format PDF/JPG/PNG. Maks 5MB. Unduh template
+                                        <a href="https://docs.google.com/document/d/1RcjFahFF3bmEpvDvf2QCZ8QlKi5gteNN/edit?tab=t.0"
+                                            target="_blank" class="text-rose-600 font-bold hover:underline">di sini</a>.
+                                    </p>
+
+                                    <div x-show="fileName" class="mt-3 w-full max-w-sm">
+                                        <div
+                                            class="p-2.5 border rounded-xl bg-white flex items-center justify-between text-xs">
+                                            <span class="truncate font-semibold text-gray-800" x-text="fileName"></span>
+                                            <button type="button" x-on:click="removeFile()"
+                                                class="text-xs text-red-600 hover:underline font-bold ml-2">
+                                                ✕
+                                            </button>
                                         </div>
                                     </div>
-                                    @error('photo')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
-
-                                <!-- Document Upload with Alpine.js -->
-                                <div>
-                                    <label for="informed_consent" class="block text-sm font-medium text-gray-700">
-                                        Dokumen Informed Consent <span class="text-red-500">*</span>
-                                    </label>
-                                    <div x-data="documentUploader()" x-on:dragover.prevent="dragover = true"
-                                        x-on:dragleave.prevent="dragover = false" x-on:drop.prevent="dropHandler($event)"
-                                        x-bind:class="{ 'border-green-500 bg-green-50': dragover }"
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md transition duration-150">
-                                        <div class="space-y-1 text-center">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
-                                                fill="none" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <div class="flex text-sm text-gray-600">
-                                                <label for="informed_consent"
-                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
-                                                    <span>Upload dokumen</span>
-                                                    <input id="informed_consent" name="informed_consent" type="file"
-                                                        class="sr-only" required
-                                                        accept="application/pdf,image/jpeg,image/png,image/jpg"
-                                                        x-on:change="handleFileSelect()">
-                                                </label>
-                                                <p class="pl-1">atau drag and drop</p>
-                                            </div>
-                                            <p class="text-xs text-gray-500">
-                                                Format: PDF, JPG, JPEG, PNG. Maksimal 5MB. Unduh template <a
-                                                    href="https://docs.google.com/document/d/1RcjFahFF3bmEpvDvf2QCZ8QlKi5gteNN/edit?tab=t.0"
-                                                    class="text-green-600 hover:underline" target="_blank">di sini</a>,
-                                                isi, tandatangani, dan unggah kembali.
-                                            </p>
-                                            <!-- Container untuk preview dokumen -->
-                                            <div x-show="fileName" id="documentPreviewContainer" class="mt-3">
-                                                <div id="documentPreview"
-                                                    class="p-3 border rounded-md bg-gray-50 flex items-center justify-between">
-                                                    <div class="flex items-center">
-                                                        <svg class="h-6 w-6 text-gray-600 mr-2" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                        </svg>
-                                                        <span id="documentName" class="text-sm text-gray-700"
-                                                            x-text="fileName">Nama
-                                                            dokumen</span>
-                                                    </div>
-                                                    <button type="button" x-on:click="removeFile()"
-                                                        class="text-sm text-red-600 hover:text-red-800">Hapus</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @error('informed_consent')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                                @error('informed_consent')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
-                        <!-- Submit Buttons -->
-                        <div class="flex space-x-4">
+                        <!-- Submit Actions -->
+                        <div class="flex items-center gap-3 pt-2">
                             <button type="submit"
-                                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
+                                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold text-xs shadow-md shadow-pink-500/20 transition">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                Simpan Profil
+                                <span>Simpan &amp; Daftarkan Profil Ta'aruf</span>
                             </button>
                             <a href="{{ route('taaruf.index') }}"
-                                class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition">
                                 Batal
                             </a>
                         </div>
                     </form>
                 </div>
 
-                <!-- Sidebar Column -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
-                        <div class="px-6 py-4 bg-green-600">
-                            <h2 class="text-xl font-bold text-white">Petunjuk Pengisian</h2>
-                        </div>
-                        <div class="p-6 space-y-6">
-                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm text-blue-700">
-                                            Informasi yang Anda berikan akan ditampilkan kepada alumni lain yang juga
-                                            menggunakan fitur Ta'aruf.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Right 1 Column: Guidelines Sidebar -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 space-y-4">
+                        <h3 class="text-xs font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                            <span>💡</span>
+                            <span>Petunjuk &amp; Tips Pengisian</span>
+                        </h3>
 
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Tips pengisian profil:</h3>
-                                <ul class="mt-4 space-y-2 text-sm text-gray-600">
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Berikan informasi yang jujur dan akurat
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Isi semua kolom wajib (bertanda *)
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Gunakan bahasa yang sopan dan mudah dipahami
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Unggah foto yang jelas dan representatif
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Pastikan dokumen informed consent telah ditandatangani
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Setelah mengisi profil:</h3>
-                                <ul class="mt-4 space-y-2 text-sm text-gray-600">
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Anda akan diminta menjawab beberapa pertanyaan tambahan
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Profil Anda akan aktif dan dapat dilihat oleh alumni lain
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Anda dapat mengubah atau menonaktifkan profil kapan saja
-                                    </li>
-                                </ul>
-                            </div>
+                        <div
+                            class="p-3 bg-rose-50/70 rounded-xl border border-rose-100 text-xs text-rose-900 leading-relaxed">
+                            Data yang Anda cantumkan akan ditampilkan di katalog ta'aruf hanya bagi alumni lawan jenis yang
+                            berstatus aktif.
                         </div>
+
+                        <ul class="text-xs text-gray-600 space-y-2 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span>Isi semua kolom wajib bertanda bintang (<span
+                                        class="text-rose-500 font-bold">*</span>) dengan jujur dan akurat.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span>Gunakan foto profil yang santun, sopan, dan berwajah jelas.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span>Pastikan surat persetujuan (informed consent) telah ditandatangani.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 text-xs text-gray-600">
+                        <h4 class="font-bold text-gray-900 mb-2">Bantuan &amp; Konsultasi</h4>
+                        <p class="leading-relaxed mb-3">
+                            Jika ada kendala dalam proses pengisian biodata, hubungi tim fasilitator:
+                        </p>
+                        <a href="https://wa.me/6285703952464" target="_blank"
+                            class="inline-flex items-center gap-1.5 text-emerald-600 font-bold hover:underline">
+                            <span>💬</span>
+                            <span>+6285703952464</span>
+                        </a>
                     </div>
                 </div>
+
             </div>
+
         </div>
-    </main>
+    </div>
+
     @push('scripts')
-        {{-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> --}}
         <script>
             function photoUploader() {
                 return {
                     dragover: false,
                     preview: null,
-
                     handleFileSelect() {
                         const input = document.getElementById('photo');
                         if (input.files && input.files[0]) {
@@ -551,19 +464,15 @@
                             reader.readAsDataURL(input.files[0]);
                         }
                     },
-
                     dropHandler(event) {
                         this.dragover = false;
-                        const dt = event.dataTransfer;
-                        const files = dt.files;
-
+                        const files = event.dataTransfer.files;
                         if (files.length > 0) {
                             const input = document.getElementById('photo');
                             input.files = files;
                             this.handleFileSelect();
                         }
                     },
-
                     removeFile() {
                         const input = document.getElementById('photo');
                         input.value = '';
@@ -576,26 +485,21 @@
                 return {
                     dragover: false,
                     fileName: null,
-
                     handleFileSelect() {
                         const input = document.getElementById('informed_consent');
                         if (input.files && input.files[0]) {
                             this.fileName = input.files[0].name;
                         }
                     },
-
                     dropHandler(event) {
                         this.dragover = false;
-                        const dt = event.dataTransfer;
-                        const files = dt.files;
-
+                        const files = event.dataTransfer.files;
                         if (files.length > 0) {
                             const input = document.getElementById('informed_consent');
                             input.files = files;
                             this.handleFileSelect();
                         }
                     },
-
                     removeFile() {
                         const input = document.getElementById('informed_consent');
                         input.value = '';

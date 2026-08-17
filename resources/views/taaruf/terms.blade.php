@@ -1,244 +1,141 @@
 @extends('layouts.app')
 
-@section('title', 'Syarat dan Ketentuan Ta\'aruf')
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+@section('title', 'Syarat dan Ketentuan Ta\'aruf - Bidang Dakwah Salman ITB')
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
 @section('content')
-    <main class="mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="mb-8">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol class="flex items-center space-x-4">
-                        <li>
-                            <a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                                Alumni</a>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="h-5 w-5 text-gray-400 mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <a href="{{ route('taaruf.index') }}" class="text-green-600 hover:text-green-700">Ta'aruf</a>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="h-5 w-5 text-gray-400 mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-gray-500" aria-current="page">Syarat dan Ketentuan</span>
-                        </li>
-                    </ol>
+<div class="min-h-screen bg-gray-50/70 py-8" x-data="{ agreed: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-pink-950 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <nav class="flex items-center gap-2 text-xs text-rose-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <a href="{{ route('taaruf.index') }}" class="hover:text-white transition">Ta'aruf</a>
+                    <span>/</span>
+                    <span class="text-white font-semibold">Syarat &amp; Ketentuan</span>
                 </nav>
-                <h2 class="text-3xl font-bold text-gray-900 mt-4">Syarat dan Ketentuan Ta'aruf</h2>
-                <p class="text-gray-500 mt-2">Harap baca dengan seksama sebelum melanjutkan</p>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h5 class="text-xl font-bold text-green-600">Ketentuan Penggunaan Fitur Ta'aruf</h5>
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">1. Tujuan Fitur Ta'aruf</h5>
-                                <p class="mt-2 text-gray-600">Fitur Ta'aruf Bidang Dakwah Masjid Salman ITB bertujuan untuk
-                                    memfasilitasi proses perkenalan (ta'aruf) yang sesuai dengan syariat Islam bagi alumni
-                                    Sekolah Pranikah yang serius menuju jenjang pernikahan.</p>
-                            </div>
-
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">2. Persyaratan Pengguna</h5>
-                                <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                    <li>Merupakan alumni Sekolah Pranikah Online atau Sekolah Pranikah Offline Bidang Dakwah
-                                        Masjid Salman ITB</li>
-                                    <li>Telah mengaktivasi akun alumni</li>
-                                    <li>Berusia minimal 18 tahun</li>
-                                    <li>Memiliki niat serius untuk menikah</li>
-                                    <li>Bersedia memberikan informasi yang benar dan akurat</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">3. Kerahasiaan Data</h5>
-                                <p class="mt-2 text-gray-600">Semua informasi yang Anda berikan dalam fitur Ta'aruf akan
-                                    dijaga kerahasiaannya dan hanya dapat diakses oleh:</p>
-                                <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                    <li>Alumni Sekolah Pranikah yang juga telah menyetujui ketentuan Ta'aruf</li>
-                                    <li>Administrator sistem yang berwenang</li>
-                                </ul>
-                                <p class="mt-2 text-gray-600">Anda hanya dapat melihat profil alumni lawan jenis yang juga
-                                    telah menyetujui ketentuan ini.</p>
-                            </div>
-
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">4. Kode Etik</h5>
-                                <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                    <li>Berikan informasi yang jujur dan akurat tentang diri Anda</li>
-                                    <li>Hormati privasi pengguna lain</li>
-                                    <li>Jaga adab komunikasi sesuai syariat Islam</li>
-                                    <li>Dilarang menggunakan fitur ini untuk tujuan selain ta'aruf menuju pernikahan</li>
-                                    <li>Dilarang menyebarkan informasi pengguna lain di luar platform ini</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">5. Informed Consent</h5>
-                                <p class="mt-2 text-gray-600">Anda akan diminta untuk mengisi dan mengunggah dokumen
-                                    Informed Consent yang berisi pernyataan persetujuan penggunaan fitur Ta'aruf. Dokumen
-                                    ini harus ditandatangani sebagai bukti persetujuan Anda.</p>
-                            </div>
-
-                            <div class="mb-6">
-                                <h5 class="text-lg font-semibold text-gray-900">6. Hak Administrator</h5>
-                                <p class="mt-2 text-gray-600">Administrator berhak untuk:</p>
-                                <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                    <li>Menonaktifkan profil yang melanggar ketentuan</li>
-                                    <li>Memverifikasi kebenaran informasi yang diberikan</li>
-                                    <li>Melakukan perubahan pada fitur Ta'aruf sesuai kebutuhan</li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <h5 class="text-lg font-semibold text-gray-900">7. Pembatasan Tanggung Jawab</h5>
-                                <p class="mt-2 text-gray-600">Bidang Dakwah Masjid Salman ITB hanya memfasilitasi proses
-                                    ta'aruf dan tidak bertanggung jawab atas:</p>
-                                <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                    <li>Keputusan pribadi pengguna dalam proses ta'aruf</li>
-                                    <li>Hasil dari proses ta'aruf</li>
-                                    <li>Perselisihan yang mungkin terjadi antar pengguna</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h5 class="text-xl font-bold text-green-600">Persetujuan</h5>
-                        </div>
-                        <div class="p-6">
-                            <p class="text-gray-600">Dengan melanjutkan, Anda menyatakan:</p>
-                            <ul class="mt-2 ml-6 space-y-2 text-gray-600 list-disc">
-                                <li>Telah membaca dan memahami seluruh syarat dan ketentuan</li>
-                                <li>Setuju untuk mematuhi semua ketentuan yang berlaku</li>
-                                <li>Bersedia memberikan informasi yang benar dan akurat</li>
-                                <li>Memiliki niat serius untuk ta'aruf menuju pernikahan</li>
-                            </ul>
-
-                            <form action="{{ route('taaruf.terms.accept') }}" method="POST" class="mt-6">
-                                @csrf
-                                <div class="mb-4">
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="agree" name="agree" type="checkbox" required
-                                                class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="agree" class="font-medium text-gray-700">Saya menyetujui semua
-                                                syarat dan ketentuan di atas</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col space-y-3">
-                                    <button type="submit" id="submitBtn" disabled
-                                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md inline-flex items-center justify-center transition duration-150 ease-in-out">
-                                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Setuju dan Lanjutkan
-                                    </button>
-                                    <a href="{{ route('taaruf.index') }}"
-                                        class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 border border-gray-300 rounded-md inline-flex items-center justify-center transition duration-150 ease-in-out">
-                                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Batal
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h5 class="text-xl font-bold text-green-600">Informasi Tambahan</h5>
-                        </div>
-                        <div class="p-6">
-                            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm text-blue-700">
-                                            Anda dapat mengaktifkan atau menonaktifkan status ta'aruf Anda kapan saja.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p class="text-gray-600">Jika Anda memiliki pertanyaan tentang ketentuan ini, silakan hubungi
-                                admin melalui:</p>
-                            <p class="flex items-center mb-2 text-gray-600">
-                                <svg class="h-5 w-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                </svg>
-                                <a target="_blank" href="mailto:bidangdakwah@salmanitb.com">bidangdakwah@salmanitb.com</a>
-                            </p>
-                            <p class="flex items-center text-gray-600">
-                                <svg class="h-5 w-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                </svg>
-                                <a target="_blank"
-                                    href="https://wa.me/{{ preg_replace('/[^0-9]/', '', '+6285722183585') }}">+6285722183585</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                    Syarat &amp; Ketentuan Layanan Ta'aruf
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                    Pahami kode etik dan panduan syariat sebelum mengaktifkan profil ta'aruf Anda.
+                </p>
             </div>
         </div>
-    </main>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const agreeCheckbox = document.getElementById('agree');
-                const submitBtn = document.getElementById('submitBtn');
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Terms Content -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6 text-xs sm:text-sm text-gray-700 leading-relaxed">
+                    
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 mb-2">
+                            <span class="w-6 h-6 rounded-lg bg-rose-50 text-rose-600 text-xs flex items-center justify-center font-bold">1</span>
+                            Tujuan Fitur Ta'aruf
+                        </h3>
+                        <p class="text-gray-600 pl-8">
+                            Fitur Ta'aruf Bidang Dakwah Masjid Salman ITB bertujuan memfasilitasi proses perkenalan (ta'aruf) yang bernilai ibadah dan sesuai syariat Islam khusus bagi alumni Sekolah Pranikah yang siap dan berkomitmen menuju pernikahan.
+                        </p>
+                    </div>
 
-                agreeCheckbox.addEventListener('change', function() {
-                    submitBtn.disabled = !this.checked;
-                });
-            });
-        </script>
-    @endpush
+                    <div class="pt-4 border-t border-gray-100">
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 mb-2">
+                            <span class="w-6 h-6 rounded-lg bg-rose-50 text-rose-600 text-xs flex items-center justify-center font-bold">2</span>
+                            Persyaratan Peserta Ta'aruf
+                        </h3>
+                        <ul class="list-disc pl-12 space-y-1.5 text-gray-600">
+                            <li>Alumni resmi Sekolah Pranikah (SPN Online / Offline) Salman ITB.</li>
+                            <li>Telah mengaktifkan akun alumni pada portal resmi.</li>
+                            <li>Berusia minimal 18 tahun dan mandiri secara syar'i.</li>
+                            <li>Memiliki niat serius dan bertekad menikah dalam waktu yang wajar.</li>
+                            <li>Wajib mengisi seluruh data biodata dengan jujur, akurat, dan dapat dipertanggungjawabkan.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100">
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 mb-2">
+                            <span class="w-6 h-6 rounded-lg bg-rose-50 text-rose-600 text-xs flex items-center justify-center font-bold">3</span>
+                            Kerahasiaan Data &amp; Privasi
+                        </h3>
+                        <p class="text-gray-600 pl-8 mb-2">
+                            Seluruh data dan privasi peserta dijaga ketat dalam sistem Bidang Dakwah Salman ITB:
+                        </p>
+                        <ul class="list-disc pl-12 space-y-1.5 text-gray-600">
+                            <li>Data hanya dapat dilihat oleh alumni lawan jenis yang sama-sama berstatus aktif dan menyetujui ketentuan ini.</li>
+                            <li>Kontak pribadi (No. HP/WA) tidak dipublikasikan secara bebas di katalog umum demi menjaga adab.</li>
+                            <li>Dilarang keras menyebarluaskan, mengambil tangkapan layar (*screenshot*), atau mendistribusikan data peserta ke pihak luar.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100">
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 mb-2">
+                            <span class="w-6 h-6 rounded-lg bg-rose-50 text-rose-600 text-xs flex items-center justify-center font-bold">4</span>
+                            Kode Etik Komunikasi
+                        </h3>
+                        <p class="text-gray-600 pl-8">
+                            Pertanyaan dan komunikasi antar peserta wajib santun, fokus pada keselarasan visi ibadah, tidak berlebihan (*ghuluw*), dan menghindari percakapan yang mengarah pada khalwat atau pacaran.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Right 1 Col: Agreement Form -->
+            <div class="space-y-6">
+                
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4">
+                        Pernyataan Persetujuan
+                    </h3>
+
+                    <form action="{{ route('taaruf.terms.accept') }}" method="POST" class="space-y-4">
+                        @csrf
+                        
+                        <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-gray-50/70 hover:bg-gray-100/60 cursor-pointer transition">
+                            <input id="agree" name="agree" type="checkbox" required x-model="agreed"
+                                class="mt-0.5 w-4 h-4 rounded text-rose-600 border-gray-300 focus:ring-rose-500">
+                            <span class="text-xs text-gray-700 leading-snug select-none">
+                                Saya telah membaca, memahami, dan berjanji mematuhi seluruh <strong>Syarat &amp; Ketentuan</strong> layanan Ta'aruf Salman ITB.
+                            </span>
+                        </label>
+
+                        <button type="submit" :disabled="!agreed"
+                            :class="agreed ? 'bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white cursor-pointer shadow-md shadow-pink-500/20' : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'"
+                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs transition duration-150">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Setuju &amp; Lanjutkan</span>
+                        </button>
+
+                        <a href="{{ route('taaruf.index') }}"
+                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-xs transition">
+                            Batal
+                        </a>
+                    </form>
+                </div>
+
+                <!-- Info Help Card -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl text-white p-6 shadow-sm">
+                    <div class="text-rose-400 text-lg mb-2">🛡️</div>
+                    <h4 class="text-xs font-bold text-white mb-1.5">Kenyamanan &amp; Keamanan Anda</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Anda dapat menonaktifkan visibilitas profil ta'aruf Anda sewaktu-waktu dari Dashboard Ta'aruf jika sedang dalam proses khitbah atau menikah.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 @endsection

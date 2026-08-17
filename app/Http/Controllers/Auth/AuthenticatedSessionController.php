@@ -53,12 +53,17 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        if (auth()->user()->hasRole('admin')) {
+        $user = auth()->user();
+
+        if ($user->hasAnyRole(['superAdmin', 'admin', 'admin_spn', 'admin_taaruf'])) {
             return redirect()->intended(route('admin.dashboard', absolute: false));
-        } elseif (auth()->user()->hasRole('alumni')) {
+        } elseif ($user->hasRole('alumni')) {
             return redirect()->intended(route('alumni.dashboard', absolute: false));
-        } else {
+        } elseif ($user->hasRole('author')) {
             return redirect()->intended(route('author.dashboard', absolute: false));
+        } else {
+            // Semua pengguna tanpa role administratif diarahkan ke dashboard peserta
+            return redirect()->intended(route('peserta.dashboard', absolute: false));
         }
     }
 

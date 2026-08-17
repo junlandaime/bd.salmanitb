@@ -1,151 +1,130 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+@extends('layouts.guest')
+@section('title', 'Masuk ke Akun - Bidang Dakwah Masjid Salman ITB')
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+@section('content')
+<div class="w-full max-w-md mx-auto" x-data="{ showPassword: false }">
 
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
+    {{-- Icon & Heading --}}
+    <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-2xl text-emerald-300 mx-auto mb-3 shadow-inner">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+        </div>
+        <h1 class="text-xl font-extrabold text-white tracking-tight">Masuk ke Akun</h1>
+        <p class="mt-1 text-xs text-slate-300">Masukkan alamat email dan kata sandi Anda untuk melanjutkan</p>
+    </div>
 
+    {{-- Session Status / Flash Message --}}
+    @if (session('status'))
+        <div class="mb-5 p-3.5 bg-emerald-500/15 border border-emerald-400/30 rounded-xl text-emerald-300 text-xs flex items-center gap-2.5">
+            <i class="fas fa-check-circle text-emerald-400 shrink-0"></i>
+            <span>{{ session('status') }}</span>
+        </div>
+    @endif
 
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    {{-- Errors Alert --}}
+    @if ($errors->any())
+        <div class="mb-5 p-3.5 bg-red-500/10 border border-red-400/30 rounded-xl text-red-300 text-xs flex items-start gap-2.5">
+            <i class="fas fa-exclamation-circle text-red-400 mt-0.5 shrink-0"></i>
+            <div>
+                <p class="font-bold">Gagal masuk:</p>
+                <ul class="list-disc list-inside mt-1 space-y-0.5 text-[11px] text-red-200">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
 
-    {{-- <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">{{ $title ?? 'Login' }}</h2>
-    </div> --}}
-
-    <form method="POST" action="{{ route('login') }}" x-data="{ showPassword: false }"
-        class="mt-8 space-y-6 animate__animated animate__fadeIn">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
 
         <!-- Email Address -->
-        <div class="rounded-md shadow-sm -space-y-px">
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
+        <div class="space-y-1">
+            <label for="email" class="block text-xs font-semibold text-slate-300">Alamat Email</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-envelope text-sm"></i>
                 </div>
-                <x-text-input id="email"
-                    class="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                    type="email" name="email" :value="old('email')" placeholder="Email address" required autofocus
-                    autocomplete="username" />
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                    placeholder="nama@email.com"
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-400 transition" />
             </div>
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            @error('email')
+                <p class="text-[11px] text-red-400 mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Password -->
-        <div class="rounded-md shadow-sm -space-y-px mt-4">
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                            clip-rule="evenodd" />
-                    </svg>
+        <div class="space-y-1">
+            <label for="password" class="block text-xs font-semibold text-slate-300">Kata Sandi</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-lock text-sm"></i>
                 </div>
-                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <button type="button" @click="showPassword = !showPassword"
-                        class="text-gray-400 hover:text-emerald-500 focus:outline-none">
-                        <svg x-show="!showPassword" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fill-rule="evenodd"
-                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <svg x-show="showPassword" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20" fill="currentColor" style="display: none;">
-                            <path fill-rule="evenodd"
-                                d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
-                                clip-rule="evenodd" />
-                            <path
-                                d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                        </svg>
-                    </button>
-                </div>
-                <input id="password" x-bind:type="showPassword ? 'text' : 'password'" name="password"
-                    class="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                    placeholder="Password" required autocomplete="current-password" />
+                <input id="password" :type="showPassword ? 'text' : 'password'" name="password" required
+                    autocomplete="current-password" placeholder="••••••••"
+                    class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-400 transition" />
+                <button type="button" @click="showPassword = !showPassword"
+                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition focus:outline-none">
+                    <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-xs"></i>
+                </button>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            @error('password')
+                <p class="text-[11px] text-red-400 mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Remember Me and Forgot Password -->
-        <div class="flex items-center justify-between mt-4">
-            <div class="flex items-center">
-                <input id="remember_me" type="checkbox"
-                    class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
-                    name="remember">
-                <label for="remember_me" class="ml-2 block text-sm text-gray-900 cursor-pointer">
-                    {{ __('Remember me') }}
-                </label>
-            </div>
+        <div class="flex items-center justify-between pt-1">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer">
+                <input id="remember_me" type="checkbox" name="remember"
+                    class="rounded border-white/20 bg-white/10 text-emerald-500 shadow-2xs focus:ring-emerald-400/30 cursor-pointer">
+                <span class="ml-2 text-xs text-slate-300">Ingat saya</span>
+            </label>
 
             @if (Route::has('password.request'))
-                <div class="text-sm">
-                    <a href="{{ route('password.request') }}"
-                        class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors duration-200">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                </div>
+                <a href="{{ route('password.request') }}"
+                    class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+                    Lupa kata sandi?
+                </a>
             @endif
         </div>
 
-        <div class="mt-6">
+        <!-- Submit Button -->
+        <div class="pt-2">
             <button type="submit"
-                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-200">
-                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                    <svg class="h-5 w-5 text-emerald-500 group-hover:text-emerald-400"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </span>
-                {{ __('Log in') }}
+                class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 hover:shadow-xl transition">
+                <span>Masuk ke Akun</span>
+                <span>&rarr;</span>
             </button>
         </div>
 
-        <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600">
-                Belum punya akun?
-                <a href="{{ route('activation.email.form') }}"
-                    class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors duration-200">
-                    Verifikasi email
+        <!-- Register & Alumni Activation Links -->
+        <div class="pt-4 border-t border-white/10 space-y-3">
+            <div class="text-center">
+                <p class="text-xs text-slate-300 mb-2">
+                    Belum punya akun Bidang Dakwah?
+                </p>
+                <a href="{{ route('register') }}"
+                    class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-xl transition shadow-2xs">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <span>Daftar Akun Peserta Baru</span>
+                    <span>&rarr;</span>
                 </a>
-            </p>
-        </div>
+            </div>
 
-        <!-- Social Proof untuk Alumni -->
-        <div class="mt-8 border-t border-gray-200 pt-6">
-            <p class="text-xs text-center text-gray-500">
-                Dipercaya oleh lebih dari 1000+ alumni Bidang Dakwah
-            </p>
-            <div class="mt-4 flex justify-center space-x-4">
-                <div class="flex -space-x-2">
-                    <img class="w-8 h-8 rounded-full border-2 border-white" src="https://picsum.photos/200"
-                        alt="User">
-                    <img class="w-8 h-8 rounded-full border-2 border-white" src="https://picsum.photos/201"
-                        alt="User">
-                    <img class="w-8 h-8 rounded-full border-2 border-white" src="https://picsum.photos/202"
-                        alt="User">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white bg-emerald-100 text-emerald-800 text-xs font-medium">
-                        +999
-                    </div>
-                </div>
+            <div class="pt-2 border-t border-white/10 text-center">
+                <p class="text-[11px] text-slate-400">
+                    Alumni SPN / Kegiatan Salman?
+                    <a href="{{ route('activation.email.form') }}" class="font-semibold text-emerald-400 hover:text-emerald-300 underline ml-1">
+                        Aktivasi Akun Alumni &rarr;
+                    </a>
+                </p>
             </div>
         </div>
-
     </form>
-</x-guest-layout>
+</div>
+@endsection

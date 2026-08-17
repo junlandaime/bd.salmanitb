@@ -1,229 +1,146 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Detail Profil Taaruf')
+@section('title', 'Detail Profil Taaruf - ' . $profile->full_name)
 
 @section('content')
-    <div class="py-6 px-4">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-semibold text-gray-800">Detail Profil Taaruf</h1>
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.taaruf.edit', $profile->id) }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                    <i class="fas fa-edit mr-2"></i>Edit Profil
-                </a>
-                <a href="{{ route('admin.taaruf.index') }}"
-                    class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
-                    <i class="fas fa-arrow-left mr-2"></i>Kembali
-                </a>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <a href="{{ route('admin.taaruf.index') }}" class="hover:text-pink-600">Layanan Ta'aruf</a>
+                <span>/</span>
+                <span>Detail Profil</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-bold text-gray-900">{{ $profile->full_name }}</h1>
+                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200' }}">
+                    {{ $profile->is_active ? 'Aktif' : 'Non-aktif' }}
+                </span>
+                @if ($profile->is_in_taaruf_process)
+                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                        Sedang Proses
+                    </span>
+                @endif
             </div>
         </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.taaruf.index') }}"
+                class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-sm shadow-sm transition">
+                &larr; Kembali
+            </a>
+            <a href="{{ route('admin.taaruf.edit', $profile->id) }}"
+                class="px-4 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm shadow-sm transition">
+                Edit Profil
+            </a>
+        </div>
+    </div>
 
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-6">
-                <div class="flex flex-col md:flex-row">
-                    <!-- Left Column - Photo and Basic Info -->
-                    <div class="w-full md:w-1/3 mb-6 md:mb-0 md:pr-6">
-                        <div class="mb-6 flex justify-center">
-                            @if ($profile->photo_url)
-                                <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
-                                    class="w-48 h-48 object-cover rounded-lg shadow-md">
-                            @else
-                                <div class="w-48 h-48 bg-gray-200 rounded-lg shadow-md flex items-center justify-center">
-                                    <svg class="h-24 w-24 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                    </svg>
-                                </div>
-                            @endif
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Photo & Identity -->
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 text-center">
+                <div class="mb-4 flex justify-center">
+                    @if ($profile->photo_url)
+                        <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                            class="w-40 h-40 object-cover rounded-2xl shadow-sm border border-gray-100">
+                    @else
+                        <div class="w-40 h-40 bg-gray-100 rounded-2xl flex items-center justify-center text-4xl border border-gray-200">
+                            {{ $profile->gender === 'male' ? '👨' : '𝄩👩' }}
                         </div>
+                    @endif
+                </div>
 
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h2 class="text-xl font-semibold mb-4">Informasi Dasar</h2>
+                <h3 class="text-base font-bold text-gray-900">{{ $profile->full_name }}</h3>
+                <p class="text-xs text-gray-500 mt-0.5">({{ $profile->nickname ?: '-' }})</p>
 
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Status Profil</span>
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $profile->is_active ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </div>
+                <div class="mt-4 flex items-center justify-center gap-2">
+                    <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
+                        {{ $profile->gender === 'male' ? '♂ Laki-laki' : '♀ Perempuan' }}
+                    </span>
+                </div>
 
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Nama Lengkap</span>
-                                <span class="text-gray-900">{{ $profile->full_name }}</span>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Nama Panggilan</span>
-                                <span class="text-gray-900">{{ $profile->nickname }}</span>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Jenis Kelamin</span>
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' }}">
-                                    {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
-                                </span>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Tempat, Tanggal Lahir</span>
-                                <span class="text-gray-900">{{ $profile->birth_place_date }}</span>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500">Email</span>
-                                <span class="text-gray-900">{{ $profile->user->email }}</span>
-                            </div>
-
-                            @if ($profile->instagram)
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Instagram</span>
-                                    <span class="text-gray-900">{{ $profile->instagram }}</span>
-                                </div>
-                            @endif
-                        </div>
+                <div class="mt-6 pt-6 border-t border-gray-100 text-left space-y-3 text-xs">
+                    <div>
+                        <span class="text-gray-400 block">Email Akun:</span>
+                        <span class="text-gray-900 font-medium">{{ $profile->user->email ?? '-' }}</span>
                     </div>
-
-                    <!-- Right Column - Detailed Info -->
-                    <div class="w-full md:w-2/3">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <h2 class="text-xl font-semibold mb-4">Informasi Pribadi</h2>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Domisili Saat Ini</span>
-                                    <span class="text-gray-900">{{ $profile->current_residence }}</span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Pendidikan Terakhir</span>
-                                    <span class="text-gray-900">{{ $profile->last_education }}</span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Pekerjaan</span>
-                                    <span class="text-gray-900">{{ $profile->occupation }}</span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Target Tahun Menikah</span>
-                                    <span
-                                        class="text-gray-900">{{ $profile->marriage_target_year ?? 'Tidak ditentukan' }}</span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Kepribadian</span>
-                                    <span class="text-gray-900">{{ $profile->personality ?? 'Tidak diisi' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <h2 class="text-xl font-semibold mb-4">Status Taaruf</h2>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Sedang Dalam Proses Taaruf</span>
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_in_taaruf_process ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ $profile->is_in_taaruf_process ? 'Ya' : 'Tidak' }}
-                                    </span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Perokok</span>
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_smoker ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ $profile->is_smoker ? 'Ya' : 'Tidak' }}
-                                    </span>
-                                </div>
-
-                                @if ($profile->gender === 'male')
-                                    <div class="mb-3">
-                                        <span class="block text-sm font-medium text-gray-500">Berniat Poligami</span>
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_polygamy_intended ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                            {{ $profile->is_polygamy_intended ? 'Ya' : 'Tidak' }}
-                                        </span>
-                                    </div>
-                                @endif
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Memiliki Hutang</span>
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->has_debt ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ $profile->has_debt ? 'Ya' : 'Tidak' }}
-                                    </span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <span class="block text-sm font-medium text-gray-500">Memiliki Tanggungan</span>
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->has_dependents ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ $profile->has_dependents ? 'Ya' : 'Tidak' }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-                            <h2 class="text-xl font-semibold mb-4">Ekspektasi & Visi Misi</h2>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500 mb-1">Ekspektasi dalam
-                                    Pernikahan</span>
-                                <p class="text-gray-900 whitespace-pre-line">{{ $profile->expectation ?? 'Tidak diisi' }}
-                                </p>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500 mb-1">Visi Misi Pernikahan</span>
-                                <p class="text-gray-900 whitespace-pre-line">
-                                    {{ $profile->ideal_partner_criteria ?? 'Tidak diisi' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-                            <h2 class="text-xl font-semibold mb-4">Kriteria Pasangan dan Kelebihan Kekurangan Diri</h2>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500 mb-1">Kriteria Pasangan</span>
-                                <p class="text-gray-900 whitespace-pre-line">{{ $profile->visi_misi ?? 'Tidak diisi' }}
-                                </p>
-                            </div>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500 mb-1">Kelebihan dan Kekurangan
-                                    Diri</span>
-                                <p class="text-gray-900 whitespace-pre-line">
-                                    {{ $profile->kelebihan_kekurangan ?? 'Tidak diisi' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-                            <h2 class="text-xl font-semibold mb-4">Dokumen</h2>
-
-                            <div class="mb-3">
-                                <span class="block text-sm font-medium text-gray-500 mb-1">Informed Consent</span>
-                                @if ($profile->informed_consent_url)
-                                    <a href="{{ $profile->informed_consent_url }}" target="_blank"
-                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        Lihat Dokumen
-                                    </a>
-                                @else
-                                    <span class="text-red-500">Dokumen tidak tersedia</span>
-                                @endif
-                            </div>
-                        </div>
+                    <div>
+                        <span class="text-gray-400 block">Tempat, Tanggal Lahir:</span>
+                        <span class="text-gray-900 font-medium">{{ $profile->birth_place_date ?: '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block">Instagram:</span>
+                        <span class="text-gray-900 font-medium">{{ $profile->instagram ?: '-' }}</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Informed Consent File -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Dokumen Informed Consent</h4>
+                @if ($profile->informed_consent_url)
+                    <a href="{{ $profile->informed_consent_url }}" target="_blank"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-xs hover:bg-indigo-100 transition">
+                        <span>📄 Lihat Dokumen Bukti &rarr;</span>
+                    </a>
+                @else
+                    <p class="text-xs text-gray-400">Belum ada berkas informed consent diunggah.</p>
+                @endif
+            </div>
         </div>
+
+        <!-- Right: Background & Detailed Criteria -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Personal Info Card -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                <h3 class="text-base font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4">Informasi Pribadi &amp; Karir</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <span class="text-gray-400 block">Domisili:</span>
+                        <span class="text-gray-900 font-semibold mt-0.5 block">{{ $profile->current_residence ?: '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block">Pendidikan Terakhir:</span>
+                        <span class="text-gray-900 font-semibold mt-0.5 block">{{ $profile->last_education ?: '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block">Pekerjaan:</span>
+                        <span class="text-gray-900 font-semibold mt-0.5 block">{{ $profile->occupation ?: '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block">Target Tahun Menikah:</span>
+                        <span class="text-gray-900 font-semibold mt-0.5 block">{{ $profile->marriage_target_year ?: 'Fleksibel' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vision & Expectations Card -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 space-y-4">
+                <h3 class="text-base font-bold text-gray-900 pb-3 border-b border-gray-100">Visi Misi &amp; Kriteria Pasangan</h3>
+                
+                <div>
+                    <span class="text-xs font-semibold text-gray-700 block mb-1">Ekspektasi dalam Pernikahan:</span>
+                    <p class="text-xs text-gray-600 bg-gray-50 p-3.5 rounded-xl leading-relaxed whitespace-pre-line">{{ $profile->expectation ?: 'Tidak diisi' }}</p>
+                </div>
+
+                <div>
+                    <span class="text-xs font-semibold text-gray-700 block mb-1">Kriteria Pasangan Ideal:</span>
+                    <p class="text-xs text-gray-600 bg-gray-50 p-3.5 rounded-xl leading-relaxed whitespace-pre-line">{{ $profile->ideal_partner_criteria ?: 'Tidak diisi' }}</p>
+                </div>
+
+                <div>
+                    <span class="text-xs font-semibold text-gray-700 block mb-1">Kelebihan dan Kekurangan Diri:</span>
+                    <p class="text-xs text-gray-600 bg-gray-50 p-3.5 rounded-xl leading-relaxed whitespace-pre-line">{{ $profile->kelebihan_kekurangan ?: 'Tidak diisi' }}</p>
+                </div>
+            </div>
+
+        </div>
+
     </div>
+
+</div>
 @endsection

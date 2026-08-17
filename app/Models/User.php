@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasRoles, Notifiable;
@@ -76,5 +76,29 @@ class User extends Authenticatable
     public function taarufProfile()
     {
         return $this->hasOne(TaarufProfile::class);
+    }
+
+    /**
+     * Get the articles authored by the user.
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
+    /**
+     * Get the news authored by the user.
+     */
+    public function news()
+    {
+        return $this->hasMany(News::class, 'author_id');
+    }
+
+    /**
+     * Get the feedbacks submitted by the user.
+     */
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
     }
 }

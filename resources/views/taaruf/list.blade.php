@@ -1,770 +1,465 @@
 @extends('layouts.app')
 
 @section('title', 'Daftar Alumni Ta\'aruf')
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
 @section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="mb-8">
-            <nav class="mb-4">
-                <ol class="flex text-sm">
-                    <li class="flex items-center">
-                        <a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                            Alumni</a>
-                        <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </li>
-                    <li class="flex items-center">
-                        <a href="{{ route('taaruf.index') }}" class="text-green-600 hover:text-green-700">Ta'aruf</a>
-                        <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </li>
-                    <li class="text-gray-500">Daftar Alumni</li>
-                </ol>
-            </nav>
-            <h2 class="text-3xl font-bold text-green-600">Daftar Alumni Ta'aruf</h2>
-            <p class="text-gray-500 mt-2">Berikut adalah daftar alumni yang siap untuk ta'aruf</p>
+<div class="min-h-screen bg-gray-50/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-pink-950 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <nav class="flex items-center gap-2 text-xs text-rose-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <a href="{{ route('taaruf.index') }}" class="hover:text-white transition">Ta'aruf</a>
+                    <span>/</span>
+                    <span class="text-white font-semibold">Daftar Alumni</span>
+                </nav>
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 text-xs font-semibold mb-2">
+                            <span>👥</span>
+                            <span>Katalog Peserta Ta'aruf</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                            Daftar Peserta Ta'aruf Aktif
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                            Gunakan filter pencarian domisili, tingkat pendidikan, atau target menikah untuk mencari calon pasangan yang sevisi.
+                        </p>
+                    </div>
+
+                    <a href="{{ route('taaruf.index') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-xs self-start md:self-auto">
+                        &larr; Dashboard Ta'aruf
+                    </a>
+                </div>
+            </div>
         </div>
 
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                <p>{{ session('error') }}</p>
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                <p>{{ session('success') }}</p>
-            </div>
-        @endif
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                    <div class="p-6 border-b">
-                        <h5 class="text-xl font-bold text-green-600 mb-4">Pencarian dan Filter</h5>
-                        <form action="{{ route('taaruf.list') }}" method="GET" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Search Input -->
-                                <div>
-                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari
-                                        Nama</label>
-                                    <div class="relative rounded-md shadow-sm">
-                                        <input type="text" name="search" id="search"
-                                            class="focus:ring-green-500 focus:border-green-500 block w-full pl-3 pr-10 py-2 sm:text-sm border-gray-300 rounded-md"
-                                            placeholder="Masukkan nama..." value="{{ request('search') }}">
-                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Filter Type -->
-                                <div>
-                                    <label for="filter"
-                                        class="block text-sm font-medium text-gray-700 mb-1">Filter</label>
-                                    <select id="filter" name="filter"
-                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                        <option value="all"
-                                            {{ request('filter') == 'all' || !request('filter') ? 'selected' : '' }}>
-                                            Semua
-                                        </option>
-                                        <option value="location" {{ request('filter') == 'location' ? 'selected' : '' }}>
-                                            Berdasarkan Lokasi
-                                        </option>
-                                        <option value="education" {{ request('filter') == 'education' ? 'selected' : '' }}>
-                                            Berdasarkan Pendidikan
-                                        </option>
-                                        <option value="marriage_year"
-                                            {{ request('filter') == 'marriage_year' ? 'selected' : '' }}>
-                                            Berdasarkan Target Menikah
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Location Filter Options -->
-                            <div class="hidden filter-options space-y-4" id="location-options">
-                                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Location Type Selection -->
-                                        <div>
-                                            <label for="location_type" class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                </svg>
-                                                Tipe Lokasi
-                                            </label>
-                                            <select name="location_type" id="location_type"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="origin"
-                                                    {{ request('location_type') == 'origin' || !request('location_type') ? 'selected' : '' }}>
-                                                    Asal Daerah
-                                                </option>
-                                                <option value="residence"
-                                                    {{ request('location_type') == 'residence' ? 'selected' : '' }}>
-                                                    Domisili Saat Ini
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Location Level Selection -->
-                                        <div>
-                                            <label for="location_level"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                                                </svg>
-                                                Level Wilayah
-                                            </label>
-                                            <select name="location_level" id="location_level"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="province"
-                                                    {{ request('location_level') == 'province' || !request('location_level') ? 'selected' : '' }}>
-                                                    Provinsi
-                                                </option>
-                                                <option value="city"
-                                                    {{ request('location_level') == 'city' ? 'selected' : '' }}>
-                                                    Kota/Kabupaten
-                                                </option>
-                                                <option value="district"
-                                                    {{ request('location_level') == 'district' ? 'selected' : '' }}>
-                                                    Kecamatan
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Dynamic Location Dropdowns -->
-                                    <div class="mt-4 grid grid-cols-1 gap-4" id="location-selects">
-                                        <!-- Province Select -->
-                                        <div id="province-select-container">
-                                            <label for="location_province"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                Pilih Provinsi
-                                            </label>
-                                            <select name="location_province" id="location_province"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="">-- Semua Provinsi --</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- City Select (Hidden by default) -->
-                                        <div id="city-select-container" class="hidden">
-                                            <label for="location_city"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                Pilih Kota/Kabupaten
-                                            </label>
-                                            <select name="location_city" id="location_city" disabled
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="">-- Pilih Provinsi Terlebih Dahulu --</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- District Select (Hidden by default) -->
-                                        <div id="district-select-container" class="hidden">
-                                            <label for="location_district"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                Pilih Kecamatan
-                                            </label>
-                                            <select name="location_district" id="location_district" disabled
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="">-- Pilih Kota/Kabupaten Terlebih Dahulu --</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Info Badge -->
-                                    <div class="mt-3 flex items-start">
-                                        <svg class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                clip-rule="evenodd" />
+            <!-- Left 2 Cols: Filter & Candidate Listings -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Search & Filter Card -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <h2 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4 flex items-center gap-2">
+                        <span>🔍</span>
+                        <span>Pencarian dan Filter Peserta</span>
+                    </h2>
+                    
+                    <form action="{{ route('taaruf.list') }}" method="GET" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Search Input -->
+                            <div>
+                                <label for="search" class="block text-xs font-bold text-gray-700 mb-1">Cari Nama Peserta</label>
+                                <div class="relative rounded-xl shadow-2xs">
+                                    <input type="text" name="search" id="search"
+                                        class="w-full pl-3 pr-10 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition"
+                                        placeholder="Masukkan nama..." value="{{ request('search') }}">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
-                                        <p class="text-xs text-gray-600">
-                                            <strong>Tips:</strong> Pilih level wilayah terlebih dahulu, kemudian pilih
-                                            wilayah yang diinginkan.
-                                            Semakin spesifik level yang dipilih, semakin detail pencarian yang dilakukan.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Education Filter Options (Enhanced Version) -->
-                            <div class="hidden filter-options" id="education-options">
-                                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Education Filter Type Selection -->
-                                        <div>
-                                            <label for="education_filter_type"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                </svg>
-                                                Tipe Filter Pendidikan
-                                            </label>
-                                            <select name="education_filter_type" id="education_filter_type"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="strata"
-                                                    {{ request('education_filter_type') == 'strata' || !request('education_filter_type') ? 'selected' : '' }}>
-                                                    Berdasarkan Strata Pendidikan
-                                                </option>
-                                                <option value="university"
-                                                    {{ request('education_filter_type') == 'university' ? 'selected' : '' }}>
-                                                    Berdasarkan Kampus
-                                                </option>
-                                                <option value="major"
-                                                    {{ request('education_filter_type') == 'major' ? 'selected' : '' }}>
-                                                    Berdasarkan Jurusan/Program Studi
-                                                </option>
-                                                <option value="strata_university"
-                                                    {{ request('education_filter_type') == 'strata_university' ? 'selected' : '' }}>
-                                                    Berdasarkan Strata dan Kampus
-                                                </option>
-                                                <option value="strata_major"
-                                                    {{ request('education_filter_type') == 'strata_major' ? 'selected' : '' }}>
-                                                    Berdasarkan Strata dan Jurusan
-                                                </option>
-                                                <option value="full"
-                                                    {{ request('education_filter_type') == 'full' ? 'selected' : '' }}>
-                                                    Filter Lengkap (Strata, Kampus, Jurusan)
-                                                </option>
-                                            </select>
-                                        </div>
+                            <!-- Filter Type -->
+                            <div>
+                                <label for="filter" class="block text-xs font-bold text-gray-700 mb-1">Kategori Filter</label>
+                                <select id="filter" name="filter"
+                                    class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">
+                                    <option value="all" {{ request('filter') == 'all' || !request('filter') ? 'selected' : '' }}>Semua Peserta</option>
+                                    <option value="location" {{ request('filter') == 'location' ? 'selected' : '' }}>Berdasarkan Lokasi / Domisili</option>
+                                    <option value="education" {{ request('filter') == 'education' ? 'selected' : '' }}>Berdasarkan Pendidikan</option>
+                                    <option value="marriage_year" {{ request('filter') == 'marriage_year' ? 'selected' : '' }}>Berdasarkan Target Menikah</option>
+                                </select>
+                            </div>
+                        </div>
 
-                                        <!-- Empty space for visual balance -->
-                                        <div></div>
+                        <!-- Location Filter Options -->
+                        <div class="hidden filter-options space-y-4" id="location-options">
+                            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Location Type Selection -->
+                                    <div>
+                                        <label for="location_type" class="block text-xs font-bold text-gray-700 mb-1">Tipe Wilayah</label>
+                                        <select name="location_type" id="location_type"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="origin" {{ request('location_type') == 'origin' || !request('location_type') ? 'selected' : '' }}>Asal Daerah Kelahiran</option>
+                                            <option value="residence" {{ request('location_type') == 'residence' ? 'selected' : '' }}>Domisili Tempat Tinggal Saat Ini</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Dynamic Education Filter Dropdowns -->
-                                    <div class="mt-4 grid grid-cols-1 gap-4" id="education-selects">
+                                    <!-- Location Level Selection -->
+                                    <div>
+                                        <label for="location_level" class="block text-xs font-bold text-gray-700 mb-1">Tingkat Wilayah</label>
+                                        <select name="location_level" id="location_level"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="province" {{ request('location_level') == 'province' || !request('location_level') ? 'selected' : '' }}>Provinsi</option>
+                                            <option value="city" {{ request('location_level') == 'city' ? 'selected' : '' }}>Kota / Kabupaten</option>
+                                            <option value="district" {{ request('location_level') == 'district' ? 'selected' : '' }}>Kecamatan</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                                        <!-- Strata Select -->
-                                        <div id="strata-select-container">
-                                            <label for="filter_education_level"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                                                </svg>
-                                                Pilih Strata Pendidikan
-                                            </label>
-                                            <select name="filter_education_level" id="filter_education_level"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="">-- Semua Strata --</option>
-                                                <option value="SD"
-                                                    {{ request('filter_education_level') == 'SD' ? 'selected' : '' }}>
-                                                    SD/Sederajat</option>
-                                                <option value="SMP"
-                                                    {{ request('filter_education_level') == 'SMP' ? 'selected' : '' }}>
-                                                    SMP/Sederajat</option>
-                                                <option value="SMA"
-                                                    {{ request('filter_education_level') == 'SMA' ? 'selected' : '' }}>
-                                                    SMA/Sederajat</option>
-                                                <option value="SMK"
-                                                    {{ request('filter_education_level') == 'SMK' ? 'selected' : '' }}>SMK
-                                                </option>
-                                                <option value="D3"
-                                                    {{ request('filter_education_level') == 'D3' ? 'selected' : '' }}>
-                                                    Diploma 3 (D3)</option>
-                                                <option value="D4"
-                                                    {{ request('filter_education_level') == 'D4' ? 'selected' : '' }}>
-                                                    Diploma 4 (D4)</option>
-                                                <option value="S1"
-                                                    {{ request('filter_education_level') == 'S1' ? 'selected' : '' }}>
-                                                    Sarjana (S1)</option>
-                                                <option value="S2"
-                                                    {{ request('filter_education_level') == 'S2' ? 'selected' : '' }}>
-                                                    Magister (S2)</option>
-                                                <option value="S3"
-                                                    {{ request('filter_education_level') == 'S3' ? 'selected' : '' }}>
-                                                    Doktor (S3)</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- University Select -->
-                                        <div id="university-select-container" class="hidden">
-                                            <label for="filter_university"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                                </svg>
-                                                Pilih Kampus/Universitas
-                                            </label>
-                                            <select name="filter_university" id="filter_university"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                                <option value="">Memuat data kampus...</option>
-                                            </select>
-                                            <p class="mt-1 text-xs text-gray-500">💡 Ketik untuk mencari nama kampus</p>
-                                        </div>
-
-                                        <!-- Major Select -->
-                                        <div id="major-select-container" class="hidden">
-                                            <label for="filter_major"
-                                                class="block text-sm font-medium text-gray-700 mb-2">
-                                                <svg class="inline-block h-4 w-4 mr-1 text-green-600" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                </svg>
-                                                Pilih Jurusan/Program Studi
-                                            </label>
-                                            <input type="text" name="filter_major" id="filter_major"
-                                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
-                                                placeholder="Ketik jurusan... (contoh: Teknik Informatika)"
-                                                value="{{ request('filter_major') }}">
-                                            <p class="mt-1 text-xs text-gray-500">💡 Ketik nama jurusan atau program studi
-                                                yang dicari</p>
-                                        </div>
-
+                                <!-- Dynamic Location Dropdowns -->
+                                <div class="mt-3 grid grid-cols-1 gap-3" id="location-selects">
+                                    <!-- Province Select -->
+                                    <div id="province-select-container">
+                                        <label for="location_province" class="block text-xs font-medium text-gray-700 mb-1">Pilih Provinsi</label>
+                                        <select name="location_province" id="location_province"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="">-- Semua Provinsi --</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Info Badge -->
-                                    <div class="mt-3 flex items-start">
-                                        <svg class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="text-xs text-gray-600">
-                                            <strong>Tips:</strong> Pilih tipe filter terlebih dahulu, kemudian isi kriteria
-                                            yang diinginkan.
-                                            Filter akan mencari profil yang sesuai dengan kombinasi kriteria yang Anda
-                                            tentukan.
-                                        </p>
+                                    <!-- City Select -->
+                                    <div id="city-select-container" class="hidden">
+                                        <label for="location_city" class="block text-xs font-medium text-gray-700 mb-1">Pilih Kota / Kabupaten</label>
+                                        <select name="location_city" id="location_city" disabled
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="">-- Pilih Provinsi Terlebih Dahulu --</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- District Select -->
+                                    <div id="district-select-container" class="hidden">
+                                        <label for="location_district" class="block text-xs font-medium text-gray-700 mb-1">Pilih Kecamatan</label>
+                                        <select name="location_district" id="location_district" disabled
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="">-- Pilih Kota/Kabupaten Terlebih Dahulu --</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Marriage Year Filter Options -->
-                            <div class="hidden filter-options" id="marriage_year-options">
-                                <label for="marriage_year" class="block text-sm font-medium text-gray-700 mb-1">Pilih
-                                    Target Tahun Menikah</label>
-                                <select name="marriage_year" id="marriage_year"
-                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                    <option value="">Pilih Tahun</option>
-                                    @for ($year = 2025; $year <= 2030; $year++)
-                                        <option value="{{ $year }}"
-                                            {{ request('marriage_year') == $year ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
+                        <!-- Education Filter Options -->
+                        <div class="hidden filter-options" id="education-options">
+                            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="education_filter_type" class="block text-xs font-bold text-gray-700 mb-1">Tipe Filter Pendidikan</label>
+                                        <select name="education_filter_type" id="education_filter_type"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="strata" {{ request('education_filter_type') == 'strata' || !request('education_filter_type') ? 'selected' : '' }}>Jenjang Strata</option>
+                                            <option value="university" {{ request('education_filter_type') == 'university' ? 'selected' : '' }}>Nama Kampus</option>
+                                            <option value="major" {{ request('education_filter_type') == 'major' ? 'selected' : '' }}>Jurusan / Program Studi</option>
+                                            <option value="strata_university" {{ request('education_filter_type') == 'strata_university' ? 'selected' : '' }}>Strata &amp; Kampus</option>
+                                            <option value="strata_major" {{ request('education_filter_type') == 'strata_major' ? 'selected' : '' }}>Strata &amp; Jurusan</option>
+                                            <option value="full" {{ request('education_filter_type') == 'full' ? 'selected' : '' }}>Lengkap (Strata + Kampus + Jurusan)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 grid grid-cols-1 gap-3" id="education-selects">
+                                    <div id="strata-select-container">
+                                        <label for="filter_education_level" class="block text-xs font-medium text-gray-700 mb-1">Pilih Jenjang</label>
+                                        <select name="filter_education_level" id="filter_education_level"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                            <option value="">-- Semua Jenjang --</option>
+                                            <option value="SMA/SMK" {{ request('filter_education_level') == 'SMA/SMK' ? 'selected' : '' }}>SMA / SMK</option>
+                                            <option value="D3" {{ request('filter_education_level') == 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
+                                            <option value="S1" {{ request('filter_education_level') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
+                                            <option value="S2" {{ request('filter_education_level') == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
+                                            <option value="S3" {{ request('filter_education_level') == 'S3' ? 'selected' : '' }}>Doktor (S3)</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="university-select-container" class="hidden">
+                                        <label for="filter_university" class="block text-xs font-medium text-gray-700 mb-1">Cari Kampus</label>
+                                        <select name="filter_university" id="filter_university" class="w-full">
+                                            <option value="">-- Semua Kampus --</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="major-select-container" class="hidden">
+                                        <label for="filter_major" class="block text-xs font-medium text-gray-700 mb-1">Jurusan / Program Studi</label>
+                                        <input type="text" name="filter_major" id="filter_major"
+                                            class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500"
+                                            placeholder="Ketik jurusan..." value="{{ request('filter_major') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marriage Year Options -->
+                        <div class="hidden filter-options" id="marriage-year-options">
+                            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-4">
+                                <label for="filter_marriage_year" class="block text-xs font-bold text-gray-700 mb-1">Target Tahun Menikah</label>
+                                <select name="filter_marriage_year" id="filter_marriage_year"
+                                    class="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500">
+                                    <option value="">-- Semua Target Tahun --</option>
+                                    @for ($year = date('Y'); $year <= date('Y') + 5; $year++)
+                                        <option value="{{ $year }}" {{ request('filter_marriage_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                                     @endfor
+                                    <option value="Segera" {{ request('filter_marriage_year') == 'Segera' ? 'selected' : '' }}>Insya Allah Segera</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Submit & Reset Buttons -->
+                        <div class="flex items-center gap-2 pt-2">
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold text-xs shadow-xs transition">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <span>Terapkan Filter</span>
+                            </button>
+
+                            <a href="{{ route('taaruf.list') }}"
+                                class="px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition">
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Candidate Results Section -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <!-- Top Bar -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-gray-100 mb-6">
+                        <div>
+                            <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                <span>👥</span>
+                                <span>Daftar Peserta Ta'aruf</span>
+                            </h2>
+                            <p class="text-xs text-gray-500 mt-0.5">Ditemukan <span class="font-bold text-gray-800">{{ $profiles->total() ?? count($profiles) }}</span> profil alumni aktif</p>
+                        </div>
+
+                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                            <!-- Per Page Selection -->
+                            <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                                <span>Tampilkan:</span>
+                                <select id="per_page" name="per_page"
+                                    class="px-2 py-1 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
                                 </select>
                             </div>
 
-                            <!-- Action Buttons -->
-                            <div class="flex justify-between items-center">
-                                <a href="{{ route('taaruf.list') }}"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            <!-- View Toggle Switcher -->
+                            <div class="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200/80">
+                                <button type="button" id="cardViewBtn"
+                                    class="view-toggle flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition {{ request('view', 'card') == 'card' ? 'bg-white text-rose-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                     </svg>
-                                    Reset Filter
-                                </a>
-                                <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    <span>Card</span>
+                                </button>
+                                <button type="button" id="listViewBtn"
+                                    class="view-toggle flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition {{ request('view') == 'list' ? 'bg-white text-rose-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                                     </svg>
-                                    Terapkan Filter
+                                    <span>List</span>
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
-                    <div class="p-6">
-                        <!-- View Controls -->
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                            <h5 class="text-xl font-bold text-green-600">Profil Alumni</h5>
-
-                            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                                <!-- Per Page Selection -->
-                                <div class="flex items-center gap-2">
-                                    <label for="per_page"
-                                        class="text-sm text-gray-600 whitespace-nowrap">Tampilkan:</label>
-                                    <select id="per_page" name="per_page"
-                                        class="block w-full sm:w-auto pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 rounded-md">
-                                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10
-                                        </option>
-                                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25
-                                        </option>
-                                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50
-                                        </option>
-                                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <!-- View Toggle -->
-                                <div class="flex items-center bg-gray-100 rounded-md p-1">
-                                    <button type="button" id="cardViewBtn"
-                                        class="view-toggle flex items-center px-3 py-2 text-sm font-medium rounded transition-colors {{ request('view', 'card') == 'card' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                                            </path>
-                                        </svg>
-                                        Card
-                                    </button>
-                                    <button type="button" id="listViewBtn"
-                                        class="view-toggle flex items-center px-3 py-2 text-sm font-medium rounded transition-colors {{ request('view') == 'list' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 6h16M4 12h16M4 18h16"></path>
-                                        </svg>
-                                        List
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (count($profiles) > 0)
-                            <!-- Card View -->
-                            <div id="cardView" class="{{ request('view') == 'list' ? 'hidden' : '' }}">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    @foreach ($profiles as $profile)
-                                        @php
-                                            $age = \App\Helpers\DateHelper::getAgeFromBirthPlaceDate(
-                                                $profile->birth_place_date,
-                                            );
-                                        @endphp
-                                        <div
-                                            class="bg-white rounded-lg border shadow-sm hover:shadow-md transition duration-300 h-full">
-                                            <div class="p-6">
-                                                <div class="flex justify-center mb-4">
-                                                    @if ($profile->photo_url)
-                                                        <img src="{{ $profile->photo_url }}"
-                                                            alt="{{ $profile->full_name }}"
-                                                            class="w-24 h-24 rounded-full object-cover">
-                                                    @else
-                                                        <div
-                                                            class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
-                                                            <svg class="w-12 h-12 text-gray-400" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                                </path>
-                                                            </svg>
-                                                        </div>
-                                                    @endif
-                                                </div>
-
-                                                <h5 class="text-xl font-bold text-center mb-4">{{ $profile->full_name }}
-                                                </h5>
-
-                                                <div class="space-y-2">
-                                                    <div class="flex justify-between">
-                                                        <span class="text-gray-500">Usia:</span>
-                                                        <span
-                                                            class="{{ $age === null ? 'text-red-600 font-semibold' : '' }}"
-                                                            @if ($age === null) title="Lengkapi data tempat & tanggal lahir agar usia tampil" @endif>
-                                                            @if ($age === null)
-                                                                N/A
-                                                            @else
-                                                                {{ $age }} tahun
-                                                            @endif
+                    @if (count($profiles) > 0)
+                        <!-- Card View Grid -->
+                        <div id="cardView" class="{{ request('view') == 'list' ? 'hidden' : '' }}">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                @foreach ($profiles as $profile)
+                                    @php
+                                        $age = \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date);
+                                    @endphp
+                                    <div class="bg-gradient-to-b from-white to-gray-50/70 rounded-2xl border border-gray-200/90 hover:border-rose-300 hover:shadow-md transition duration-200 p-5 flex flex-col justify-between group">
+                                        <div>
+                                            <!-- Card Header: Avatar, Name, Age Badge -->
+                                            <div class="flex items-center gap-3.5 pb-4 border-b border-gray-100">
+                                                @if ($profile->photo_url)
+                                                    <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                                        class="w-14 h-14 rounded-2xl object-cover border border-rose-100 shadow-2xs shrink-0">
+                                                @else
+                                                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center font-bold text-xl shadow-2xs shrink-0">
+                                                        {{ strtoupper(substr($profile->full_name, 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <div class="min-w-0 flex-1">
+                                                    <h3 class="text-sm font-bold text-gray-900 truncate group-hover:text-rose-700 transition">
+                                                        {{ $profile->full_name }}
+                                                    </h3>
+                                                    <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                                                        <span class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-100 text-rose-700 text-[10px] font-bold">
+                                                            {{ $age ? $age . ' Tahun' : 'Usia -' }}
                                                         </span>
+                                                        @if ($profile->marriage_target_year)
+                                                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-semibold">
+                                                                Target: {{ $profile->marriage_target_year }}
+                                                            </span>
+                                                        @endif
                                                     </div>
-                                                    <div class="flex justify-between">
-                                                        <span class="text-gray-500">Domisili:</span>
-                                                        <span
-                                                            class="text-wrap text-right text-sm">{{ $profile->current_residence }}</span>
-                                                    </div>
-                                                    <div class="flex justify-between">
-                                                        <span class="text-gray-500">Pendidikan:</span>
-                                                        <span
-                                                            class="text-wrap text-right text-sm">{{ $profile->last_education }}</span>
-                                                    </div>
-                                                    <div class="flex justify-between">
-                                                        <span class="text-gray-500">Pekerjaan:</span>
-                                                        <span
-                                                            class="text-wrap text-right text-sm">{{ $profile->occupation }}</span>
-                                                    </div>
-                                                    @if ($profile->marriage_target_year)
-                                                        <div class="flex justify-between">
-                                                            <span class="text-gray-500">Target Menikah:</span>
-                                                            <span
-                                                                class="text-wrap text-right text-sm">{{ $profile->marriage_target_year }}</span>
-                                                        </div>
-                                                    @endif
                                                 </div>
+                                            </div>
 
-                                                <div class="text-center mt-6">
-                                                    <a href="{{ route('taaruf.profile.show', $profile->id) }}"
-                                                        class="inline-flex items-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                                            </path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                            </path>
-                                                        </svg>
-                                                        Lihat Profil Lengkap
-                                                    </a>
+                                            <!-- Card Info Items -->
+                                            <div class="py-3.5 space-y-2 text-xs">
+                                                <div class="flex items-start gap-2 text-gray-600">
+                                                    <span class="text-gray-400 shrink-0">📍</span>
+                                                    <span class="truncate">{{ $profile->current_residence ?: ($profile->residence_city ?: '-') }}</span>
+                                                </div>
+                                                <div class="flex items-start gap-2 text-gray-600">
+                                                    <span class="text-gray-400 shrink-0">🎓</span>
+                                                    <span class="truncate">{{ $profile->education_level ?: ($profile->last_education ?: '-') }}{{ $profile->university ? ' • ' . $profile->university : '' }}</span>
+                                                </div>
+                                                <div class="flex items-start gap-2 text-gray-600">
+                                                    <span class="text-gray-400 shrink-0">💼</span>
+                                                    <span class="truncate">{{ $profile->occupation ?: '-' }}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
 
-                            <!-- Table View -->
-                            <div id="listView" class="{{ request('view') == 'list' ? '' : 'hidden' }}">
-                                <div class="bg-white rounded-lg border shadow-sm overflow-hidden">
-                                    <div class="overflow-x-auto">
-                                        <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-50">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Foto
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Nama Lengkap
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Usia
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Domisili
-                                                    </th>
-                                                    {{-- <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Pendidikan
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Pekerjaan
-                                                    </th> --}}
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Target Menikah
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Aksi
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="bg-white divide-y divide-gray-200">
-                                                @foreach ($profiles as $profile)
-                                                    <tr class="hover:bg-gray-50 transition duration-150">
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            @if ($profile->photo_url)
-                                                                <img src="{{ $profile->photo_url }}"
-                                                                    alt="{{ $profile->full_name }}"
-                                                                    class="w-12 h-12 rounded-full object-cover">
-                                                            @else
-                                                                <div
-                                                                    class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                                                    <svg class="w-6 h-6 text-gray-400" fill="none"
-                                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                                        </path>
-                                                                    </svg>
-                                                                </div>
-                                                            @endif
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm font-medium text-gray-900">
-                                                                {{ $profile->full_name }}</div>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm text-gray-900">
-                                                                {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ?? 'N/A' }}
-                                                                tahun
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            <div class="text-sm text-gray-900">
-                                                                {{ $profile->current_residence }}</div>
-                                                        </td>
-                                                        {{-- <td class="px-6 py-4">
-                                                            <div class="text-sm text-gray-900">
-                                                                {{ $profile->last_education }}</div>
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            <div class="text-sm text-gray-900">{{ $profile->occupation }}
-                                                            </div>
-                                                        </td> --}}
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm text-gray-900">
-                                                                {{ $profile->marriage_target_year ?? '-' }}
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                            <a href="{{ route('taaruf.profile.show', $profile->id) }}"
-                                                                class="inline-flex items-center px-3 py-1.5 border border-green-600 rounded-md text-xs font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                                <svg class="w-4 h-4 mr-1" fill="none"
-                                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                                                    </path>
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                                    </path>
-                                                                </svg>
-                                                                Lihat
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                        <!-- Card Action -->
+                                        <div class="pt-3 border-t border-gray-100">
+                                            <a href="{{ route('taaruf.profile.show', $profile->id) }}"
+                                                class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 font-bold text-xs shadow-2xs transition group-hover:bg-rose-600 group-hover:text-white group-hover:border-rose-600">
+                                                <span>Lihat Biodata Lengkap</span>
+                                                <span>&rarr;</span>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
-                            <div class="flex justify-center mt-8">
-                                {{ $profiles->appends(request()->query())->links() }}
+                        </div>
+
+                        <!-- Table View -->
+                        <div id="listView" class="{{ request('view') == 'list' ? '' : 'hidden' }}">
+                            <div class="overflow-x-auto rounded-xl border border-gray-200">
+                                <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Foto</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Nama Lengkap</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Usia</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Domisili</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Target Menikah</th>
+                                            <th class="px-4 py-3 text-center font-bold text-gray-700">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                        @foreach ($profiles as $profile)
+                                            <tr class="hover:bg-rose-50/40 transition">
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    @if ($profile->photo_url)
+                                                        <img src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}"
+                                                            class="w-9 h-9 rounded-xl object-cover border border-gray-200">
+                                                    @else
+                                                        <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center font-bold text-xs">
+                                                            {{ strtoupper(substr($profile->full_name, 0, 1)) }}
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap font-bold text-gray-900">
+                                                    {{ $profile->full_name }}
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-gray-600">
+                                                    {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ? \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) . ' th' : '-' }}
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-gray-600">
+                                                    {{ $profile->current_residence ?: '-' }}
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-rose-600 font-semibold">
+                                                    {{ $profile->marriage_target_year ?: '-' }}
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-center">
+                                                    <a href="{{ route('taaruf.profile.show', $profile->id) }}"
+                                                        class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-600 hover:text-white transition font-semibold text-[11px]">
+                                                        <span>Lihat</span>
+                                                        <span>&rarr;</span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                        @else
-                            <div class="text-center py-16">
-                                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                                    </path>
-                                </svg>
-                                <h4 class="text-xl font-bold mb-2">Belum ada profil alumni yang tersedia</h4>
-                                <p class="text-gray-500">Saat ini belum ada alumni lawan jenis yang aktif dalam fitur
-                                    Ta'aruf</p>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="flex justify-center mt-6">
+                            {{ $profiles->appends(request()->query())->links() }}
+                        </div>
+                    @else
+                        <div class="text-center py-16 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                            <div class="w-12 h-12 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center text-xl mx-auto mb-2">
+                                👥
                             </div>
-                        @endif
-                    </div>
+                            <h4 class="text-sm font-bold text-gray-900 mb-1">Belum Ada Profil Alumni yang Sesuai</h4>
+                            <p class="text-xs text-gray-500">Coba ubah kriteria filter atau kata kunci pencarian Anda.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6 top-5">
-                    <div class="p-6 border-b">
-                        <h5 class="text-xl font-bold text-green-600">Informasi</h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
-                            <div class="flex">
-                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span class="text-blue-700">Daftar ini hanya menampilkan profil alumni lawan jenis yang
-                                    aktif dalam fitur Ta'aruf.</span>
+            <!-- Right 1 Col: Sidebar Info & Status -->
+            <div class="space-y-6">
+                <!-- Status Profil Anda -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                        <span>👤</span>
+                        <span>Status Profil Anda</span>
+                    </h3>
+
+                    @if ($myProfile && $myProfile->is_active)
+                        <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-1">
+                            <div class="flex items-center gap-2 font-bold text-emerald-800">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                <span>Profil Sedang Aktif</span>
                             </div>
+                            <p class="text-emerald-700 text-[11px] leading-relaxed">
+                                Biodata Anda saat ini dapat ditemukan dan dilihat oleh alumni lawan jenis di katalog ini.
+                            </p>
+                        </div>
+                    @else
+                        <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs space-y-1">
+                            <div class="flex items-center gap-2 font-bold text-amber-800">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                <span>Profil Belum Aktif</span>
+                            </div>
+                            <p class="text-amber-700 text-[11px] leading-relaxed">
+                                Profil Anda disembunyikan dari katalog ta'aruf.
+                            </p>
                         </div>
 
-                        <p class="font-bold text-gray-700 mb-2">Panduan melihat profil:</p>
-                        <ul class="list-disc pl-5 mb-4 text-gray-600 space-y-1">
-                            <li>Klik "Lihat Profil Lengkap" untuk melihat informasi lebih detail</li>
-                            <li>Profil yang ditampilkan telah menyetujui untuk ditampilkan dalam daftar ini</li>
-                            <li>Hormati privasi setiap alumni dengan tidak menyebarkan informasi profil mereka</li>
-                        </ul>
-
-                        <p class="font-bold text-gray-700 mb-2">Langkah selanjutnya:</p>
-                        <ul class="list-disc pl-5 mb-4 text-gray-600 space-y-1">
-                            <li>Jika tertarik dengan profil tertentu, Anda dapat menghubungi admin untuk proses ta'aruf
-                                lebih lanjut</li>
-                            <li>Admin akan memfasilitasi proses perkenalan sesuai dengan ketentuan ta'aruf</li>
-                        </ul>
-
-                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mt-4">
-                            <div class="flex">
-                                <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                    </path>
-                                </svg>
-                                <span class="text-yellow-700">Dilarang menghubungi alumni secara langsung tanpa melalui
-                                    proses yang telah ditentukan.</span>
-                            </div>
-                        </div>
-                    </div>
+                        <a href="{{ route('taaruf.index') }}"
+                            class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition">
+                            <span>Aktifkan Profil Ta'aruf &rarr;</span>
+                        </a>
+                    @endif
                 </div>
 
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6 border-b">
-                        <h5 class="text-xl font-bold text-green-600">Status Profil Anda</h5>
-                    </div>
-                    <div class="p-6">
-                        @if ($myProfile && $myProfile->is_active)
-                            <div class="bg-green-50 border-l-4 border-green-500 p-4">
-                                <div class="flex">
-                                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    <span class="text-green-700">Profil Ta'aruf Anda sedang aktif dan dapat dilihat oleh
-                                        alumni lain.</span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4">
-                                <div class="flex">
-                                    <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                        </path>
-                                    </svg>
-                                    <span class="text-yellow-700">Profil Ta'aruf Anda sedang tidak aktif dan tidak dapat
-                                        dilihat oleh alumni lain.</span>
-                                </div>
-                            </div>
+                <!-- Panduan & Tata Tertib -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 space-y-4 text-xs text-gray-600">
+                    <h3 class="text-xs font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                        <span>🛡️</span>
+                        <span>Adab &amp; Ketentuan Ta'aruf</span>
+                    </h3>
 
-                            <a href="{{ route('taaruf.index') }}"
-                                class="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                                Kelola Profil Ta'aruf
-                            </a>
-                        @endif
-                    </div>
+                    <ul class="space-y-2 leading-relaxed">
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-bold">•</span>
+                            <span>Katalog hanya menampilkan profil alumni yang telah memberikan persetujuan (informed consent).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-bold">•</span>
+                            <span>Dilarang menduplikasi, mempublikasikan, atau menyebarkan biodata peserta ke pihak luar.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-bold">•</span>
+                            <span>Proses kelanjutan ta'aruf wajib melalui fasilitator resmi panitia SPN Salman ITB.</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -1083,10 +778,10 @@
                         cardView.classList.remove('hidden');
                         listView.classList.add('hidden');
 
-                        cardViewBtn.classList.add('bg-white', 'text-green-600', 'shadow-sm');
+                        cardViewBtn.classList.add('bg-white', 'text-rose-700', 'shadow-xs');
                         cardViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
 
-                        listViewBtn.classList.remove('bg-white', 'text-green-600', 'shadow-sm');
+                        listViewBtn.classList.remove('bg-white', 'text-rose-700', 'shadow-xs');
                         listViewBtn.classList.add('text-gray-600', 'hover:text-gray-900');
 
                         updateUrlAndReload('view', 'card');
@@ -1098,10 +793,10 @@
                         listView.classList.remove('hidden');
                         cardView.classList.add('hidden');
 
-                        listViewBtn.classList.add('bg-white', 'text-green-600', 'shadow-sm');
+                        listViewBtn.classList.add('bg-white', 'text-rose-700', 'shadow-xs');
                         listViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
 
-                        cardViewBtn.classList.remove('bg-white', 'text-green-600', 'shadow-sm');
+                        cardViewBtn.classList.remove('bg-white', 'text-rose-700', 'shadow-xs');
                         cardViewBtn.classList.add('text-gray-600', 'hover:text-gray-900');
 
                         updateUrlAndReload('view', 'list');

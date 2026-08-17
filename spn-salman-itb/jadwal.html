@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jadwal Pelaksanaan &mdash; SPN Salman ITB</title>
+  <meta name="description" content="9 pertemuan, 18 sesi. Setiap Ahad, 23 Agustus - 18 Oktober 2026." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%23DD8A2B%22/><path fill=%22white%22 d=%22M12 18.8l-1.1-1c-3.9-3.5-6.4-5.8-6.4-8.7C4.5 6.9 6.2 5.3 8.3 5.3c1.2 0 2.4.6 3.2 1.5.8-.9 2-1.5 3.2-1.5 2.1 0 3.8 1.6 3.8 3.8 0 2.9-2.5 5.2-6.4 8.7l-1.1 1z%22/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF6EE',
+            paper: '#F3EDE2',
+            ink: '#221D16',
+            'ink-soft': '#736B5C',
+            brand: {
+              50: '#FDF3E4', 100: '#FBE4C0', 200: '#F6CB84', 300: '#F0AD52',
+              400: '#E5952F', 500: '#D9821F', 600: '#B96814', 700: '#935113',
+              800: '#743F14', 900: '#5F3413'
+            },
+            leaf: { 50: '#EEF9EE', 100: '#D8F1DA', 500: '#3E9A4D', 600: '#2F7C3D', 700: '#276633' }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'ui-serif', 'Georgia', 'serif'],
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 1px 2px rgba(34,29,22,.04), 0 8px 24px -8px rgba(34,29,22,.12)'
+          }
+        }
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #FAF6EE; }
+    .font-display { font-family: 'Playfair Display', ui-serif, Georgia, serif; }
+    [x-cloak] { display: none !important; }
+    .hero-texture {
+      background-color: #2b2117;
+      background-image:
+        radial-gradient(ellipse at 20% 15%, rgba(217,130,31,0.20), transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(217,130,31,0.14), transparent 50%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    }
+    .mihrab {
+      -webkit-mask-image: linear-gradient(#000,#000);
+    }
+    ::selection { background: #F6CB84; color: #221D16; }
+  </style>
+</head>
+<body class="bg-cream font-sans text-ink antialiased">
+  <header class="sticky top-0 z-50 border-b border-ink/10 bg-cream/90 backdrop-blur">
+    <div x-data="{ mobileOpen: false }">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+        <a href="index.html" class="flex items-center gap-3 shrink-0">
+          <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500 text-white shadow-soft"><svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <span class="leading-tight">
+            <span class="block font-semibold text-ink">SPN Salman ITB</span>
+            <span class="block text-xs text-ink-soft">Offline Batch 49</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-8 text-sm font-medium lg:flex">
+          <a href="kurikulum.html" class="relative py-1 transition-colors text-ink-soft hover:text-ink">Kurikulum</a>
+          <a href="jadwal.html" class="relative py-1 transition-colors text-brand-700 font-semibold">Jadwal<span class="absolute -bottom-1.5 left-0 right-0 h-0.5 rounded-full bg-brand-500"></span></a>
+          <a href="pemateri.html" class="relative py-1 transition-colors text-ink-soft hover:text-ink">Pemateri</a>
+          <a href="harga.html" class="relative py-1 transition-colors text-ink-soft hover:text-ink">Harga</a>
+          <a href="fasilitas.html" class="relative py-1 transition-colors text-ink-soft hover:text-ink">Fasilitas</a>
+          <a href="faq.html" class="relative py-1 transition-colors text-ink-soft hover:text-ink">FAQ</a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="harga.html" class="hidden items-center gap-1.5 rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-600 sm:inline-flex">
+            Daftar Sekarang
+          </a>
+          <button @click="mobileOpen = !mobileOpen" class="flex h-11 w-11 items-center justify-center rounded-xl border border-ink/10 text-ink lg:hidden" :aria-expanded="mobileOpen" aria-label="Buka menu">
+            <span x-show="!mobileOpen"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+            <span x-show="mobileOpen" x-cloak><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></span>
+          </button>
+        </div>
+      </div>
+
+      <div x-show="mobileOpen" x-cloak x-transition.duration.200ms class="border-t border-ink/10 bg-cream px-4 pb-4 pt-2 lg:hidden">
+        <nav class="flex flex-col gap-1">
+          <a href="kurikulum.html" class="block rounded-xl px-4 py-3 text-base text-ink">Kurikulum</a>
+          <a href="jadwal.html" class="block rounded-xl px-4 py-3 text-base text-brand-700 font-semibold bg-brand-50">Jadwal</a>
+          <a href="pemateri.html" class="block rounded-xl px-4 py-3 text-base text-ink">Pemateri</a>
+          <a href="harga.html" class="block rounded-xl px-4 py-3 text-base text-ink">Harga</a>
+          <a href="fasilitas.html" class="block rounded-xl px-4 py-3 text-base text-ink">Fasilitas</a>
+          <a href="faq.html" class="block rounded-xl px-4 py-3 text-base text-ink">FAQ</a>
+          <a href="harga.html" class="mt-2 block rounded-full bg-brand-500 px-4 py-3 text-center text-base font-semibold text-white">Daftar Sekarang</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+  <section class="border-b border-ink/10 bg-paper">
+    <div class="mx-auto max-w-4xl px-6 py-14 text-center lg:px-8 lg:py-20">
+      <nav class="mb-5 flex items-center justify-center gap-2 text-xs text-ink-soft">
+        <a href="index.html" class="hover:text-brand-600">Beranda</a>
+        <span>/</span>
+        <span class="text-ink">Jadwal</span>
+      </nav>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Jadwal Pelaksanaan</p>
+      <h1 class="mt-3 font-display text-4xl font-semibold text-ink sm:text-5xl">9 Pertemuan, 18 Sesi</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-ink-soft">Setiap Ahad, 23 Agustus &ndash; 18 Oktober 2026 &middot; pukul 09.30 &ndash; 15.00 WIB di Masjid Salman ITB.</p>
+    </div>
+  </section>
+    <section class="bg-cream">
+      <div class="mx-auto max-w-5xl px-6 py-16 lg:px-8">
+        <div class="relative">
+          <div class="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-brand-200 lg:block"></div>
+          <div class="absolute left-5 top-0 h-full w-px bg-brand-200 lg:hidden"></div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="hidden lg:order-1 lg:block"></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">1</span>
+          </div>
+          <div class="lg:order-3">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 23 Agustus 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Fondasi Akidah dan Niat Pernikahan</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Menjemput Jodoh yang Baik Sesuai Syariat</div>
+                </div>
+              </div></div>
+          </div></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="lg:order-1">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 30 Agustus 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Kematangan Diri dan Kesehatan Mental Pranikah</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Praktik Asesmen Diri Kesiapan Menikah</div>
+                </div>
+              </div></div>
+          </div></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">2</span>
+          </div>
+          <div class="hidden lg:order-3 lg:block"></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="hidden lg:order-1 lg:block"></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">3</span>
+          </div>
+          <div class="lg:order-3">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 06 September 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Ta'aruf: Calon Pasangan, Mertua, dan Relasi Sosial</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Fikih Pernikahan</div>
+                </div>
+              </div></div>
+          </div></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="lg:order-1">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 13 September 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Komunikasi dan Manajemen Konflik Rumah Tangga</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Praktik Simulasi Pemecahan Masalah</div>
+                </div>
+              </div></div>
+          </div></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">4</span>
+          </div>
+          <div class="hidden lg:order-3 lg:block"></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="hidden lg:order-1 lg:block"></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">5</span>
+          </div>
+          <div class="lg:order-3">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 20 September 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Manajemen Keuangan Rumah Tangga</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Ketahanan Keluarga di Era Digital</div>
+                </div>
+              </div></div>
+          </div></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="lg:order-1">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 27 September 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Praktik Pranikah — Pemateri Segera Diumumkan</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Praktik Pranikah — Pemateri Segera Diumumkan</div>
+                </div>
+              </div></div>
+          </div></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">6</span>
+          </div>
+          <div class="hidden lg:order-3 lg:block"></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="hidden lg:order-1 lg:block"></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">7</span>
+          </div>
+          <div class="lg:order-3">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 04 Oktober 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Kesehatan Reproduksi dan Intimasi Halal</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Ketahanan Pernikahan dan Pencegahan Perceraian</div>
+                </div>
+              </div></div>
+          </div></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="lg:order-1">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 11 Oktober 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Parenting dan Visi Keluarga</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Praktik Pembuatan Visi Keluarga dan Perencanaan Regenerasi Keluarga</div>
+                </div>
+              </div></div>
+          </div></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">8</span>
+          </div>
+          <div class="hidden lg:order-3 lg:block"></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-6 pb-10 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          <div class="hidden lg:order-1 lg:block"></div>
+          <div class="relative flex justify-center lg:order-2">
+            <span class="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 font-display text-lg font-semibold text-white shadow-soft">9</span>
+          </div>
+          <div class="lg:order-3">          <div class="rounded-2xl border border-brand-200 bg-brand-50/60 p-6">
+            <div class="font-display text-lg font-semibold text-ink">Ahad, 18 Oktober 2026</div>
+            <div class="mt-1 divide-y divide-brand-200/70">              <div class="flex items-start gap-3 py-3 ">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">09.30 - 11.30 &mdash; Sesi 1</div>
+                  <div class="font-medium text-ink">Hukum Negara dan Administrasi Pernikahan</div>
+                </div>
+              </div>              <div class="flex items-start gap-3 py-3 border-t border-brand-200/70">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ink-soft"></span>
+                <div>
+                  <div class="text-xs text-ink-soft">13.00 - 15.00 &mdash; Sesi 2</div>
+                  <div class="font-medium text-ink">Penjelasan Layanan Ta'aruf Salman dan Kealumnian</div>
+                </div>
+              </div></div>
+          </div></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <section class="bg-brand-500">
+    <div class="mx-auto max-w-5xl px-6 py-16 text-center lg:px-8">
+      <h2 class="font-display text-3xl font-semibold text-white sm:text-4xl">Siap Membangun Keluarga Sakinah?</h2>
+      <p class="mx-auto mt-4 max-w-xl text-brand-50/90">Bekali diri Anda dengan ilmu pranikah yang komprehensif. Daftar sekarang sebelum kuota terpenuhi!</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href="harga.html" class="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-semibold text-brand-700 shadow-soft transition hover:bg-brand-50">Daftar Sekarang</a>
+        <span class="text-sm text-brand-50/90">Batas pendaftaran: 22 Agustus 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-[#181410] text-brand-50/80">
+    <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+      <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="lg:col-span-2">
+          <a href="index.html" class="flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500 text-white"><svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+            <span class="leading-tight">
+              <span class="block font-semibold text-white">SPN Salman ITB</span>
+              <span class="block text-xs text-white/50">Offline Batch 49</span>
+            </span>
+          </a>
+          <p class="mt-5 max-w-sm font-display italic text-brand-200">Bekali Diri, Benahi Hati, Menuju Keluarga Sakinah!</p>
+          <p class="mt-4 max-w-sm text-xs leading-relaxed text-white/40">Merek terdaftar di Direktorat Jenderal Kekayaan Intelektual, Kementerian Hukum Republik Indonesia.</p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold text-white">Navigasi</h3>
+          <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+            <a href="kurikulum.html" class="hover:text-white">Kurikulum</a>
+            <a href="jadwal.html" class="hover:text-white">Jadwal</a>
+            <a href="pemateri.html" class="hover:text-white">Pemateri</a>
+            <a href="harga.html" class="hover:text-white">Harga</a>
+            <a href="fasilitas.html" class="hover:text-white">Fasilitas</a>
+            <a href="faq.html" class="hover:text-white">FAQ</a>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold text-white">Kontak &amp; Lokasi</h3>
+          <ul class="mt-4 space-y-3 text-sm">
+            <li class="flex gap-2.5"><span class="mt-0.5 shrink-0 text-brand-400"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-6.4 7-11.5A7 7 0 105 9.5C5 14.6 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg></span><span>Sekretariat Bidang Dakwah Gedung Kayu Lantai 1, Komplek Masjid Salman ITB, Jl. Ganesha No.7, Kel. Lebak Siliwangi, Kec. Coblong, Kota Bandung, Jawa Barat</span></li>
+            <li class="flex gap-2.5"><span class="mt-0.5 shrink-0 text-brand-400"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.9 9.9 0 004.62 1.15h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.13-2.9-7C17.17 3.03 14.69 2 12.04 2zm0 1.67c2.23 0 4.33.87 5.9 2.45a8.2 8.2 0 012.42 5.79c0 4.53-3.7 8.24-8.25 8.24a8.2 8.2 0 01-4.2-1.15l-.3-.18-3.12.79.83-3.04-.2-.31a8.16 8.16 0 01-1.26-4.37c0-4.53 3.7-8.22 8.18-8.22zm-4.42 4.6c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.46-.28-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.78.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47z"/></svg></span><span>+62 821 2671 4989</span></li>
+            <li class="flex gap-2.5"><span class="mt-0.5 shrink-0 text-brand-400"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg></span><span>@spn.salmanitb</span></li>
+            <li class="flex gap-2.5"><span class="mt-0.5 shrink-0 text-brand-400"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/></svg></span><span>23 Agustus &ndash; 18 Oktober 2026</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
+        <div class="flex items-center gap-3">
+          <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-brand-400 hover:text-white" aria-label="Instagram"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg></a>
+          <a href="https://wa.me/6282126714989" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-brand-400 hover:text-white" aria-label="WhatsApp"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.9 9.9 0 004.62 1.15h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.13-2.9-7C17.17 3.03 14.69 2 12.04 2zm0 1.67c2.23 0 4.33.87 5.9 2.45a8.2 8.2 0 012.42 5.79c0 4.53-3.7 8.24-8.25 8.24a8.2 8.2 0 01-4.2-1.15l-.3-.18-3.12.79.83-3.04-.2-.31a8.16 8.16 0 01-1.26-4.37c0-4.53 3.7-8.22 8.18-8.22zm-4.42 4.6c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.46-.28-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.78.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47z"/></svg></a>
+        </div>
+        <p class="text-xs text-white/40">&copy; 2026 SPN Salman ITB &mdash; Bidang Dakwah Masjid Salman ITB. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6282126714989" target="_blank" rel="noopener"
+     class="group fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-white shadow-[0_10px_30px_-6px_rgba(217,130,31,0.6)] transition hover:bg-brand-600 hover:scale-105"
+     aria-label="Chat WhatsApp">
+    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.9 9.9 0 004.62 1.15h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.13-2.9-7C17.17 3.03 14.69 2 12.04 2zm0 1.67c2.23 0 4.33.87 5.9 2.45a8.2 8.2 0 012.42 5.79c0 4.53-3.7 8.24-8.25 8.24a8.2 8.2 0 01-4.2-1.15l-.3-.18-3.12.79.83-3.04-.2-.31a8.16 8.16 0 01-1.26-4.37c0-4.53 3.7-8.22 8.18-8.22zm-4.42 4.6c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.46-.28-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.78.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47z"/></svg>
+  </a>
+
+</body>
+</html>

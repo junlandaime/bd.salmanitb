@@ -13,6 +13,7 @@ class ActivityBatchController extends Controller
 {
     public function index(Activity $activity)
     {
+        ActivityBatch::updateExpiredBatches();
         $batches = $activity->batches()->orderBy('batch_ke', 'desc')->get();
         return view('admin.activities.batches.index', compact('activity', 'batches'));
     }

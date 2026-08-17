@@ -16,7 +16,6 @@ class AlumniImportController extends Controller
     public function __construct(ExcelImportService $excelImportService)
     {
         $this->excelImportService = $excelImportService;
-        // $this->middleware(['auth', 'role:admin']);
     }
 
     /**
@@ -36,6 +35,11 @@ class AlumniImportController extends Controller
      */
     public function importAlumni(Request $request)
     {
+        // Increase execution time & memory for large spreadsheets
+        @ini_set('max_execution_time', '300');
+        @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
+
         $request->validate([
             'file' => 'required|file|mimes:csv,xlsx,xls',
             'activity_batch_id' => 'required|exists:activity_batches,id',
@@ -44,9 +48,6 @@ class AlumniImportController extends Controller
         try {
             // Store file temporarily
             $file = $request->file('file');
-            // $filePath = $file->storeAs('temp', $file->getClientOriginalName());
-            // $fullPath = Storage::path($filePath);
-
             $filePath = UploadSanitizer::store($file, 'temp', 'local');
             $fullPath = Storage::disk('local')->path($filePath);
 
@@ -57,15 +58,14 @@ class AlumniImportController extends Controller
             );
 
             // Delete temp file
-            // Storage::delete($filePath);
             Storage::disk('local')->delete($filePath);
 
             return redirect()->route('admin.alumni.import.form')
-                ->with('success', "Import completed: {$stats['created']} new users, {$stats['updated']} updated users, {$stats['failed']} failed.")
+                ->with('success', "Import berhasil: {$stats['created']} pengguna baru dibuat, {$stats['updated']} pengguna diperbarui, {$stats['failed']} gagal.")
                 ->with('import_stats', $stats);
         } catch (\Exception $e) {
             return redirect()->route('admin.alumni.import.form')
-                ->with('error', 'Import failed: ' . $e->getMessage());
+                ->with('error', 'Import gagal: ' . $e->getMessage());
         }
     }
 
@@ -86,6 +86,11 @@ class AlumniImportController extends Controller
      */
     public function importMaterials(Request $request)
     {
+        // Increase execution time & memory for large spreadsheets
+        @ini_set('max_execution_time', '300');
+        @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
+
         $request->validate([
             'file' => 'required|file|mimes:csv,xlsx,xls',
             'activity_batch_id' => 'required|exists:activity_batches,id',
@@ -94,9 +99,6 @@ class AlumniImportController extends Controller
         try {
             // Store file temporarily
             $file = $request->file('file');
-            // $filePath = $file->storeAs('temp', $file->getClientOriginalName());
-            // $fullPath = Storage::path($filePath);
-
             $filePath = UploadSanitizer::store($file, 'temp', 'local');
             $fullPath = Storage::disk('local')->path($filePath);
 
@@ -107,15 +109,14 @@ class AlumniImportController extends Controller
             );
 
             // Delete temp file
-            // Storage::delete($filePath);
             Storage::disk('local')->delete($filePath);
 
             return redirect()->route('admin.alumni.materials.import.form')
-                ->with('success', "Import completed: {$stats['created']} materials imported, {$stats['failed']} failed.")
+                ->with('success', "Import berhasil: {$stats['created']} materi batch berhasil di-import, {$stats['failed']} gagal.")
                 ->with('import_stats', $stats);
         } catch (\Exception $e) {
             return redirect()->route('admin.alumni.materials.import.form')
-                ->with('error', 'Import failed: ' . $e->getMessage());
+                ->with('error', 'Import gagal: ' . $e->getMessage());
         }
     }
 }

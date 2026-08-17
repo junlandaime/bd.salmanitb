@@ -1,288 +1,236 @@
 @extends('layouts.app')
 
-@section('title', $material->title)
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
+@section('title', $material->title . ' - ' . $batch->nama_batch)
 
 @section('content')
-    <main class="mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Breadcrumb -->
-            <nav class="mb-5">
-                <ol class="flex text-sm text-gray-500">
-                    <li><a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                            Alumni</a></li>
-                    <li class="mx-2">/</li>
-                    <li><a href="{{ route('alumni.batch.materials', $batch->id) }}"
-                            class="text-green-600 hover:text-green-700">Materi {{ $batch->nama_batch }}</a></li>
-                    <li class="mx-2">/</li>
-                    <li class="text-gray-700 font-medium">{{ $material->title }}</li>
-                </ol>
-            </nav>
+<div class="min-h-screen bg-gray-50/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card (Contained & Clean) -->
+        <div class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <!-- Breadcrumbs -->
+                <nav class="flex flex-wrap items-center gap-2 text-xs text-emerald-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <a href="{{ route('alumni.batch.materials', $batch->id) }}" class="hover:text-white transition">{{ $batch->nama_batch }}</a>
+                    <span>/</span>
+                    <span class="text-white font-semibold truncate max-w-xs">{{ $material->title }}</span>
+                </nav>
 
-            <h1 class="text-3xl font-bold text-gray-900 mb-1">{{ $material->title }}</h1>
-            <p class="text-gray-500 mb-8">{{ $batch->activity->title }} - {{ $batch->nama_batch }}</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-2">
-                    <!-- Video Section -->
-                    @if ($material->video_url)
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                            <div class="p-4 border-b border-gray-100">
-                                <h2 class="text-xl font-bold text-gray-900">Video Rekaman</h2>
-                            </div>
-                            <div class="p-4">
-                                <div class="aspect-w-16 aspect-h-9 rounded-md overflow-hidden">
-                                    @php
-                                        // Extract YouTube video ID if it's a YouTube URL
-$videoId = null;
-$isGoogleDrive = false;
-$gdriveFileId = null;
-
-if (strpos($material->video_url, 'youtube.com') !== false) {
-    parse_str(parse_url($material->video_url, PHP_URL_QUERY), $params);
-    $videoId = $params['v'] ?? null;
-} elseif (strpos($material->video_url, 'youtu.be') !== false) {
-    $videoId = substr(parse_url($material->video_url, PHP_URL_PATH), 1);
-} elseif (strpos($material->video_url, 'drive.google.com') !== false) {
-    $isGoogleDrive = true;
-    // Extract Google Drive file ID
-    if (strpos($material->video_url, 'id=') !== false) {
-        parse_str(parse_url($material->video_url, PHP_URL_QUERY), $params);
-        $gdriveFileId = $params['id'] ?? null;
-    } else {
-        // Handle format like: https://drive.google.com/file/d/{fileId}/view
-        $path = parse_url($material->video_url, PHP_URL_PATH);
-        $pathParts = explode('/', $path);
-        $fileIdIndex = array_search('d', $pathParts);
-                                                if ($fileIdIndex !== false && isset($pathParts[$fileIdIndex + 1])) {
-                                                    $gdriveFileId = $pathParts[$fileIdIndex + 1];
-                                                }
-                                            }
-                                        }
-                                    @endphp
-
-                                    @if ($videoId)
-                                        <iframe class="w-full h-full"
-                                            src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0"
-                                            allowfullscreen></iframe>
-                                    @elseif ($isGoogleDrive && $gdriveFileId)
-                                        <iframe class="w-full h-full"
-                                            src="https://drive.google.com/file/d/{{ $gdriveFileId }}/preview"
-                                            frameborder="0" allowfullscreen></iframe>
-                                    @else
-                                        <div class="flex flex-col items-center justify-center py-12 text-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 10l4.553-2.276A1 1 0 0110 8.618v6.764a1 1 0 01-1.447.894L5 14v-4z" />
-                                            </svg>
-                                            <h3 class="text-lg font-medium text-gray-900 mb-2">Video tidak dapat ditampilkan
-                                            </h3>
-                                            <p class="text-gray-500 mb-4">URL video tidak valid atau tidak didukung untuk
-                                                ditampilkan langsung.</p>
-                                            <a href="{{ $material->video_url }}"
-                                                class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
-                                                target="_blank">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                </svg>
-                                                Buka Video di Tab Baru
-                                            </a>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold mb-2">
+                            <span>Modul Ke-{{ $material->order ?: 1 }}</span>
+                            <span>&bull;</span>
+                            <span>{{ $batch->activity->title }}</span>
                         </div>
-                    @endif
+                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                            {{ $material->title }}
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                            {{ $batch->nama_batch }} &bull; Masjid Salman ITB
+                        </p>
+                    </div>
 
-                    <!-- Description Section -->
-                    @if ($material->description)
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                            <div class="p-4 border-b border-gray-100">
-                                <h2 class="text-xl font-bold text-gray-900">Deskripsi</h2>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-gray-600">{{ $material->description }}</p>
-                            </div>
-                        </div>
-                    @endif
+                    <a href="{{ route('alumni.batch.materials', $batch->id) }}"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-xs self-start md:self-auto">
+                        &larr; Daftar Materi Batch
+                    </a>
                 </div>
+            </div>
+        </div>
 
-                <div class="md:col-span-1">
-                    <!-- Download Materials Section -->
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="p-4 border-b border-gray-100">
-                            <h2 class="text-xl font-bold text-gray-900">Materi Tersedia</h2>
+        @php
+            $videoId = null;
+            $isGoogleDrive = false;
+            $gdriveFileId = null;
+
+            if (!empty($material->video_url)) {
+                if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i', $material->video_url, $match)) {
+                    $videoId = $match[1];
+                } elseif (strpos($material->video_url, 'drive.google.com') !== false) {
+                    $isGoogleDrive = true;
+                    if (preg_match('/[-\w]{25,}/', $material->video_url, $gdriveMatch)) {
+                        $gdriveFileId = $gdriveMatch[0];
+                    }
+                }
+            }
+        @endphp
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Video Player & Description -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Video Player Card -->
+                @if ($material->video_url)
+                    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                            <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                Rekaman Video Sesi
+                            </h2>
+                            <a href="{{ $material->video_url }}" target="_blank"
+                                class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1">
+                                <span>Buka di Tab Baru</span>
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
                         </div>
-                        <div class="p-4">
-                            <div class="space-y-2">
-                                @if ($material->slide_url)
-                                    <a href="{{ $material->slide_url }}"
-                                        class="flex items-center justify-between p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition duration-200"
-                                        target="_blank">
-                                        <div class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-3"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <span class="text-gray-700">Slide Presentasi</span>
+                        
+                        <div class="p-4 sm:p-6 bg-slate-950">
+                            <!-- Responsive 16:9 Video Wrapper with Bulletproof Padding Ratio -->
+                            <div class="relative w-full overflow-hidden rounded-xl bg-black shadow-inner" style="padding-top: 56.25%; min-height: 240px;">
+                                @if ($videoId)
+                                    <iframe class="absolute inset-0 w-full h-full"
+                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0"
+                                        title="{{ $material->title }}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowfullscreen></iframe>
+                                @elseif ($isGoogleDrive && $gdriveFileId)
+                                    <iframe class="absolute inset-0 w-full h-full"
+                                        src="https://drive.google.com/file/d/{{ $gdriveFileId }}/preview"
+                                        title="{{ $material->title }}"
+                                        frameborder="0" allowfullscreen></iframe>
+                                @else
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 text-slate-400">
+                                        <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white mb-3">
+                                            ▶
                                         </div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                    </a>
-                                @endif
-
-                                @if ($material->notes_url)
-                                    <a href="{{ $material->notes_url }}"
-                                        class="flex items-center justify-between p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition duration-200"
-                                        target="_blank">
-                                        <div class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-3"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <span class="text-gray-700">Notulensi / Catatan</span>
-                                        </div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                    </a>
-                                @endif
-
-                                @if ($material->video_url)
-                                    <a href="{{ $material->video_url }}"
-                                        class="flex items-center justify-between p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition duration-200"
-                                        target="_blank">
-                                        <div class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-3"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z" />
-                                            </svg>
-                                            <span class="text-gray-700">Link Video</span>
-                                        </div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                    </a>
-                                @endif
-
-                                @if (!$material->slide_url && !$material->notes_url && !$material->video_url)
-                                    <div
-                                        class="flex flex-col items-center justify-center py-8 text-center bg-gray-50 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-300 mb-2"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <p class="text-gray-500">Tidak ada materi yang tersedia untuk diunduh.</p>
+                                        <h3 class="text-sm font-bold text-white mb-1">Tonton di Platform Penyedia</h3>
+                                        <p class="text-xs max-w-sm mb-4">Video dapat diputar melalui tautan berikut:</p>
+                                        <a href="{{ $material->video_url }}" target="_blank"
+                                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition">
+                                            Buka Video Sekarang &rarr;
+                                        </a>
                                     </div>
                                 @endif
                             </div>
                         </div>
                     </div>
+                @endif
 
-                    <!-- Navigation Section -->
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="p-4 border-b border-gray-100">
-                            <h2 class="text-xl font-bold text-gray-900">Navigasi Materi</h2>
+                <!-- Description Card -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-7">
+                    <h2 class="text-base font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4">
+                        Deskripsi &amp; Rangkuman Materi
+                    </h2>
+                    @if ($material->description)
+                        <div class="text-xs sm:text-sm text-gray-700 max-w-none leading-relaxed whitespace-pre-line">
+                            {{ $material->description }}
                         </div>
-                        <div class="p-4">
-                            <div class="flex justify-between mb-4">
-                                @php
-                                    $currentIndex = $batch->materials->search(function ($item) use ($material) {
-                                        return $item->id === $material->id;
-                                    });
+                    @else
+                        <p class="text-xs text-gray-400 italic">Tidak ada deskripsi tambahan untuk materi ini.</p>
+                    @endif
+                </div>
 
-                                    $prevMaterial = $currentIndex > 0 ? $batch->materials[$currentIndex - 1] : null;
-                                    $nextMaterial =
-                                        $currentIndex < $batch->materials->count() - 1
-                                            ? $batch->materials[$currentIndex + 1]
-                                            : null;
-                                @endphp
+            </div>
 
-                                @if ($prevMaterial)
-                                    <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $prevMaterial->id]) }}"
-                                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 19l-7-7 7-7" />
-                                        </svg>
-                                        Sebelumnya
-                                    </a>
-                                @else
-                                    <button disabled
-                                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 19l-7-7 7-7" />
-                                        </svg>
-                                        Sebelumnya
-                                    </button>
-                                @endif
+            <!-- Right 1 Col: Downloads & Navigation -->
+            <div class="space-y-6">
+                
+                <!-- Downloadable Resources Card -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4 flex items-center gap-2">
+                        <span>📥</span>
+                        <span>Berkas &amp; Sumber Daya</span>
+                    </h3>
 
-                                @if ($nextMaterial)
-                                    <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $nextMaterial->id]) }}"
-                                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
-                                        Selanjutnya
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </a>
-                                @else
-                                    <button disabled
-                                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
-                                        Selanjutnya
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </button>
-                                @endif
-                            </div>
-
-                            <a href="{{ route('alumni.batch.materials', $batch->id) }}"
-                                class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    <div class="space-y-3">
+                        @if ($material->slide_url)
+                            <a href="{{ $material->slide_url }}" target="_blank"
+                                class="flex items-center justify-between p-3.5 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-100/70 transition group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-blue-500 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                                        📊
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-900 group-hover:text-blue-700">Slide Presentasi</div>
+                                        <div class="text-[11px] text-gray-500">PDF / PPT Materi</div>
+                                    </div>
+                                </div>
+                                <svg class="w-4 h-4 text-blue-500 group-hover:translate-x-0.5 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
-                                Kembali ke Daftar Materi
                             </a>
-                        </div>
+                        @endif
+
+                        @if ($material->notes_url)
+                            <a href="{{ $material->notes_url }}" target="_blank"
+                                class="flex items-center justify-between p-3.5 rounded-xl border border-amber-100 bg-amber-50/50 hover:bg-amber-100/70 transition group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                                        📝
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-900 group-hover:text-amber-700">Notulensi / Resume</div>
+                                        <div class="text-[11px] text-gray-500">Catatan Pertemuan</div>
+                                    </div>
+                                </div>
+                                <svg class="w-4 h-4 text-amber-500 group-hover:translate-x-0.5 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        @endif
+
+                        @if (!$material->slide_url && !$material->notes_url && !$material->video_url)
+                            <div class="text-center py-6 text-xs text-gray-400 bg-gray-50 rounded-xl">
+                                Belum ada berkas lampiran tambahan.
+                            </div>
+                        @endif
                     </div>
                 </div>
+
+                <!-- Step Navigation Card -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4">Navigasi Modul</h3>
+                    
+                    @php
+                        $materialsList = $batch->materials->values();
+                        $currentIndex = $materialsList->search(fn($m) => $m->id === $material->id);
+                        $prevMaterial = $currentIndex > 0 ? $materialsList[$currentIndex - 1] : null;
+                        $nextMaterial = $currentIndex < $materialsList->count() - 1 ? $materialsList[$currentIndex + 1] : null;
+                    @endphp
+
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        @if ($prevMaterial)
+                            <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $prevMaterial->id]) }}"
+                                class="inline-flex items-center justify-center gap-1.5 p-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition shadow-2xs">
+                                <span>&larr; Modul {{ $prevMaterial->order ?: $currentIndex }}</span>
+                            </a>
+                        @else
+                            <button disabled class="p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-300 text-xs font-medium cursor-not-allowed">
+                                &larr; Sebelumnya
+                            </button>
+                        @endif
+
+                        @if ($nextMaterial)
+                            <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $nextMaterial->id]) }}"
+                                class="inline-flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-2xs">
+                                <span>Modul {{ $nextMaterial->order ?: ($currentIndex + 2) }} &rarr;</span>
+                            </a>
+                        @else
+                            <button disabled class="p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-300 text-xs font-medium cursor-not-allowed">
+                                Selanjutnya &rarr;
+                            </button>
+                        @endif
+                    </div>
+
+                    <a href="{{ route('alumni.batch.materials', $batch->id) }}"
+                        class="w-full inline-flex items-center justify-center gap-2 p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition">
+                        <span>Lihat Semua Materi Batch</span>
+                    </a>
+                </div>
+
             </div>
+
         </div>
-    </main>
+    </div>
+</div>
 @endsection

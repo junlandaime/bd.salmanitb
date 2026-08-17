@@ -1,278 +1,225 @@
 @extends('layouts.app')
 
-@section('title', 'Pertanyaan Ta\'aruf')
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+@section('title', 'Pertanyaan Tambahan Ta\'aruf - Bidang Dakwah Salman ITB')
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
 @section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="mb-8">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2">
-                    <li>
-                        <a href="{{ route('alumni.dashboard') }}" class="text-green-600 hover:text-green-700">Dashboard
-                            Alumni</a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <a href="{{ route('taaruf.index') }}" class="ml-2 text-green-600 hover:text-green-700">Ta'aruf</a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-2 text-gray-500" aria-current="page">Pertanyaan Tambahan</span>
-                    </li>
-                </ol>
-            </nav>
-            <h2 class="text-3xl font-bold text-gray-900 mt-4">Pertanyaan Tambahan Ta'aruf</h2>
-            <p class="text-gray-500">Jawab pertanyaan berikut dengan jujur untuk melengkapi profil Ta'aruf Anda</p>
+<div class="min-h-screen bg-gray-50/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-pink-950 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <nav class="flex items-center gap-2 text-xs text-rose-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <a href="{{ route('taaruf.index') }}" class="hover:text-white transition">Ta'aruf</a>
+                    <span>/</span>
+                    <span class="text-white font-semibold">Pertanyaan Tambahan</span>
+                </nav>
+
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                    Pertanyaan Kesiapan Ta'aruf
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                    Jawab pertanyaan prinsip berikut secara jujur sebagai transparansi ikhtiar ta'aruf Anda.
+                </p>
+            </div>
         </div>
 
         @if (session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
+            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <span class="text-sm font-medium">{{ session('error') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
             </div>
         @endif
 
         @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <span class="text-sm font-medium">{{ session('success') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">✕</button>
             </div>
         @endif
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="md:col-span-2">
-                <form action="{{ route('taaruf.questions.save') }}" method="POST" class="mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Form -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <form action="{{ route('taaruf.questions.save') }}" method="POST">
                     @csrf
 
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="border-b border-gray-200 px-6 py-4">
-                            <h5 class="text-xl font-bold text-green-600">Pertanyaan Penting</h5>
-                        </div>
-                        <div class="p-6">
-                            <p class="text-gray-500 mb-6">
-                                Pertanyaan-pertanyaan berikut merupakan informasi penting yang perlu diketahui oleh calon
-                                pasangan.
-                                Jawablah dengan jujur, karena kejujuran adalah kunci dalam proses ta'aruf.
+                    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+                        
+                        <div class="border-b border-gray-100 pb-4">
+                            <h2 class="text-base font-bold text-gray-900">Pertanyaan Prinsip &amp; Kesiapan</h2>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                Keterbukaan di awal menjadi pondasi sakinah dan saling percaya.
                             </p>
-
-                            <div class="mb-6">
-                                <label class="block mb-2">Apakah Anda sedang dalam proses ta'aruf dengan orang lain? <span
-                                        class="text-red-500">*</span></label>
-                                <div class="flex items-center space-x-6">
-                                    <div class="flex items-center">
-                                        <input type="radio" id="is_in_taaruf_process_yes" name="is_in_taaruf_process"
-                                            value="1" class="h-4 w-4 text-green-600"
-                                            {{ old('is_in_taaruf_process', $taarufProfile->is_in_taaruf_process ?? '') ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="is_in_taaruf_process_yes">Ya</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" id="is_in_taaruf_process_no" name="is_in_taaruf_process"
-                                            value="0" class="h-4 w-4 text-green-600"
-                                            {{ old('is_in_taaruf_process', $taarufProfile->is_in_taaruf_process ?? '') === 0 ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="is_in_taaruf_process_no">Tidak</label>
-                                    </div>
-                                </div>
-                                @error('is_in_taaruf_process')
-                                    <div class="text-red-500 mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-6">
-                                <label class="block mb-2">Apakah Anda seorang perokok? <span
-                                        class="text-red-500">*</span></label>
-                                <div class="flex items-center space-x-6">
-                                    <div class="flex items-center">
-                                        <input type="radio" id="is_smoker_yes" name="is_smoker" value="1"
-                                            class="h-4 w-4 text-green-600"
-                                            {{ old('is_smoker', $taarufProfile->is_smoker ?? '') ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="is_smoker_yes">Ya</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" id="is_smoker_no" name="is_smoker" value="0"
-                                            class="h-4 w-4 text-green-600"
-                                            {{ old('is_smoker', $taarufProfile->is_smoker ?? '') === 0 ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="is_smoker_no">Tidak</label>
-                                    </div>
-                                </div>
-                                @error('is_smoker')
-                                    <div class="text-red-500 mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            @if (auth()->user()->taarufProfile->gender === 'male')
-                                <div class="mb-6">
-                                    <label class="block mb-2">Apakah Anda berniat untuk berpoligami? <span
-                                            class="text-red-500">*</span></label>
-                                    <div class="flex items-center space-x-6">
-                                        <div class="flex items-center">
-                                            <input type="radio" id="is_polygamy_intended_yes" name="is_polygamy_intended"
-                                                value="1" class="h-4 w-4 text-green-600"
-                                                {{ old('is_polygamy_intended', $taarufProfile->is_polygamy_intended ?? '') ? 'checked' : '' }}
-                                                required>
-                                            <label class="ml-2" for="is_polygamy_intended_yes">Ya</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input type="radio" id="is_polygamy_intended_no" name="is_polygamy_intended"
-                                                value="0" class="h-4 w-4 text-green-600"
-                                                {{ old('is_polygamy_intended', $taarufProfile->is_polygamy_intended ?? '') === 0 ? 'checked' : '' }}
-                                                required>
-                                            <label class="ml-2" for="is_polygamy_intended_no">Tidak</label>
-                                        </div>
-                                    </div>
-                                    @error('is_polygamy_intended')
-                                        <div class="text-red-500 mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            @else
-                                <input type="hidden" name="is_polygamy_intended" value="0">
-                            @endif
-
-                            <div class="mb-6">
-                                <label class="block mb-2">Apakah Anda memiliki hutang yang signifikan? <span
-                                        class="text-red-500">*</span></label>
-                                <div class="flex items-center space-x-6">
-                                    <div class="flex items-center">
-                                        <input type="radio" id="has_debt_yes" name="has_debt" value="1"
-                                            class="h-4 w-4 text-green-600"
-                                            {{ old('has_debt', $taarufProfile->has_debt ?? '') ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="has_debt_yes">Ya</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" id="has_debt_no" name="has_debt" value="0"
-                                            class="h-4 w-4 text-green-600"
-                                            {{ old('has_debt', $taarufProfile->has_debt ?? '') === 0 ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="has_debt_no">Tidak</label>
-                                    </div>
-                                </div>
-                                @error('has_debt')
-                                    <div class="text-red-500 mt-1">{{ $message }}</div>
-                                @enderror
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Hutang signifikan adalah hutang yang dapat mempengaruhi kehidupan rumah tangga, seperti
-                                    KPR, hutang pendidikan, atau hutang usaha.
-                                </p>
-                            </div>
-
-                            <div class="mb-6">
-                                <label class="block mb-2">Apakah Anda memiliki tanggungan? <span
-                                        class="text-red-500">*</span></label>
-                                <div class="flex items-center space-x-6">
-                                    <div class="flex items-center">
-                                        <input type="radio" id="has_dependents_yes" name="has_dependents"
-                                            value="1" class="h-4 w-4 text-green-600"
-                                            {{ old('has_dependents', $taarufProfile->has_dependents ?? '') ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="has_dependents_yes">Ya</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" id="has_dependents_no" name="has_dependents"
-                                            value="0" class="h-4 w-4 text-green-600"
-                                            {{ old('has_dependents', $taarufProfile->has_dependents ?? '') === 0 ? 'checked' : '' }}
-                                            required>
-                                        <label class="ml-2" for="has_dependents_no">Tidak</label>
-                                    </div>
-                                </div>
-                                @error('has_dependents')
-                                    <div class="text-red-500 mt-1">{{ $message }}</div>
-                                @enderror
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Tanggungan dapat berupa anak (jika Anda pernah menikah sebelumnya), orang tua, atau
-                                    anggota keluarga lain yang menjadi tanggung jawab Anda.
-                                </p>
-                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <button type="submit"
-                            class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Simpan Jawaban
-                        </button>
-                        <a href="{{ route('taaruf.index') }}"
-                            class="ml-4 inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 md:py-4 md:text-lg md:px-10">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Batal
-                        </a>
+                        <!-- Q1: Sedang Proses Taaruf -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-gray-800">
+                                1. Apakah Anda saat ini sedang dalam proses ta'aruf dengan orang lain? <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-3 max-w-sm">
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="is_in_taaruf_process" value="1" required
+                                        {{ old('is_in_taaruf_process', $taarufProfile->is_in_taaruf_process ?? '') ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Ya, Sedang Proses</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="is_in_taaruf_process" value="0" required
+                                        {{ old('is_in_taaruf_process', $taarufProfile->is_in_taaruf_process ?? '') === 0 ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Tidak</span>
+                                </label>
+                            </div>
+                            @error('is_in_taaruf_process')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Q2: Perokok -->
+                        <div class="space-y-2 pt-4 border-t border-gray-100">
+                            <label class="block text-xs font-bold text-gray-800">
+                                2. Apakah Anda seorang perokok / pengguna vape? <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-3 max-w-sm">
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="is_smoker" value="1" required
+                                        {{ old('is_smoker', $taarufProfile->is_smoker ?? '') ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Ya</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="is_smoker" value="0" required
+                                        {{ old('is_smoker', $taarufProfile->is_smoker ?? '') === 0 ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Tidak</span>
+                                </label>
+                            </div>
+                            @error('is_smoker')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Q3: Poligami (khusus pria) -->
+                        @if (auth()->user()->taarufProfile && auth()->user()->taarufProfile->gender === 'male')
+                            <div class="space-y-2 pt-4 border-t border-gray-100">
+                                <label class="block text-xs font-bold text-gray-800">
+                                    3. Apakah Anda berniat untuk berpoligami di kemudian hari? <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="grid grid-cols-2 gap-3 max-w-sm">
+                                    <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                        <input type="radio" name="is_polygamy_intended" value="1" required
+                                            {{ old('is_polygamy_intended', $taarufProfile->is_polygamy_intended ?? '') ? 'checked' : '' }}
+                                            class="text-rose-600 focus:ring-rose-500">
+                                        <span>Ya</span>
+                                    </label>
+                                    <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                        <input type="radio" name="is_polygamy_intended" value="0" required
+                                            {{ old('is_polygamy_intended', $taarufProfile->is_polygamy_intended ?? '') === 0 ? 'checked' : '' }}
+                                            class="text-rose-600 focus:ring-rose-500">
+                                        <span>Tidak</span>
+                                    </label>
+                                </div>
+                                @error('is_polygamy_intended')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @else
+                            <input type="hidden" name="is_polygamy_intended" value="0">
+                        @endif
+
+                        <!-- Q4: Hutang Signifikan -->
+                        <div class="space-y-2 pt-4 border-t border-gray-100">
+                            <label class="block text-xs font-bold text-gray-800">
+                                4. Apakah Anda memiliki tanggungan hutang signifikan (KPR, cicilan produktif, dll)? <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-3 max-w-sm">
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="has_debt" value="1" required
+                                        {{ old('has_debt', $taarufProfile->has_debt ?? '') ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Ya, Memiliki</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="has_debt" value="0" required
+                                        {{ old('has_debt', $taarufProfile->has_debt ?? '') === 0 ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Tidak Ada</span>
+                                </label>
+                            </div>
+                            @error('has_debt')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Q5: Tanggungan Keluarga -->
+                        <div class="space-y-2 pt-4 border-t border-gray-100">
+                            <label class="block text-xs font-bold text-gray-800">
+                                5. Apakah Anda memiliki tanggungan nafkah keluarga (orang tua, adik, dll)? <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-3 max-w-sm">
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="has_dependents" value="1" required
+                                        {{ old('has_dependents', $taarufProfile->has_dependents ?? '') ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Ya</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer text-xs font-semibold">
+                                    <input type="radio" name="has_dependents" value="0" required
+                                        {{ old('has_dependents', $taarufProfile->has_dependents ?? '') === 0 ? 'checked' : '' }}
+                                        class="text-rose-600 focus:ring-rose-500">
+                                    <span>Tidak</span>
+                                </label>
+                            </div>
+                            @error('has_dependents')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="pt-6 border-t border-gray-100 flex items-center gap-3">
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold text-xs shadow-md shadow-pink-500/20 transition">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>Simpan Jawaban Pertanyaan</span>
+                            </button>
+                            <a href="{{ route('taaruf.index') }}"
+                                class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition">
+                                Batal
+                            </a>
+                        </div>
+
                     </div>
                 </form>
+
             </div>
 
-            <div class="md:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
-                    <div class="border-b border-gray-200 px-6 py-4">
-                        <h5 class="text-xl font-bold text-green-600">Informasi Penting</h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-yellow-700">
-                                        Jawaban Anda akan ditampilkan kepada calon pasangan yang melihat profil Anda.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="font-bold text-gray-900 mb-2">Mengapa pertanyaan ini penting?</p>
-                        <ul class="list-disc pl-5 text-gray-600 mb-4 space-y-1">
-                            <li>Kejujuran adalah fondasi penting dalam membangun rumah tangga</li>
-                            <li>Informasi ini dapat menjadi pertimbangan penting bagi calon pasangan</li>
-                            <li>Menyembunyikan informasi penting dapat menimbulkan masalah di kemudian hari</li>
-                        </ul>
-
-                        <p class="font-bold text-gray-900 mb-2">Setelah mengisi pertanyaan:</p>
-                        <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                            <li>Profil Ta'aruf Anda akan lengkap dan aktif</li>
-                            <li>Anda dapat melihat daftar alumni lain yang juga aktif dalam fitur Ta'aruf</li>
-                            <li>Anda dapat mengubah jawaban ini kapan saja jika ada perubahan</li>
-                        </ul>
+            <!-- Right 1 Col: Info -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 space-y-4">
+                    <h3 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
+                        <span>💡</span>
+                        <span>Mengapa Keterbukaan Ini Penting?</span>
+                    </h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Pertanyaan di atas dirancang untuk meminimalisir kesalahpahaman dan memastikan kedua pihak memiliki kesiapan mental dan finansial sebelum melangkah ke proses ta'aruf yang lebih serius.
+                    </p>
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 text-xs text-amber-800">
+                        Jawaban Anda dapat diperbarui sewaktu-waktu jika terjadi perubahan kondisi.
                     </div>
                 </div>
             </div>
+
         </div>
+
     </div>
+</div>
 @endsection

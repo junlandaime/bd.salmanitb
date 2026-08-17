@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Prevent horizontal scroll / layout bleeding on mobile */
+html,
+body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    position: relative;
+}
+
+/* Ensure AOS animations don't trigger horizontal overflow */
+body[data-aos-easing] {
+    overflow-x: hidden !important;
+}
+
+[data-aos] {
+    pointer-events: auto;
+}

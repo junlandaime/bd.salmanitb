@@ -21,6 +21,60 @@ class BatchAlumniController extends Controller
     // }
 
     /**
+     * Display alumni who participated in more than 1 batch.
+     */
+    public function multiBatch(Request $request)
+    {
+        $query = User::has('batchAlumni', '>', 1)
+            ->with(['batchAlumni.activityBatch.activity'])
+            ->withCount('batchAlumni');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('batch_id')) {
+            $batchId = $request->batch_id;
+            $query->whereHas('batchAlumni', function ($q) use ($batchId) {
+                $q->where('activity_batch_id', $batchId);
+            });
+        }
+
+        if ($request->filled('min_batches')) {
+            $min = (int) $request->min_batches;
+            $query->having('batch_alumni_count', '>=', $min);
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort_by', 'count_desc');
+        switch ($sortBy) {
+            case 'count_asc':
+                $query->orderBy('batch_alumni_count', 'asc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'count_desc':
+            default:
+                $query->orderBy('batch_alumni_count', 'desc');
+                break;
+        }
+
+        $totalMultiBatch = User::has('batchAlumni', '>', 1)->count();
+        $users = $query->paginate(20)->withQueryString();
+        $batches = ActivityBatch::with('activity')->orderBy('created_at', 'desc')->get();
+
+        return view('admin.batch-alumni.multi-batch', compact('users', 'totalMultiBatch', 'batches'));
+    }
+
+    /**
      * Display a listing of batch alumni.
      *
      * @return \Illuminate\Http\Response

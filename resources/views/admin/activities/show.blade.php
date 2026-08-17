@@ -2,320 +2,243 @@
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex justify-between items-center mb-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
-                <h1 class="text-2xl font-semibold text-gray-900">{{ $activity->title }}</h1>
-                <p class="mt-1 text-sm text-gray-600">Detail activity information and content</p>
+                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                    <a href="{{ route('admin.activities.index') }}" class="hover:text-emerald-600">Kegiatan</a>
+                    <span>/</span>
+                    <span>Detail</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ $activity->title }}</h1>
+                <p class="text-sm text-gray-500 mt-0.5">Detail informasi, kurikulum / learning path, dan manajemen batch kegiatan.</p>
             </div>
-            <div class="flex space-x-3">
+            <div class="flex items-center gap-3">
                 <a href="{{ route('admin.activities.index') }}"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Back
+                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 font-semibold text-sm hover:bg-gray-50 shadow-sm transition">
+                    &larr; Kembali
                 </a>
                 <a href="{{ route('admin.activities.edit', $activity) }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path
-                            d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Edit Activity
+                    Edit Kegiatan
                 </a>
             </div>
         </div>
 
         @if (session('success'))
-            <div class="rounded-md bg-green-50 p-4 mb-6">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
-                    </div>
-                </div>
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl mb-6 flex items-center justify-between shadow-sm" role="alert">
+                <span class="text-sm font-medium">{{ session('success') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">✕</button>
             </div>
         @endif
 
-        <!-- Basic Information -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-            <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <!-- Basic Information Card -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 mb-8">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
                 <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Basic Information</h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Activity details and settings.</p>
+                    <h2 class="text-base font-bold text-gray-900">Informasi Utama</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Pengaturan judul, deskripsi, dan status publikasi</p>
                 </div>
-                <div>
-                    <span
-                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $activity->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                        {{ ucfirst($activity->status) }}
-                    </span>
-                </div>
+                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $activity->status === 'published' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+                    {{ ucfirst($activity->status) }}
+                </span>
             </div>
-            <div class="border-t border-gray-200">
-                <dl>
-                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Title</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $activity->title }}</dd>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-400 uppercase">Judul Kegiatan</span>
+                        <p class="text-base font-bold text-gray-900 mt-0.5">{{ $activity->title }}</p>
                     </div>
-                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Description</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $activity->description }}</dd>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-400 uppercase">Program Induk</span>
+                        <p class="text-sm font-semibold text-emerald-700 mt-0.5">{{ $activity->program->title ?? 'Program BD' }}</p>
                     </div>
-                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Featured Image</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            @if ($activity->featured_image)
-                                <img src="{{ Storage::url($activity->featured_image) }}" alt="Featured image"
-                                    class="w-64 h-32 object-cover rounded">
-                            @else
-                                <span class="text-gray-500">No featured image</span>
-                            @endif
-                        </dd>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-400 uppercase">Deskripsi</span>
+                        <p class="text-sm text-gray-600 mt-0.5 leading-relaxed">{{ $activity->description }}</p>
                     </div>
-                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Featured Status</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ $activity->is_featured ? 'Featured' : 'Not Featured' }}
-                        </dd>
-                    </div>
-                </dl>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase block mb-1.5">Featured Image</span>
+                    @if ($activity->featured_image)
+                        <img src="{{ Storage::url($activity->featured_image) }}" alt="{{ $activity->title }}"
+                            class="w-full h-40 object-cover rounded-xl border border-gray-200 shadow-sm">
+                    @else
+                        <div class="w-full h-40 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-xs">
+                            Tidak ada gambar unggulan
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
 
-        <!-- Batch Section -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-            <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <!-- Batch Kegiatan Card -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden mb-8">
+            <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50/50">
                 <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Batch Kegiatan</h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Daftar batch yang tersedia untuk kegiatan ini.</p>
+                    <h2 class="text-base font-bold text-gray-900">Daftar Batch Pelaksanaan</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Kelola kuota, tanggal pendaftaran, dan harga per batch</p>
                 </div>
                 <a href="{{ route('admin.activities.batches.create', $activity) }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                            clip-rule="evenodd" />
+                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-semibold text-xs shadow-sm transition">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Tambah Batch
                 </a>
             </div>
-            <div class="border-t border-gray-200">
-                @if ($activity->batches->count() > 0)
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Batch</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Status</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Kuota</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Harga</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Pendaftaran</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Pelaksanaan</th>
-                                    <th scope="col" class="relative px-6 py-3">
-                                        <span class="sr-only">Aksi</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach ($activity->batches as $batch)
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $batch->nama_batch }}</div>
-                                            <div class="text-sm text-gray-500">Batch ke-{{ $batch->batch_ke }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if ($batch->status === 'aktif') bg-green-100 text-green-800
-                                            @elseif($batch->status === 'nonaktif') bg-gray-100 text-gray-800
-                                            @else bg-blue-100 text-blue-800 @endif">
-                                                {{ ucfirst($batch->status) }}
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-600 uppercase bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3.5">Nama Batch</th>
+                            <th class="px-6 py-3.5">Status</th>
+                            <th class="px-6 py-3.5">Kuota</th>
+                            <th class="px-6 py-3.5">Harga</th>
+                            <th class="px-6 py-3.5">Pendaftaran</th>
+                            <th class="px-6 py-3.5">Pelaksanaan</th>
+                            <th class="px-6 py-3.5 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($activity->batches as $batch)
+                            <tr class="hover:bg-gray-50/75 transition">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-gray-900">{{ $batch->nama_batch }}</div>
+                                    <div class="text-xs text-gray-400 font-mono">Batch #{{ $batch->batch_ke }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if ($batch->status === 'aktif')
+                                        @if ($batch->isRegistrationOpen())
+                                            <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                                Aktif (Dibuka)
                                             </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $batch->kuota }} peserta
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            Rp {{ number_format($batch->harga, 0, ',', '.') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">
-                                                {{ $batch->tanggal_mulai_pendaftaran->format('d M Y') }}</div>
-                                            <div class="text-sm text-gray-500">s/d
-                                                {{ $batch->tanggal_selesai_pendaftaran->format('d M Y') }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">
-                                                {{ $batch->tanggal_mulai_kegiatan->format('d M Y') }}</div>
-                                            <div class="text-sm text-gray-500">s/d
-                                                {{ $batch->tanggal_selesai_kegiatan->format('d M Y') }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="flex justify-end space-x-2">
-                                                <a href="{{ route('admin.activities.batches.edit', [$activity, $batch]) }}"
-                                                    class="text-green-600 hover:text-green-900">Edit</a>
-                                                <form
-                                                    action="{{ route('admin.activities.batches.destroy', [$activity, $batch]) }}"
-                                                    method="POST" class="inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900"
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus batch ini?')">
-                                                        Hapus
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        @elseif($batch->tanggal_mulai_pendaftaran && now()->lt($batch->tanggal_mulai_pendaftaran))
+                                            <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-amber-100 text-amber-800">
+                                                Aktif (Akan Dibuka)
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                Selesai
+                                            </span>
+                                        @endif
+                                    @elseif($batch->status === 'selesai')
+                                        <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            Selesai
+                                        </span>
+                                    @else
+                                        <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            Nonaktif
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-xs font-semibold text-gray-800">
+                                    {{ $batch->kuota }} orang
+                                </td>
+                                <td class="px-6 py-4 text-xs font-bold text-gray-900">
+                                    Rp {{ number_format($batch->harga, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-600">
+                                    <div>{{ $batch->tanggal_mulai_pendaftaran ? $batch->tanggal_mulai_pendaftaran->format('d M Y') : '-' }}</div>
+                                    <div class="text-gray-400">s/d {{ $batch->tanggal_selesai_pendaftaran ? $batch->tanggal_selesai_pendaftaran->format('d M Y') : '-' }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-600">
+                                    <div>{{ $batch->tanggal_mulai_kegiatan ? $batch->tanggal_mulai_kegiatan->format('d M Y') : '-' }}</div>
+                                    <div class="text-gray-400">s/d {{ $batch->tanggal_selesai_kegiatan ? $batch->tanggal_selesai_kegiatan->format('d M Y') : '-' }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <a href="{{ route('admin.activities.batches.edit', [$activity, $batch]) }}"
+                                            class="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold transition">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('admin.activities.batches.destroy', [$activity, $batch]) }}" method="POST" class="inline-block"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus batch ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 text-red-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition" title="Hapus Batch">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-400">Belum ada batch untuk kegiatan ini.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Learning Paths Card -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 mb-8">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+                <div>
+                    <h2 class="text-base font-bold text-gray-900">Kurikulum &amp; Learning Paths ({{ $activity->learningPath->count() }})</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Struktur silabus materi kegiatan</p>
+                </div>
+            </div>
+            @if ($activity->learningPath->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach ($activity->learningPath as $path)
+                        <div class="p-4 bg-gray-50/80 rounded-xl border border-gray-100">
+                            <h3 class="text-sm font-bold text-gray-900">{{ $path->title }}</h3>
+                            <p class="text-xs text-gray-500 mt-1 leading-relaxed">{{ $path->description }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-xs text-gray-400 py-4 text-center">Belum ada learning paths.</p>
+            @endif
+        </div>
+
+        <!-- FAQs & Highlights Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Highlights -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                <h3 class="font-bold text-gray-900 text-base pb-3 border-b border-gray-100 mb-4">Highlights Kegiatan</h3>
+                @if ($activity->highlights->count() > 0)
+                    <div class="space-y-3">
+                        @foreach ($activity->highlights as $highlight)
+                            <div class="p-3.5 bg-gray-50 rounded-xl">
+                                <h4 class="text-xs font-bold text-gray-900">{{ $highlight->title }}</h4>
+                                <p class="text-xs text-gray-500 mt-0.5">{{ $highlight->description }}</p>
+                            </div>
+                        @endforeach
                     </div>
                 @else
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada batch</h3>
-                        <p class="mt-1 text-sm text-gray-500">
-                            Mulai dengan membuat batch baru untuk kegiatan ini.
-                        </p>
-                        <div class="mt-6">
-                            <a href="{{ route('admin.activities.batches.create', $activity) }}"
-                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                Tambah Batch
-                            </a>
-                        </div>
+                    <p class="text-xs text-gray-400 py-4 text-center">Belum ada highlights.</p>
+                @endif
+            </div>
+
+            <!-- FAQs -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                <h3 class="font-bold text-gray-900 text-base pb-3 border-b border-gray-100 mb-4">Pertanyaan Umum (FAQs)</h3>
+                @if ($activity->faqs->count() > 0)
+                    <div class="space-y-3">
+                        @foreach ($activity->faqs as $faq)
+                            <div class="p-3.5 bg-gray-50 rounded-xl">
+                                <h4 class="text-xs font-bold text-gray-900">{{ $faq->question }}</h4>
+                                <p class="text-xs text-gray-500 mt-0.5">{{ $faq->answer }}</p>
+                            </div>
+                        @endforeach
                     </div>
+                @else
+                    <p class="text-xs text-gray-400 py-4 text-center">Belum ada FAQs.</p>
                 @endif
             </div>
         </div>
 
-        <!-- Learning Paths Section -->
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900">Learning Paths</h2>
-            </div>
-            @if ($activity->learningPath->count() > 0)
-                <div class="space-y-4">
-                    @foreach ($activity->learningPath as $path)
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h3 class="text-sm font-medium text-gray-900">{{ $path->title }}</h3>
-                            <p class="text-sm text-gray-500">{{ $path->description }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-gray-500">No learning paths available.</p>
-            @endif
-        </div>
-
-        <!-- Highlights Section -->
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900">Highlights</h2>
-            </div>
-            @if ($activity->highlights->count() > 0)
-                <div class="space-y-4">
-                    @foreach ($activity->highlights as $highlight)
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h3 class="text-sm font-medium text-gray-900">{{ $highlight->title }}</h3>
-                            <p class="text-sm text-gray-500">{{ $highlight->description }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-gray-500">No highlights available.</p>
-            @endif
-        </div>
-
-        <!-- Testimonials Section -->
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900">Testimonials</h2>
-            </div>
-            @if ($activity->testimonials->count() > 0)
-                <div class="space-y-4">
-                    @foreach ($activity->testimonials as $testimonial)
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h3 class="text-sm font-medium text-gray-900">{{ $testimonial->name }}</h3>
-                            <p class="text-sm text-gray-500">{{ $testimonial->content }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-gray-500">No testimonials available.</p>
-            @endif
-        </div>
-
-        <!-- Gallery Section -->
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900">Gallery</h2>
-            </div>
-            @if ($activity->gallery->count() > 0)
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    @foreach ($activity->gallery as $image)
-                        <div class="relative">
-                            <img src="{{ asset($image->image_url) }}" alt="{{ $image->caption }}"
-                                class="w-full h-32 object-cover rounded-lg">
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-gray-500">No gallery images available.</p>
-            @endif
-        </div>
-
-        <!-- FAQs Section -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900">FAQs</h2>
-            </div>
-            @if ($activity->faqs->count() > 0)
-                <div class="space-y-4">
-                    @foreach ($activity->faqs as $faq)
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h3 class="text-sm font-medium text-gray-900">{{ $faq->question }}</h3>
-                            <p class="text-sm text-gray-500">{{ $faq->answer }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-gray-500">No FAQs available.</p>
-            @endif
-        </div>
     </div>
 @endsection

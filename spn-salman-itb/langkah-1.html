@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertanyaan Pendahuluan — SPN Salman ITB Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FBF8F3',
+          ink: '#211D17',
+          muted: '#79705F',
+          hairline: '#E8E1D2',
+          gold: {
+            50:'#FDF6E9', 100:'#FAEACB', 200:'#F1D48E', 300:'#E6BB57',
+            400:'#D5A233', 500:'#C1861A', 600:'#A66F13', 700:'#835710', 800:'#5F3F0C'
+          },
+          leaf: { 50:'#EEF6EE', 100:'#DBEEDC', 500:'#3F8A4B', 600:'#2F7239', 700:'#245A2C' }
+        },
+        fontFamily: {
+          serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  body { background:#FBF8F3; }
+  [x-cloak] { display:none !important; }
+  input[type=radio]:checked, input[type=checkbox]:checked { accent-color:#A66F13; }
+  ::selection { background:#F1D48E; }
+  .field-label { font-weight:600; color:#211D17; font-size:0.875rem; margin-bottom:0.375rem; display:block; }
+  .field-input {
+    width:100%; background:#fff; border:1px solid #E8E1D2; border-radius:0.65rem;
+    padding:0.7rem 0.9rem; font-size:0.925rem; color:#211D17; transition:border-color .15s, box-shadow .15s;
+  }
+  .field-input:focus { outline:none; border-color:#C1861A; box-shadow:0 0 0 3px #FAEACB; }
+  .field-input::placeholder { color:#B3A990; }
+  .req { color:#B4432E; }
+</style>
+</head>
+<body class="font-sans text-ink">
+
+<header class="border-b border-hairline bg-cream/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-3xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gold-600 text-white flex items-center justify-center font-serif font-semibold text-sm">SP</div>
+      <div class="leading-tight">
+        <p class="font-serif font-semibold text-ink text-[15px]">SPN Salman 49</p>
+        <p class="text-[11px] text-muted -mt-0.5">Sekolah Pranikah ITB</p>
+      </div>
+    </a>
+    <a href="index.html" class="text-sm text-muted hover:text-gold-700 transition-colors">← Beranda</a>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 sm:px-6 py-10 sm:py-14">
+  
+  <div class="flex items-center gap-1 sm:gap-2 mb-8">
+    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white ring-4 ring-gold-100">1</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">2</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">3</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">4</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">5</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">6</div>
+  </div>
+
+  <div class="bg-white border border-hairline rounded-2xl shadow-sm shadow-black/[0.03] p-6 sm:p-9" x-data="{
+  q:{}, restu:'', gambaran:'', alasan:'', harapan:'',
+  init(){
+    this.q = Object.fromEntries(new URLSearchParams(location.search));
+    this.restu = this.q.restu || '';
+    this.gambaran = this.q.gambaran_awal || '';
+    this.alasan = this.q.alasan || '';
+    this.harapan = this.q.harapan || '';
+  },
+  get valid(){
+    return this.restu !== '' && this.gambaran.trim().length > 0 && this.alasan.trim().length > 0 && this.harapan.trim().length > 0;
+  }
+}" x-cloak>
+    <div class="mb-7">
+      <h1 class="font-serif text-2xl sm:text-[26px] text-ink font-semibold">Pendaftaran SPN Batch 49</h1>
+      <p class="text-sm text-muted mt-1">Langkah 1/6: Pertanyaan Pendahuluan</p>
+    </div>
+
+    <form method="GET" action="langkah-2.html" class="space-y-7">
+      <p class="text-[15px] text-ink/80">Sebelum melanjutkan, jawab beberapa pertanyaan berikut ya.</p>
+
+      <div>
+        <label class="field-label">Sudah mendapat restu dari orang tua, wali, atau keluarga untuk mengikuti SPN Salman Offline Batch 49? <span class="req">*</span></label>
+        <div class="space-y-2.5">
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="restu==='sudah' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="restu" value="sudah" x-model="restu" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Alhamdulillah, sudah</span>
+      </label>
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="restu==='akan' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="restu" value="akan" x-model="restu" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Sehabis ini pasti akan minta restunya</span>
+      </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" for="gambaran">Apa gambaran awalmu terkait Sekolah Pranikah Salman ITB? <span class="req">*</span></label>
+        <textarea id="gambaran" name="gambaran_awal" x-model="gambaran" maxlength="500" rows="3"
+          class="field-input" placeholder="Ceritakan gambaran awalmu..."></textarea>
+        <p class="text-xs text-muted text-right mt-1" x-text="gambaran.length + '/500'"></p>
+      </div>
+
+      <div>
+        <label class="field-label" for="alasan">Apa alasanmu mengikuti Sekolah Pranikah Salman ITB? <span class="req">*</span></label>
+        <textarea id="alasan" name="alasan" x-model="alasan" maxlength="500" rows="3"
+          class="field-input" placeholder="Ceritakan alasanmu..."></textarea>
+        <p class="text-xs text-muted text-right mt-1" x-text="alasan.length + '/500'"></p>
+      </div>
+
+      <div>
+        <label class="field-label" for="harapan">Apa harapanmu setelah mengikuti Sekolah Pranikah Salman ITB? <span class="req">*</span></label>
+        <textarea id="harapan" name="harapan" x-model="harapan" maxlength="500" rows="3"
+          class="field-input" placeholder="Ceritakan harapanmu setelah menyelesaikan program ini..."></textarea>
+        <p class="text-xs text-muted text-right mt-1" x-text="harapan.length + '/500'"></p>
+      </div>
+
+      
+    <div class="flex items-center justify-between border-t border-hairline pt-6 mt-8">
+      <span></span>
+      <button type="submit" :disabled="!(valid)"
+        :class="(valid) ? 'bg-gold-600 hover:bg-gold-700 text-white cursor-pointer' : 'bg-gold-100 text-gold-400 cursor-not-allowed'"
+        class="rounded-xl px-6 py-2.5 text-sm font-semibold transition-colors">Selanjutnya</button>
+    </div>
+
+    </form>
+
+  </div>
+  <p class="text-center text-xs text-muted mt-6">Sekolah Pranikah Salman ITB · Batch 49</p>
+</main>
+
+</body>
+</html>

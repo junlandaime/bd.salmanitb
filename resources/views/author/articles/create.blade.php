@@ -1,31 +1,41 @@
 @extends('author.layouts.app')
 
-@section('title', 'Tulis Artikel')
+@section('title', 'Tulis Artikel Baru - Panel Penulis')
 
 @section('content')
-    <div class="container mx-auto px-6 py-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-semibold text-gray-700">Tulis Artikel Baru</h1>
-                <a href="{{ route('author.articles.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Kembali ke
-                    daftar</a>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <a href="{{ route('author.articles.index') }}" class="hover:text-emerald-700">Artikel Saya</a>
+                <span>/</span>
+                <span>Tulis Baru</span>
             </div>
-
-            <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
-                class="bg-white shadow rounded-lg">
-                @include('author.articles.form')
-
-                <div class="px-6 py-4 border-t flex justify-end space-x-3 bg-gray-50">
-                    <a href="{{ route('author.articles.index') }}"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        Batal
-                    </a>
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Simpan Artikel
-                    </button>
-                </div>
-            </form>
+            <h1 class="text-2xl font-bold text-gray-900">Tulis Artikel Baru</h1>
+            <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Tulis dan publikasikan gagasan, tadabbur, atau opini dakwah Anda.</p>
         </div>
+        <a href="{{ route('author.articles.index') }}"
+            class="px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-bold text-xs shadow-2xs transition">
+            &larr; Kembali
+        </a>
     </div>
+
+    <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @include('author.articles.form')
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+            <a href="{{ route('author.articles.index') }}"
+                class="px-5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-xs transition shadow-2xs">
+                Batal
+            </a>
+            <button type="submit"
+                class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+                Simpan Artikel
+            </button>
+        </div>
+    </form>
+
+</div>
 @endsection

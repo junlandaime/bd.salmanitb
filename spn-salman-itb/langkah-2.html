@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Diri — SPN Salman ITB Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FBF8F3',
+          ink: '#211D17',
+          muted: '#79705F',
+          hairline: '#E8E1D2',
+          gold: {
+            50:'#FDF6E9', 100:'#FAEACB', 200:'#F1D48E', 300:'#E6BB57',
+            400:'#D5A233', 500:'#C1861A', 600:'#A66F13', 700:'#835710', 800:'#5F3F0C'
+          },
+          leaf: { 50:'#EEF6EE', 100:'#DBEEDC', 500:'#3F8A4B', 600:'#2F7239', 700:'#245A2C' }
+        },
+        fontFamily: {
+          serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  body { background:#FBF8F3; }
+  [x-cloak] { display:none !important; }
+  input[type=radio]:checked, input[type=checkbox]:checked { accent-color:#A66F13; }
+  ::selection { background:#F1D48E; }
+  .field-label { font-weight:600; color:#211D17; font-size:0.875rem; margin-bottom:0.375rem; display:block; }
+  .field-input {
+    width:100%; background:#fff; border:1px solid #E8E1D2; border-radius:0.65rem;
+    padding:0.7rem 0.9rem; font-size:0.925rem; color:#211D17; transition:border-color .15s, box-shadow .15s;
+  }
+  .field-input:focus { outline:none; border-color:#C1861A; box-shadow:0 0 0 3px #FAEACB; }
+  .field-input::placeholder { color:#B3A990; }
+  .req { color:#B4432E; }
+</style>
+</head>
+<body class="font-sans text-ink">
+
+<header class="border-b border-hairline bg-cream/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-3xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gold-600 text-white flex items-center justify-center font-serif font-semibold text-sm">SP</div>
+      <div class="leading-tight">
+        <p class="font-serif font-semibold text-ink text-[15px]">SPN Salman 49</p>
+        <p class="text-[11px] text-muted -mt-0.5">Sekolah Pranikah ITB</p>
+      </div>
+    </a>
+    <a href="index.html" class="text-sm text-muted hover:text-gold-700 transition-colors">← Beranda</a>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 sm:px-6 py-10 sm:py-14">
+  
+  <div class="flex items-center gap-1 sm:gap-2 mb-8">
+    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white">✓</div><div class="flex-1 h-px bg-gold-600"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white ring-4 ring-gold-100">2</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">3</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">4</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">5</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">6</div>
+  </div>
+
+  <div class="bg-white border border-hairline rounded-2xl shadow-sm shadow-black/[0.03] p-6 sm:p-9" x-data="{
+  q:{}, prev:['restu', 'gambaran_awal', 'alasan', 'harapan'],
+  nama_lengkap:'', nama_gelar:'', nama_panggilan:'', jenis_kelamin:'', whatsapp:'', instagram:'',
+  tanggal_lahir:'', usia:'', asal_daerah:'', domisili:'', status_pernikahan:'',
+  init(){
+    this.q = Object.fromEntries(new URLSearchParams(location.search));
+    this.nama_lengkap = this.q.nama_lengkap || '';
+    this.nama_gelar = this.q.nama_gelar || '';
+    this.nama_panggilan = this.q.nama_panggilan || '';
+    this.jenis_kelamin = this.q.jenis_kelamin || '';
+    this.whatsapp = this.q.whatsapp || '';
+    this.instagram = this.q.instagram || '';
+    this.tanggal_lahir = this.q.tanggal_lahir || '';
+    this.usia = this.q.usia || '';
+    this.asal_daerah = this.q.asal_daerah || '';
+    this.domisili = this.q.domisili || '';
+    this.status_pernikahan = this.q.status_pernikahan || '';
+    if(this.tanggal_lahir) this.hitungUsia();
+  },
+  hitungUsia(){
+    if(!this.tanggal_lahir){ this.usia=''; return; }
+    const b = new Date(this.tanggal_lahir), t = new Date();
+    let a = t.getFullYear() - b.getFullYear();
+    const m = t.getMonth() - b.getMonth();
+    if(m < 0 || (m === 0 && t.getDate() < b.getDate())) a--;
+    this.usia = a >= 0 ? a : '';
+  },
+  get valid(){
+    return this.nama_lengkap && this.nama_gelar && this.nama_panggilan && this.jenis_kelamin &&
+      this.whatsapp && this.instagram && this.tanggal_lahir && this.asal_daerah &&
+      this.domisili.trim().length > 0 && this.status_pernikahan;
+  }
+}" x-cloak>
+    <div class="mb-7">
+      <h1 class="font-serif text-2xl sm:text-[26px] text-ink font-semibold">Pendaftaran SPN Batch 49</h1>
+      <p class="text-sm text-muted mt-1">Langkah 2/6: Data Diri</p>
+    </div>
+
+    <form method="GET" action="langkah-3.html" class="space-y-6">
+      <template x-for="f in prev" :key="f">
+      <input type="hidden" :name="f" :value="q[f] || ''">
+    </template>
+      <p class="text-[15px] text-ink/80">Lengkapi data diri Anda dengan benar dan lengkap.</p>
+
+      <div>
+        <label class="field-label" for="nl">Nama Lengkap Tanpa Gelar <span class="req">*</span></label>
+        <input id="nl" name="nama_lengkap" x-model="nama_lengkap" class="field-input" placeholder="Nama lengkap">
+      </div>
+      <div>
+        <label class="field-label" for="ng">Nama Lengkap Dengan Gelar <span class="req">*</span></label>
+        <input id="ng" name="nama_gelar" x-model="nama_gelar" class="field-input" placeholder="Nama lengkap + gelar">
+      </div>
+      <div>
+        <label class="field-label" for="np">Nama Panggilan <span class="req">*</span></label>
+        <input id="np" name="nama_panggilan" x-model="nama_panggilan" class="field-input" placeholder="Nama panggilan">
+      </div>
+
+      <div>
+        <label class="field-label">Jenis Kelamin <span class="req">*</span></label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="jenis_kelamin==='pria' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="jenis_kelamin" value="pria" x-model="jenis_kelamin" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Pria</span>
+      </label>
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="jenis_kelamin==='wanita' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="jenis_kelamin" value="wanita" x-model="jenis_kelamin" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Wanita</span>
+      </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" for="wa">Nomor WhatsApp aktif <span class="req">*</span></label>
+        <input id="wa" name="whatsapp" x-model="whatsapp" type="tel" class="field-input" placeholder="0812-3456-7890">
+      </div>
+      <div>
+        <label class="field-label" for="ig">Akun Instagram aktif <span class="req">*</span></label>
+        <input id="ig" name="instagram" x-model="instagram" class="field-input" placeholder="@ username_anda">
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div>
+          <label class="field-label" for="tl">Tanggal Lahir <span class="req">*</span></label>
+          <input id="tl" name="tanggal_lahir" x-model="tanggal_lahir" @change="hitungUsia()" type="date" class="field-input">
+        </div>
+        <div>
+          <label class="field-label" for="us">Usia <span class="req">*</span></label>
+          <div class="relative">
+            <input id="us" name="usia" x-model="usia" type="number" readonly class="field-input bg-gold-50/40 pr-14" placeholder="Otomatis">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">tahun</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" for="ad">Asal Daerah <span class="req">*</span></label>
+        <input id="ad" name="asal_daerah" x-model="asal_daerah" class="field-input" placeholder="Kota/kabupaten asal">
+      </div>
+      <div>
+        <label class="field-label" for="dom">Alamat Rumah/Domisili Saat Ini (Terkini) <span class="req">*</span></label>
+        <textarea id="dom" name="domisili" x-model="domisili" maxlength="500" rows="3" class="field-input" placeholder="Alamat domisili saat ini"></textarea>
+        <p class="text-xs text-muted text-right mt-1" x-text="domisili.length + '/500'"></p>
+      </div>
+
+      <div>
+        <label class="field-label">Status Pernikahan <span class="req">*</span></label>
+        <div class="space-y-2.5">
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="status_pernikahan==='menikah' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="status_pernikahan" value="menikah" x-model="status_pernikahan" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Menikah</span>
+      </label>
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="status_pernikahan==='belum' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="status_pernikahan" value="belum" x-model="status_pernikahan" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Belum Menikah</span>
+      </label>
+          <label class="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-colors"
+        :class="status_pernikahan==='pernah' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+        <input type="radio" name="status_pernikahan" value="pernah" x-model="status_pernikahan" class="w-4 h-4 text-gold-600">
+        <span class="text-sm text-ink">Sudah Pernah Menikah</span>
+      </label>
+        </div>
+      </div>
+
+      
+    <div class="flex items-center justify-between border-t border-hairline pt-6 mt-8">
+      <button type="button" @click="history.back()" class="text-sm font-medium text-muted hover:text-ink transition-colors">Kembali</button>
+      <button type="submit" :disabled="!(valid)"
+        :class="(valid) ? 'bg-gold-600 hover:bg-gold-700 text-white cursor-pointer' : 'bg-gold-100 text-gold-400 cursor-not-allowed'"
+        class="rounded-xl px-6 py-2.5 text-sm font-semibold transition-colors">Selanjutnya</button>
+    </div>
+
+    </form>
+
+  </div>
+  <p class="text-center text-xs text-muted mt-6">Sekolah Pranikah Salman ITB · Batch 49</p>
+</main>
+
+</body>
+</html>

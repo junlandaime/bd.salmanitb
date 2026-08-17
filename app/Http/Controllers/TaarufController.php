@@ -2,47 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Helpers\DateHelper;
-use App\Models\ActivityBatch;
 use App\Models\TaarufProfile;
 use App\Models\TaarufQuestion;
+use App\Helpers\DateHelper;
+use App\Support\UploadSanitizer;
+use App\Http\Requests\StoreTaarufProfileRequest;
+use App\Http\Requests\UpdateTaarufProfileRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Support\UploadSanitizer;
-
 
 class TaarufController extends Controller
 {
-    /**
-     * Check if user is eligible for taaruf (alumni of SPN Online or Offline)
-     */
-    private function isEligibleForTaaruf()
-    {
-        $user = Auth::user();
-        $batches = $user->batchesAsAlumni()->with('activity')->get();
-
-        foreach ($batches as $batch) {
-            if (Str::contains($batch->activity->title, ['Sekolah Pranikah Online', 'Sekolah Pranikah Offline'])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    // =========================================================================
+    // Dashboard & Navigation
+    // =========================================================================
 
     /**
-     * Show taaruf dashboard
+     * Show taaruf dashboard.
      */
     public function index()
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
@@ -51,79 +31,15 @@ class TaarufController extends Controller
         $missingFields = [];
 
         if ($taarufProfile) {
+            $missingFields = $this->getMissingFields($taarufProfile);
+            $needsProfileUpdate = count($missingFields) > 0;
 
             if (empty($taarufProfile->birth_place_date) || DateHelper::getAgeFromBirthPlaceDate($taarufProfile->birth_place_date) === null) {
                 $needsBirthDateWarning = true;
-                $missingFields[] = 'Tempat & Tanggal Lahir (format: Kota, 4 Oktober 1995)';
-            }
-            if (empty($taarufProfile->visi_misi)) {
-                $missingFields[] = 'Kriteria Pasangan';
-            }
-            if (empty($taarufProfile->kelebihan_kekurangan)) {
-                $missingFields[] = 'Kelebihan & Kekurangan';
-            }
-            if (empty($taarufProfile->origin_province)) {
-                $missingFields[] = 'Provinsi Asal';
-            }
-            if (empty($taarufProfile->origin_city)) {
-                $missingFields[] = 'Kota/Kabupaten Asal';
-            }
-            if (empty($taarufProfile->origin_district)) {
-                $missingFields[] = 'Kecamatan Asal';
-            }
-            if (empty($taarufProfile->origin_village)) {
-                $missingFields[] = 'Kelurahan Asal';
-            }
-            if (empty($taarufProfile->residence_province)) {
-                $missingFields[] = 'Provinsi Domisili';
-            }
-            if (empty($taarufProfile->residence_city)) {
-                $missingFields[] = 'Kota/Kabupaten Domisili';
-            }
-            if (empty($taarufProfile->residence_district)) {
-                $missingFields[] = 'Kecamatan Domisili';
-            }
-            if (empty($taarufProfile->residence_village)) {
-                $missingFields[] = 'Kelurahan Domisili';
-            }
-            if (empty($taarufProfile->education_level)) {
-                $missingFields[] = 'Strata Pendidikan Terakhir';
-            }
-            if (empty($taarufProfile->university)) {
-                $missingFields[] = 'Nama Institusi/Kampus';
-            } else {
-                if ($taarufProfile->university === 'Lainnya' && empty($taarufProfile->custom_university)) {
-                    $missingFields[] = 'Nama Kampus Lainnya (Custom)';
-                }
-            }
-
-            if (!empty($taarufProfile->education_level)) {
-                $highEducationLevels = ['D3', 'D4', 'S1', 'S2', 'S3'];
-                if (in_array($taarufProfile->education_level, $highEducationLevels) && empty($taarufProfile->major)) {
-                    $missingFields[] = 'Jurusan/Program Studi';
-                }
-            }
-
-            if (count($missingFields) > 0) {
-                $needsProfileUpdate = true;
             }
         }
 
-        $unreadQuestionsCount = 0;
-
-        if ($taarufProfile) {
-            $unreadQuestionsCount = $user->unreadNotifications()
-                ->where('type', 'App\Notifications\NewTaarufQuestion')
-                ->count();
-
-            $unansweredQuestionsCount = TaarufQuestion::where('profile_id', $taarufProfile->id)
-                ->where('is_answered', false)
-                ->count();
-
-            if ($unansweredQuestionsCount > 0 && $unreadQuestionsCount == 0) {
-                $unreadQuestionsCount = $unansweredQuestionsCount;
-            }
-        }
+        $unreadQuestionsCount = $this->getUnreadQuestionsCount($user, $taarufProfile);
 
         return view('taaruf.index', compact(
             'taarufProfile',
@@ -135,106 +51,139 @@ class TaarufController extends Controller
     }
 
     /**
-     * Helper method untuk check kelengkapan profile
-     */
-    protected function checkProfileCompleteness($profile)
-    {
-        $requiredFields = [
-            'visi_misi' => 'Visi Misi',
-            'kelebihan_kekurangan' => 'Kelebihan & Kekurangan',
-            'origin_province' => 'Provinsi Asal',
-            'origin_city' => 'Kota/Kabupaten Asal',
-            'origin_district' => 'Kecamatan Asal',
-            'origin_village' => 'Kelurahan Asal',
-            'residence_province' => 'Provinsi Domisili',
-            'residence_city' => 'Kota/Kabupaten Domisili',
-            'residence_district' => 'Kecamatan Domisili',
-            'residence_village' => 'Kelurahan Domisili',
-        ];
-
-        $missing = [];
-        foreach ($requiredFields as $field => $label) {
-            if (empty($profile->$field)) {
-                $missing[] = $label;
-            }
-        }
-
-        return [
-            'is_complete' => count($missing) === 0,
-            'missing_fields' => $missing,
-            'completion_percentage' => round((1 - (count($missing) / count($requiredFields))) * 100, 0)
-        ];
-    }
-
-    /**
-     * Show terms and conditions for taaruf
+     * Show terms and conditions for taaruf.
      */
     public function showTerms()
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         return view('taaruf.terms');
     }
 
     /**
-     * Accept terms and proceed to profile form
+     * Accept terms and proceed to profile form.
      */
     public function acceptTerms()
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
         if ($taarufProfile) {
-            $taarufProfile->is_active = true;
-            $taarufProfile->save();
-
+            $taarufProfile->update(['is_active' => true]);
             return redirect()->route('taaruf.questions');
         }
 
         return redirect()->route('taaruf.profile.create');
     }
 
+    // =========================================================================
+    // Profile CRUD
+    // =========================================================================
+
     /**
-     * Show the form for creating a new taaruf profile
+     * Show the form for creating a new taaruf profile.
+     * Auto-fills form with SPN registration data if available.
      */
     public function createProfile()
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
 
         if ($user->taarufProfile) {
             return redirect()->route('taaruf.profile.edit');
         }
 
-        return view('taaruf.profile.create');
+        // Auto-fill from SPN Registration data if available
+        $prefill = [];
+        $spnReg = \App\Models\SpnRegistration::where('user_id', $user->id)
+            ->where('status', 'terverifikasi')
+            ->latest()
+            ->first();
+
+        if ($spnReg) {
+            // Map gender values
+            $genderMap = ['pria' => 'male', 'wanita' => 'female'];
+
+            // Map pendidikan to education_level
+            $educationMap = [
+                'sma' => 'SMA/SMK',
+                'd3' => 'D3',
+                's1' => 'S1',
+                's2' => 'S2',
+                's3' => 'S3',
+            ];
+
+            $prefill = [
+                'full_name'         => $spnReg->nama_lengkap,
+                'nickname'          => $spnReg->nama_panggilan,
+                'gender'            => $genderMap[$spnReg->jenis_kelamin] ?? '',
+                'current_residence' => $spnReg->domisili,
+                'occupation'        => $spnReg->pekerjaan,
+                'university'        => $spnReg->universitas,
+                'major'             => $spnReg->jurusan,
+                'instagram'         => $spnReg->instagram,
+                'education_level'   => $educationMap[$spnReg->pendidikan] ?? '',
+                'last_education'    => ($educationMap[$spnReg->pendidikan] ?? '') . ($spnReg->jurusan ? ' ' . $spnReg->jurusan : '') . ($spnReg->universitas ? ' ' . $spnReg->universitas : ''),
+            ];
+        }
+
+        return view('taaruf.profile.create', compact('prefill'));
     }
 
     /**
-     * Show the form for editing the taaruf profile
+     * Store a newly created taaruf profile.
+     */
+    public function storeProfile(StoreTaarufProfileRequest $request)
+    {
+        $user = Auth::user();
+
+        if ($user->taarufProfile()->exists()) {
+            return redirect()->route('taaruf.profile.edit')
+                ->with('error', 'Profil Ta\'aruf Anda sudah ada. Silakan perbarui profil tersebut.');
+        }
+
+        $photoUrl = $this->handlePhotoUpload($request);
+        $informedConsentUrl = $this->handleConsentUpload($request);
+
+        if ($informedConsentUrl === false) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
+                ]);
+        }
+
+        TaarufProfile::create([
+            'user_id'              => $user->id,
+            'is_active'            => true,
+            'gender'               => $request->gender,
+            'full_name'            => $request->full_name,
+            'nickname'             => $request->nickname,
+            'birth_place_date'     => $request->birth_place_date,
+            'current_residence'    => $request->current_residence,
+            'last_education'       => $request->last_education,
+            'occupation'           => $request->occupation,
+            'marriage_target_year' => $request->marriage_target_year,
+            'personality'          => $request->personality,
+            'expectation'          => $request->expectation,
+            'ideal_partner_criteria' => $request->ideal_partner_criteria,
+            'visi_misi'            => $request->visi_misi,
+            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
+            'photo_url'            => $photoUrl,
+            'instagram'            => $request->instagram,
+            'informed_consent_url' => $informedConsentUrl,
+        ]);
+
+        return redirect()->route('taaruf.questions')
+            ->with('success', 'Profil Ta\'aruf berhasil dibuat. Silakan lengkapi pertanyaan berikut.');
+    }
+
+    /**
+     * Show the form for editing the taaruf profile.
      */
     public function editProfile()
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $profile = $user->taarufProfile;
 
-        if (!$profile) {
+        if (! $profile) {
             return redirect()->route('taaruf.profile.create');
         }
 
@@ -242,19 +191,98 @@ class TaarufController extends Controller
     }
 
     /**
-     * Show questions form
+     * Update the taaruf profile.
      */
-    public function showQuestions()
+    public function updateProfile(UpdateTaarufProfileRequest $request)
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
-        if (!$taarufProfile) {
+        if (! $taarufProfile) {
+            return redirect()->route('taaruf.profile.create');
+        }
+
+        // Handle photo upload/removal
+        $this->handlePhotoUpdate($request, $taarufProfile);
+
+        // Handle informed consent upload
+        $consentResult = $this->handleConsentUpdate($request, $taarufProfile);
+        if ($consentResult === false) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
+                ]);
+        }
+
+        $taarufProfile->update([
+            'gender'               => $request->gender,
+            'full_name'            => $request->full_name,
+            'nickname'             => $request->nickname,
+            'birth_place_date'     => $request->birth_place_date,
+            'origin_province'      => $request->origin_province,
+            'origin_city'          => $request->origin_city,
+            'origin_district'      => $request->origin_district,
+            'origin_village'       => $request->origin_village,
+            'current_residence'    => $request->current_residence,
+            'residence_province'   => $request->residence_province,
+            'residence_city'       => $request->residence_city,
+            'residence_district'   => $request->residence_district,
+            'residence_village'    => $request->residence_village,
+            'last_education'       => $request->last_education,
+            'education_level'      => $request->education_level,
+            'university'           => $request->university,
+            'custom_university'    => $request->custom_university,
+            'major'                => $request->major,
+            'occupation'           => $request->occupation,
+            'marriage_target_year' => $request->marriage_target_year,
+            'personality'          => $request->personality,
+            'expectation'          => $request->expectation,
+            'ideal_partner_criteria' => $request->ideal_partner_criteria,
+            'visi_misi'            => $request->visi_misi,
+            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
+            'instagram'            => $request->instagram,
+            'photo_url'            => $taarufProfile->photo_url,
+        ]);
+
+        return redirect()->route('taaruf.profile.edit')
+            ->with('success', 'Profil Ta\'aruf berhasil diperbarui.');
+    }
+
+    /**
+     * Toggle taaruf profile active status.
+     */
+    public function toggleActive()
+    {
+        $user = Auth::user();
+        $taarufProfile = $user->taarufProfile;
+
+        if (! $taarufProfile) {
+            return redirect()->route('taaruf.profile.create')
+                ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
+        }
+
+        $taarufProfile->update(['is_active' => ! $taarufProfile->is_active]);
+
+        $status = $taarufProfile->is_active ? 'diaktifkan' : 'dinonaktifkan';
+
+        return redirect()->route('taaruf.index')
+            ->with('success', "Profil Ta'aruf Anda berhasil {$status}.");
+    }
+
+    // =========================================================================
+    // Questions
+    // =========================================================================
+
+    /**
+     * Show questions form.
+     */
+    public function showQuestions()
+    {
+        $user = Auth::user();
+        $taarufProfile = $user->taarufProfile;
+
+        if (! $taarufProfile) {
             return redirect()->route('taaruf.profile.create')
                 ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
         }
@@ -263,74 +291,61 @@ class TaarufController extends Controller
     }
 
     /**
-     * Save answers to questions
+     * Save answers to questions.
      */
     public function saveQuestions(Request $request)
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $request->validate([
             'is_in_taaruf_process' => 'required|boolean',
-            'is_smoker' => 'required|boolean',
+            'is_smoker'            => 'required|boolean',
             'is_polygamy_intended' => 'required|boolean',
-            'has_debt' => 'required|boolean',
-            'has_dependents' => 'required|boolean',
+            'has_debt'             => 'required|boolean',
+            'has_dependents'       => 'required|boolean',
         ]);
 
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
-        if (!$taarufProfile) {
+        if (! $taarufProfile) {
             return redirect()->route('taaruf.profile.create')
                 ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
         }
 
-        $taarufProfile->update([
-            'is_in_taaruf_process' => $request->is_in_taaruf_process,
-            'is_smoker' => $request->is_smoker,
-            'is_polygamy_intended' => $request->is_polygamy_intended,
-            'has_debt' => $request->has_debt,
-            'has_dependents' => $request->has_dependents,
-        ]);
+        $taarufProfile->update($request->only([
+            'is_in_taaruf_process',
+            'is_smoker',
+            'is_polygamy_intended',
+            'has_debt',
+            'has_dependents',
+        ]));
 
         return redirect()->route('taaruf.list')
             ->with('success', 'Jawaban berhasil disimpan.');
     }
 
+    // =========================================================================
+    // Browse & View Profiles
+    // =========================================================================
+
     /**
-     * Show list of alumni who are open for taaruf - ENHANCED VERSION
+     * Show list of alumni who are open for taaruf.
      */
     public function showList(Request $request)
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
-        if (!$taarufProfile) {
+        if (! $taarufProfile) {
             return redirect()->route('taaruf.profile.create')
                 ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
         }
 
-        if (!$taarufProfile->is_active) {
+        if (! $taarufProfile->is_active) {
             return redirect()->route('taaruf.index')
                 ->with('error', 'Anda harus mengaktifkan profil Ta\'aruf terlebih dahulu.');
         }
 
-        // Per page selector
-        $allowedPerPage = [10, 25, 50, 100];
-        $perPage = (int) $request->query('per_page', 12);
-        if (!in_array($perPage, $allowedPerPage, true)) {
-            $perPage = 12;
-        }
-
-        // Main query
+        $perPage = $this->resolvePerPage($request);
         $oppositeGender = $taarufProfile->gender === 'male' ? 'female' : 'male';
 
         $query = TaarufProfile::where('gender', $oppositeGender)
@@ -345,95 +360,15 @@ class TaarufController extends Controller
             });
         }
 
-        // Filter handling
+        // Apply filters
         $filter = $request->get('filter', 'all');
 
-        // ========================================
-        // EDUCATION FILTER (Enhanced)
-        // ========================================
         if ($filter === 'education') {
-            $educationFilterType = $request->get('education_filter_type', 'strata');
-
-            switch ($educationFilterType) {
-                case 'strata':
-                    // Filter by education level only
-                    if ($request->filled('filter_education_level')) {
-                        $query->where('education_level', $request->filter_education_level);
-                    }
-                    break;
-
-                case 'university':
-                    // Filter by university only
-                    if ($request->filled('filter_university')) {
-                        $query->where(function ($q) use ($request) {
-                            $q->where('university', $request->filter_university)
-                                ->orWhere('custom_university', $request->filter_university);
-                        });
-                    }
-                    break;
-
-                case 'major':
-                    // Filter by major only
-                    if ($request->filled('filter_major')) {
-                        $query->where('major', 'like', '%' . $request->filter_major . '%');
-                    }
-                    break;
-
-                case 'strata_university':
-                    // Filter by both strata and university
-                    if ($request->filled('filter_education_level')) {
-                        $query->where('education_level', $request->filter_education_level);
-                    }
-                    if ($request->filled('filter_university')) {
-                        $query->where(function ($q) use ($request) {
-                            $q->where('university', $request->filter_university)
-                                ->orWhere('custom_university', $request->filter_university);
-                        });
-                    }
-                    break;
-
-                case 'strata_major':
-                    // Filter by both strata and major
-                    if ($request->filled('filter_education_level')) {
-                        $query->where('education_level', $request->filter_education_level);
-                    }
-                    if ($request->filled('filter_major')) {
-                        $query->where('major', 'like', '%' . $request->filter_major . '%');
-                    }
-                    break;
-
-                case 'full':
-                    // Filter by strata, university, and major
-                    if ($request->filled('filter_education_level')) {
-                        $query->where('education_level', $request->filter_education_level);
-                    }
-                    if ($request->filled('filter_university')) {
-                        $query->where(function ($q) use ($request) {
-                            $q->where('university', $request->filter_university)
-                                ->orWhere('custom_university', $request->filter_university);
-                        });
-                    }
-                    if ($request->filled('filter_major')) {
-                        $query->where('major', 'like', '%' . $request->filter_major . '%');
-                    }
-                    break;
-            }
-        }
-
-        // ========================================
-        // LOCATION FILTER
-        // ========================================
-        elseif ($filter === 'location') {
+            $this->applyEducationFilter($query, $request);
+        } elseif ($filter === 'location') {
             $this->applyLocationFilter($query, $request);
-        }
-
-        // ========================================
-        // MARRIAGE YEAR FILTER
-        // ========================================
-        elseif ($filter === 'marriage_year') {
-            if ($request->filled('marriage_year')) {
-                $query->where('marriage_target_year', $request->marriage_year);
-            }
+        } elseif ($filter === 'marriage_year' && $request->filled('marriage_year')) {
+            $query->where('marriage_target_year', $request->marriage_year);
         }
 
         // Get education levels for dropdown
@@ -447,15 +382,12 @@ class TaarufController extends Controller
             ->values()
             ->toArray();
 
-        // Paginate
         $profiles = $query->with('user')
             ->orderBy('full_name', 'asc')
             ->paginate($perPage)
             ->appends($request->except('page'));
 
         $myProfile = $taarufProfile;
-
-        // View preference
         $view = $request->get('view', 'card');
 
         return view('taaruf.list', compact(
@@ -467,24 +399,19 @@ class TaarufController extends Controller
     }
 
     /**
-     * Show a specific taaruf profile
+     * Show a specific taaruf profile.
      */
     public function showProfile($id)
     {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
         $user = Auth::user();
         $userProfile = $user->taarufProfile;
 
-        if (!$userProfile) {
+        if (! $userProfile) {
             return redirect()->route('taaruf.profile.create')
                 ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
         }
 
-        if (!$userProfile->is_active) {
+        if (! $userProfile->is_active) {
             return redirect()->route('taaruf.index')
                 ->with('error', 'Anda harus mengaktifkan profil Ta\'aruf terlebih dahulu.');
         }
@@ -496,7 +423,7 @@ class TaarufController extends Controller
                 ->with('error', 'Anda hanya dapat melihat profil lawan jenis.');
         }
 
-        if (!$profile->is_active) {
+        if (! $profile->is_active) {
             return redirect()->route('taaruf.list')
                 ->with('error', 'Profil yang Anda cari tidak aktif.');
         }
@@ -504,486 +431,269 @@ class TaarufController extends Controller
         return view('taaruf.profile.show', compact('profile'));
     }
 
-    /**
-     * Toggle taaruf profile active status
-     */
-    public function toggleActive()
-    {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
-        $user = Auth::user();
-        $taarufProfile = $user->taarufProfile;
-
-        if (!$taarufProfile) {
-            return redirect()->route('taaruf.profile.create')
-                ->with('error', 'Anda harus membuat profil Ta\'aruf terlebih dahulu.');
-        }
-
-        $taarufProfile->is_active = !$taarufProfile->is_active;
-        $taarufProfile->save();
-
-        $status = $taarufProfile->is_active ? 'diaktifkan' : 'dinonaktifkan';
-
-        return redirect()->route('taaruf.index')
-            ->with('success', "Profil Ta'aruf Anda berhasil {$status}.");
-    }
+    // =========================================================================
+    // AJAX Endpoints
+    // =========================================================================
 
     /**
-     * Store a newly created taaruf profile
-     */
-    // public function storeProfile(Request $request)
-    // {
-    //     if (!$this->isEligibleForTaaruf()) {
-    //         return redirect()->route('alumni.dashboard')
-    //             ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-    //     }
-
-    //     $request->validate([
-    //         'gender' => 'required|in:male,female',
-    //         'full_name' => 'required|string|max:255',
-    //         'nickname' => 'required|string|max:100',
-    //         'birth_place_date' => 'required|string|max:255',
-    //         'origin_province' => 'required|string|max:255',
-    //         'origin_city' => 'required|string|max:255',
-    //         'origin_district' => 'required|string|max:255',
-    //         'origin_village' => 'required|string|max:255',
-    //         'current_residence' => 'required|string|max:255',
-    //         'residence_province' => 'required|string|max:255',
-    //         'residence_city' => 'required|string|max:255',
-    //         'residence_district' => 'required|string|max:255',
-    //         'residence_village' => 'required|string|max:255',
-    //         'last_education' => 'required|string|max:255',
-    //         'occupation' => 'required|string|max:255',
-    //         'marriage_target_year' => 'nullable|integer|min:2025|max:2050',
-    //         'personality' => 'nullable|string|max:255',
-    //         'expectation' => 'nullable|string',
-    //         'ideal_partner_criteria' => 'nullable|string',
-    //         'visi_misi' => 'nullable|string',
-    //         'kelebihan_kekurangan' => 'nullable|string',
-    //         'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //         'instagram' => 'nullable|string|max:255',
-    //         'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-    //     ]);
-
-    //     $user = Auth::user();
-
-    //     $photoUrl = null;
-    //     if ($request->hasFile('photo')) {
-    //         $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-    //         $photoUrl = Storage::url($photoPath);
-    //     }
-
-    //     $informedConsentUrl = null;
-    //     if ($request->hasFile('informed_consent')) {
-    //         $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
-    //         $informedConsentUrl = Storage::url($consentPath);
-    //     }
-
-    //     $taarufProfile = TaarufProfile::create([
-    //         'user_id' => $user->id,
-    //         'is_active' => true,
-    //         'gender' => $request->gender,
-    //         'full_name' => $request->full_name,
-    //         'nickname' => $request->nickname,
-    //         'birth_place_date' => $request->birth_place_date,
-    //         'origin_province' => $request->origin_province,
-    //         'origin_city' => $request->origin_city,
-    //         'origin_district' => $request->origin_district,
-    //         'origin_village' => $request->origin_village,
-    //         'current_residence' => $request->current_residence,
-    //         'residence_province' => $request->residence_province,
-    //         'residence_city' => $request->residence_city,
-    //         'residence_district' => $request->residence_district,
-    //         'residence_village' => $request->residence_village,
-    //         'last_education' => $request->last_education,
-    //         'occupation' => $request->occupation,
-    //         'marriage_target_year' => $request->marriage_target_year,
-    //         'personality' => $request->personality,
-    //         'expectation' => $request->expectation,
-    //         'ideal_partner_criteria' => $request->ideal_partner_criteria,
-    //         'visi_misi' => $request->visi_misi,
-    //         'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
-    //         'photo_url' => $photoUrl,
-    //         'instagram' => $request->instagram,
-    //         'informed_consent_url' => $informedConsentUrl,
-    //     ]);
-
-    //     return redirect()->route('taaruf.questions')
-    //         ->with('success', 'Profil Ta\'aruf berhasil dibuat. Silakan lengkapi pertanyaan berikut.');
-    // }
-
-    public function storeProfile(Request $request)
-    {
-        // Check if user is eligible
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
-
-        $user = Auth::user();
-
-        if ($user->taarufProfile()->exists()) {
-            return redirect()
-                ->route('taaruf.profile.edit') // atau route lain yang tepat
-                ->with('error', 'Profil Ta\'aruf Anda sudah ada. Silakan perbarui profil tersebut.');
-        }
-
-        $request->validate([
-            'gender' => 'required|in:male,female',
-            'full_name' => 'required|string|max:255',
-            'nickname' => 'required|string|max:100',
-            'birth_place_date' => 'required|string|max:255',
-            'current_residence' => 'required|string|max:255',
-            'last_education' => 'required|string|max:255',
-            'occupation' => 'required|string|max:255',
-            'marriage_target_year' => 'nullable|integer|min:2025|max:2050',
-            'personality' => 'nullable|string|max:255',
-            'expectation' => 'nullable|string',
-            'ideal_partner_criteria' => 'nullable|string',
-            'visi_misi' => 'nullable|string',
-            'kelebihan_kekurangan' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'instagram' => 'nullable|string|max:255',
-            'informed_consent' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-        ]);
-
-        $user = Auth::user();
-
-        // Handle photo upload
-        $photoUrl = null;
-        if ($request->hasFile('photo')) {
-            // $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-            // $photoUrl = Storage::url($photoPath);
-            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
-            $photoUrl = Storage::disk('public')->url($photoPath);
-        }
-
-        // Handle informed consent upload
-        $allowedConsentMimes = [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'image/jpeg',
-            'image/png',
-        ];
-
-        $informedConsentUrl = null;
-        if ($request->hasFile('informed_consent')) {
-
-            // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
-            // $informedConsentUrl = Storage::url($consentPath);
-
-            try {
-                $consentPath = UploadSanitizer::store(
-                    $request->file('informed_consent'),
-                    'taaruf/consents',
-                    'public',
-                    $allowedConsentMimes
-                );
-            } catch (\RuntimeException $exception) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors([
-                        'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
-                    ]);
-            }
-            $informedConsentUrl = Storage::disk('public')->url($consentPath);
-        }
-
-        // Create taaruf profile
-        $taarufProfile = TaarufProfile::create([
-            'user_id' => $user->id,
-            'is_active' => true,
-            'gender' => $request->gender,
-            'full_name' => $request->full_name,
-            'nickname' => $request->nickname,
-            'birth_place_date' => $request->birth_place_date,
-            'current_residence' => $request->current_residence,
-            'last_education' => $request->last_education,
-            'occupation' => $request->occupation,
-            'marriage_target_year' => $request->marriage_target_year,
-            'personality' => $request->personality,
-            'expectation' => $request->expectation,
-            'ideal_partner_criteria' => $request->ideal_partner_criteria,
-            'visi_misi' => $request->visi_misi,
-            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
-            'photo_url' => $photoUrl,
-            'instagram' => $request->instagram,
-            'informed_consent_url' => $informedConsentUrl,
-        ]);
-
-        return redirect()->route('taaruf.questions')
-            ->with('success', 'Profil Ta\'aruf berhasil dibuat. Silakan lengkapi pertanyaan berikut.');
-    }
-
-    /**
-     * Update the taaruf profile
-     */
-    public function updateProfile(Request $request)
-    {
-        if (!$this->isEligibleForTaaruf()) {
-            return redirect()->route('alumni.dashboard')
-                ->with('error', 'Anda tidak memiliki akses ke fitur Ta\'aruf. Fitur ini hanya tersedia untuk alumni Sekolah Pranikah Online dan Offline.');
-        }
-
-        $request->validate([
-            'gender' => 'required|in:male,female',
-            'full_name' => 'required|string|max:255',
-            'nickname' => 'required|string|max:100',
-            'birth_place_date' => 'required|string|max:255',
-            'origin_province' => 'required|string|max:255',
-            'origin_city' => 'required|string|max:255',
-            'origin_district' => 'required|string|max:255',
-            'origin_village' => 'required|string|max:255',
-            'current_residence' => 'required|string|max:255',
-            'residence_province' => 'required|string|max:255',
-            'residence_city' => 'required|string|max:255',
-            'residence_district' => 'required|string|max:255',
-            'residence_village' => 'required|string|max:255',
-            'last_education' => 'required|string|max:255',
-            'education_level' => 'required|string|in:SD,SMP,SMA,SMK,D3,D4,S1,S2,S3',
-            'university' => 'required|string',
-            'custom_university' => 'nullable|string|required_if:university,Lainnya',
-            'major' => 'nullable|string',
-            'occupation' => 'required|string|max:255',
-            'marriage_target_year' => 'nullable|integer|min:2025|max:2050',
-            'personality' => 'nullable|string|max:255',
-            'expectation' => 'nullable|string',
-            'ideal_partner_criteria' => 'nullable|string',
-            'visi_misi' => 'nullable|string',
-            'kelebihan_kekurangan' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'instagram' => 'nullable|string|max:255',
-            'informed_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-        ]);
-
-        $user = Auth::user();
-        $taarufProfile = $user->taarufProfile;
-
-        if (!$taarufProfile) {
-            return redirect()->route('taaruf.profile.create');
-        }
-
-        if ($request->hasFile('photo')) {
-            if ($taarufProfile->photo_url) {
-                $oldPath = str_replace('/storage/', '', $taarufProfile->photo_url);
-                Storage::disk('public')->delete($oldPath);
-            }
-            // $photoPath = $request->file('photo')->store('taaruf/photos', 'public');
-            // $taarufProfile->photo_url = Storage::url($photoPath);
-
-            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
-            $taarufProfile->photo_url = Storage::disk('public')->url($photoPath);
-        } elseif ($request->has('remove_photo') && $request->remove_photo) {
-            if ($taarufProfile->photo_url) {
-                $oldPath = str_replace('/storage/', '', $taarufProfile->photo_url);
-                Storage::disk('public')->delete($oldPath);
-                $taarufProfile->photo_url = null;
-            }
-        }
-
-        $allowedConsentMimes = [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'image/jpeg',
-            'image/png',
-        ];
-
-        if ($request->hasFile('informed_consent')) {
-            if ($taarufProfile->informed_consent_url) {
-                $oldPath = str_replace('/storage/', '', $taarufProfile->informed_consent_url);
-                Storage::disk('public')->delete($oldPath);
-            }
-            // $consentPath = $request->file('informed_consent')->store('taaruf/consents', 'public');
-            // $taarufProfile->informed_consent_url = Storage::url($consentPath);
-
-            try {
-                $consentPath = UploadSanitizer::store(
-                    $request->file('informed_consent'),
-                    'taaruf/consents',
-                    'public',
-                    $allowedConsentMimes
-                );
-            } catch (\RuntimeException $exception) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors([
-                        'informed_consent' => 'Dokumen informed consent harus berupa file PDF, JPG, JPEG, PNG, DOC, atau DOCX.',
-                    ]);
-            }
-            $taarufProfile->informed_consent_url = Storage::disk('public')->url($consentPath);
-        }
-
-        $taarufProfile->update([
-            'gender' => $request->gender,
-            'full_name' => $request->full_name,
-            'nickname' => $request->nickname,
-            'birth_place_date' => $request->birth_place_date,
-            'origin_province' => $request->origin_province,
-            'origin_city' => $request->origin_city,
-            'origin_district' => $request->origin_district,
-            'origin_village' => $request->origin_village,
-            'current_residence' => $request->current_residence,
-            'residence_province' => $request->residence_province,
-            'residence_city' => $request->residence_city,
-            'residence_district' => $request->residence_district,
-            'residence_village' => $request->residence_village,
-            'last_education' => $request->last_education,
-            'education_level' => $request->education_level,
-            'university' => $request->university,
-            'custom_university' => $request->custom_university,
-            'major' => $request->major,
-            'occupation' => $request->occupation,
-            'marriage_target_year' => $request->marriage_target_year,
-            'personality' => $request->personality,
-            'expectation' => $request->expectation,
-            'ideal_partner_criteria' => $request->ideal_partner_criteria,
-            'visi_misi' => $request->visi_misi,
-            'kelebihan_kekurangan' => $request->kelebihan_kekurangan,
-            'instagram' => $request->instagram,
-            'photo_url' => $taarufProfile->photo_url,
-        ]);
-
-        return redirect()->route('taaruf.profile.edit')
-            ->with('success', 'Profil Ta\'aruf berhasil diperbarui.');
-    }
-
-    /**
-     * Apply location filter based on type and level
-     */
-    protected function applyLocationFilter($query, Request $request)
-    {
-        $locationType = $request->get('location_type', 'origin');
-        $locationLevel = $request->get('location_level', 'province');
-
-        $prefix = $locationType === 'residence' ? 'residence_' : 'origin_';
-
-        switch ($locationLevel) {
-            case 'province':
-                if ($request->filled('location_province')) {
-                    $query->where($prefix . 'province', $request->location_province);
-                }
-                break;
-
-            case 'city':
-                if ($request->filled('location_province')) {
-                    $query->where($prefix . 'province', $request->location_province);
-                }
-                if ($request->filled('location_city')) {
-                    $query->where($prefix . 'city', $request->location_city);
-                }
-                break;
-
-            case 'district':
-                if ($request->filled('location_province')) {
-                    $query->where($prefix . 'province', $request->location_province);
-                }
-                if ($request->filled('location_city')) {
-                    $query->where($prefix . 'city', $request->location_city);
-                }
-                if ($request->filled('location_district')) {
-                    $query->where($prefix . 'district', $request->location_district);
-                }
-                break;
-        }
-
-        return $query;
-    }
-
-    /**
-     * Get unique locations from database
-     */
-    protected function getUniqueLocations($oppositeGender, $type = 'origin', $level = 'province')
-    {
-        $prefix = $type === 'residence' ? 'residence_' : 'origin_';
-        $field = $prefix . $level;
-
-        return TaarufProfile::where('gender', $oppositeGender)
-            ->where('is_active', true)
-            ->whereNotNull($field)
-            ->where($field, '!=', '')
-            ->distinct()
-            ->pluck($field)
-            ->sort()
-            ->values()
-            ->toArray();
-    }
-
-    /**
-     * Get unique education data for filter options (AJAX endpoint)
+     * Get unique education data for filter options.
      */
     public function getEducationFilterOptions()
     {
         $user = Auth::user();
         $taarufProfile = $user->taarufProfile;
 
-        if (!$taarufProfile) {
-            return response()->json([
-                'levels' => [],
-                'universities' => [],
-                'majors' => []
-            ]);
+        if (! $taarufProfile) {
+            return response()->json(['levels' => [], 'universities' => [], 'majors' => []]);
         }
 
         $oppositeGender = $taarufProfile->gender === 'male' ? 'female' : 'male';
+        $baseQuery = TaarufProfile::where('gender', $oppositeGender)->where('is_active', true);
 
         return response()->json([
-            'levels' => TaarufProfile::where('gender', $oppositeGender)
-                ->where('is_active', true)
-                ->distinct()
-                ->pluck('education_level')
-                ->filter()
-                ->sort()
-                ->values(),
-
-            'universities' => TaarufProfile::where('gender', $oppositeGender)
-                ->where('is_active', true)
-                ->get()
-                ->map(function ($profile) {
-                    return $profile->university ?: $profile->custom_university;
-                })
-                ->filter()
-                ->unique()
-                ->sort()
-                ->values(),
-
-            'majors' => TaarufProfile::where('gender', $oppositeGender)
-                ->where('is_active', true)
-                ->distinct()
-                ->pluck('major')
-                ->filter()
-                ->sort()
-                ->values()
+            'levels' => (clone $baseQuery)->distinct()->pluck('education_level')->filter()->sort()->values(),
+            'universities' => (clone $baseQuery)->get()->map(fn ($p) => $p->university ?: $p->custom_university)->filter()->unique()->sort()->values(),
+            'majors' => (clone $baseQuery)->distinct()->pluck('major')->filter()->sort()->values(),
         ]);
     }
 
+    // =========================================================================
+    // Private Helpers
+    // =========================================================================
+
     /**
-     * Helper method untuk debugging filter (optional)
+     * Get list of missing profile fields.
      */
-    protected function logFilterParameters(Request $request)
+    private function getMissingFields(TaarufProfile $profile): array
     {
-        if ($request->get('filter') === 'location') {
-            \Log::info('Location Filter Applied', [
-                'location_type' => $request->get('location_type'),
-                'location_level' => $request->get('location_level'),
-                'province' => $request->get('location_province'),
-                'city' => $request->get('location_city'),
-                'district' => $request->get('location_district'),
-            ]);
+        $missingFields = [];
+
+        $requiredFields = [
+            'visi_misi'          => 'Kriteria Pasangan',
+            'kelebihan_kekurangan' => 'Kelebihan & Kekurangan',
+            'origin_province'    => 'Provinsi Asal',
+            'origin_city'        => 'Kota/Kabupaten Asal',
+            'origin_district'    => 'Kecamatan Asal',
+            'origin_village'     => 'Kelurahan Asal',
+            'residence_province' => 'Provinsi Domisili',
+            'residence_city'     => 'Kota/Kabupaten Domisili',
+            'residence_district' => 'Kecamatan Domisili',
+            'residence_village'  => 'Kelurahan Domisili',
+            'education_level'    => 'Strata Pendidikan Terakhir',
+            'university'         => 'Nama Institusi/Kampus',
+        ];
+
+        foreach ($requiredFields as $field => $label) {
+            if (empty($profile->$field)) {
+                $missingFields[] = $label;
+            }
         }
 
-        if ($request->get('filter') === 'education') {
-            \Log::info('Education Filter Applied', [
-                'education_filter_type' => $request->get('education_filter_type'),
-                'education_level' => $request->get('filter_education_level'),
-                'university' => $request->get('filter_university'),
-                'major' => $request->get('filter_major'),
-            ]);
+        // Birth date format check
+        if (empty($profile->birth_place_date) || DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) === null) {
+            $missingFields[] = 'Tempat & Tanggal Lahir (format: Kota, 4 Oktober 1995)';
+        }
+
+        // Custom university check
+        if ($profile->university === 'Lainnya' && empty($profile->custom_university)) {
+            $missingFields[] = 'Nama Kampus Lainnya (Custom)';
+        }
+
+        // Major required for higher education
+        $highEducationLevels = ['D3', 'D4', 'S1', 'S2', 'S3'];
+        if (! empty($profile->education_level) && in_array($profile->education_level, $highEducationLevels) && empty($profile->major)) {
+            $missingFields[] = 'Jurusan/Program Studi';
+        }
+
+        return $missingFields;
+    }
+
+    /**
+     * Get count of unread taaruf questions.
+     */
+    private function getUnreadQuestionsCount($user, ?TaarufProfile $profile): int
+    {
+        if (! $profile) {
+            return 0;
+        }
+
+        $unreadCount = $user->unreadNotifications()
+            ->where('type', 'App\Notifications\NewTaarufQuestion')
+            ->count();
+
+        $unansweredCount = TaarufQuestion::where('profile_id', $profile->id)
+            ->where('is_answered', false)
+            ->count();
+
+        return ($unansweredCount > 0 && $unreadCount == 0) ? $unansweredCount : $unreadCount;
+    }
+
+    /**
+     * Resolve per page value from request.
+     */
+    private function resolvePerPage(Request $request): int
+    {
+        $allowedPerPage = [10, 12, 25, 50, 100];
+        $perPage = (int) $request->query('per_page', 12);
+
+        return in_array($perPage, $allowedPerPage, true) ? $perPage : 12;
+    }
+
+    /**
+     * Apply education filter to query.
+     */
+    private function applyEducationFilter($query, Request $request): void
+    {
+        $filterType = $request->get('education_filter_type', 'strata');
+
+        // Apply education level filter when applicable
+        $strataTypes = ['strata', 'strata_university', 'strata_major', 'full'];
+        if (in_array($filterType, $strataTypes) && $request->filled('filter_education_level')) {
+            $query->where('education_level', $request->filter_education_level);
+        }
+
+        // Apply university filter when applicable
+        $universityTypes = ['university', 'strata_university', 'full'];
+        if (in_array($filterType, $universityTypes) && $request->filled('filter_university')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('university', $request->filter_university)
+                    ->orWhere('custom_university', $request->filter_university);
+            });
+        }
+
+        // Apply major filter when applicable
+        $majorTypes = ['major', 'strata_major', 'full'];
+        if (in_array($filterType, $majorTypes) && $request->filled('filter_major')) {
+            $query->where('major', 'like', '%' . $request->filter_major . '%');
+        }
+    }
+
+    /**
+     * Apply location filter based on type and level.
+     */
+    private function applyLocationFilter($query, Request $request): void
+    {
+        $locationType = $request->get('location_type', 'origin');
+        $locationLevel = $request->get('location_level', 'province');
+        $prefix = $locationType === 'residence' ? 'residence_' : 'origin_';
+
+        $levels = ['province', 'city', 'district'];
+        $levelIndex = array_search($locationLevel, $levels);
+
+        // Apply filters cascading: province → city → district
+        foreach ($levels as $i => $level) {
+            if ($i > $levelIndex) {
+                break;
+            }
+
+            $paramName = 'location_' . $level;
+            if ($request->filled($paramName)) {
+                $query->where($prefix . $level, $request->get($paramName));
+            }
+        }
+    }
+
+    /**
+     * Handle photo upload for new profile.
+     */
+    private function handlePhotoUpload(Request $request): ?string
+    {
+        if (! $request->hasFile('photo')) {
+            return null;
+        }
+
+        $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
+        return Storage::disk('public')->url($photoPath);
+    }
+
+    /**
+     * Handle informed consent upload for new profile. Returns false on failure.
+     */
+    private function handleConsentUpload(Request $request): string|false|null
+    {
+        if (! $request->hasFile('informed_consent')) {
+            return null;
+        }
+
+        $allowedMimes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+        ];
+
+        try {
+            $consentPath = UploadSanitizer::store(
+                $request->file('informed_consent'),
+                'taaruf/consents',
+                'public',
+                $allowedMimes
+            );
+        } catch (\RuntimeException $exception) {
+            return false;
+        }
+
+        return Storage::disk('public')->url($consentPath);
+    }
+
+    /**
+     * Handle photo update/removal for existing profile.
+     */
+    private function handlePhotoUpdate(Request $request, TaarufProfile $profile): void
+    {
+        if ($request->hasFile('photo')) {
+            $this->deleteOldFile($profile->photo_url);
+            $photoPath = UploadSanitizer::store($request->file('photo'), 'taaruf/photos');
+            $profile->photo_url = Storage::disk('public')->url($photoPath);
+        } elseif ($request->has('remove_photo') && $request->remove_photo) {
+            $this->deleteOldFile($profile->photo_url);
+            $profile->photo_url = null;
+        }
+    }
+
+    /**
+     * Handle informed consent update for existing profile. Returns false on failure.
+     */
+    private function handleConsentUpdate(Request $request, TaarufProfile $profile): bool
+    {
+        if (! $request->hasFile('informed_consent')) {
+            return true;
+        }
+
+        $this->deleteOldFile($profile->informed_consent_url);
+
+        $allowedMimes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+        ];
+
+        try {
+            $consentPath = UploadSanitizer::store(
+                $request->file('informed_consent'),
+                'taaruf/consents',
+                'public',
+                $allowedMimes
+            );
+        } catch (\RuntimeException $exception) {
+            return false;
+        }
+
+        $profile->informed_consent_url = Storage::disk('public')->url($consentPath);
+        return true;
+    }
+
+    /**
+     * Delete an old uploaded file by its public URL.
+     */
+    private function deleteOldFile(?string $url): void
+    {
+        if ($url) {
+            $path = str_replace('/storage/', '', $url);
+            Storage::disk('public')->delete($path);
         }
     }
 }

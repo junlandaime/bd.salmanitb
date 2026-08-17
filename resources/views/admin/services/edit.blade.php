@@ -1,27 +1,38 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-3xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Edit Service</h1>
-                <a href="{{ route('admin.services.index') }}" class="text-gray-600 hover:text-gray-900">
-                    Back to Services
-                </a>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                    <a href="{{ route('admin.services.index') }}" class="hover:text-emerald-600">Layanan</a>
+                    <span>/</span>
+                    <span>Edit</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Edit Layanan: {{ $service->title }}</h1>
+                <p class="text-sm text-gray-500 mt-0.5">Perbarui deskripsi, gambar, icon, link, atau status aktif layanan.</p>
             </div>
-
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <form action="{{ route('admin.services.update', $service) }}" method="POST" enctype="multipart/form-data">
-                    @method('PUT')
-                    @include('admin.services.form')
-
-                    <div class="mt-6">
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                            Update Service
-                        </button>
-                    </div>
-                </form>
-            </div>
+            <a href="{{ route('admin.services.index') }}"
+                class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-sm shadow-sm transition">
+                &larr; Kembali
+            </a>
         </div>
+
+        <form action="{{ route('admin.services.update', $service) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @method('PUT')
+            @include('admin.services.form')
+
+            <div class="flex items-center justify-end gap-3">
+                <a href="{{ route('admin.services.index') }}"
+                    class="px-5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-sm shadow-sm transition">
+                    Batal
+                </a>
+                <button type="submit"
+                    class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
     </div>
 @endsection

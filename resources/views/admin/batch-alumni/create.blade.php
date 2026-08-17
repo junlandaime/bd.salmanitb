@@ -1,36 +1,42 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Alumni')
+@section('title', 'Tambah Alumni - Admin Panel')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex items-center mb-6">
-            <a href="{{ route('admin.batch-alumni.index') }}" class="text-blue-500 hover:text-blue-700 mr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Kembali
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-3xl">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                    <a href="{{ route('admin.batch-alumni.index') }}" class="hover:text-emerald-600">Database Alumni</a>
+                    <span>/</span>
+                    <span>Tambah Data</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Tambah Data Alumni</h1>
+                <p class="text-sm text-gray-500 mt-0.5">Hubungkan akun pengguna ke batch kegiatan tertentu sebagai alumni.</p>
+            </div>
+            <a href="{{ route('admin.batch-alumni.index') }}"
+                class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-sm shadow-sm transition">
+                &larr; Kembali
             </a>
-            <h1 class="text-2xl font-bold text-gray-800">Tambah Alumni</h1>
         </div>
 
         @if (session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
+            <div class="bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-2xl mb-6 shadow-sm" role="alert">
+                <span class="text-sm font-medium">{{ session('error') }}</span>
             </div>
         @endif
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <form action="{{ route('admin.batch-alumni.store') }}" method="POST">
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8">
+            <form action="{{ route('admin.batch-alumni.store') }}" method="POST" class="space-y-6">
                 @csrf
 
-                <div class="mb-4">
-                    <label for="user_id" class="block text-sm font-medium text-gray-700 mb-1">User</label>
-                    <select name="user_id" id="user_id"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 @error('user_id') border-red-500 @enderror"
-                        required>
-                        <option value="">Select User</option>
+                <div>
+                    <label for="user_id" class="block text-xs font-semibold text-gray-700 mb-1">Pengguna / Akun Alumni <span class="text-red-500">*</span></label>
+                    <select name="user_id" id="user_id" required
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white">
+                        <option value="">-- Pilih Pengguna --</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                                 {{ $user->name }} ({{ $user->email }})
@@ -38,71 +44,72 @@
                         @endforeach
                     </select>
                     @error('user_id')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="activity_batch_id" class="block text-sm font-medium text-gray-700 mb-1">Batch</label>
-                    <select name="activity_batch_id" id="activity_batch_id"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 @error('activity_batch_id') border-red-500 @enderror"
-                        required>
-                        <option value="">Select Batch</option>
+                <div>
+                    <label for="activity_batch_id" class="block text-xs font-semibold text-gray-700 mb-1">Batch Kegiatan <span class="text-red-500">*</span></label>
+                    <select name="activity_batch_id" id="activity_batch_id" required
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white">
+                        <option value="">-- Pilih Batch --</option>
                         @foreach ($batches as $batch)
-                            <option value="{{ $batch->id }}"
-                                {{ old('activity_batch_id') == $batch->id ? 'selected' : '' }}>
-                                {{ $batch->activity->nama_kegiatan }} - {{ $batch->nama_batch }}
+                            <option value="{{ $batch->id }}" {{ old('activity_batch_id') == $batch->id ? 'selected' : '' }}>
+                                {{ $batch->activity->title ?? $batch->activity->nama_kegiatan ?? 'Kegiatan' }} - {{ $batch->nama_batch }}
                             </option>
                         @endforeach
                     </select>
                     @error('activity_batch_id')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="instagram_account" class="block text-sm font-medium text-gray-700 mb-1">Instagram
-                        Account</label>
-                    <input type="text" name="instagram_account" id="instagram_account"
-                        value="{{ old('instagram_account') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 @error('instagram_account') border-red-500 @enderror">
-                    @error('instagram_account')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="instagram_account" class="block text-xs font-semibold text-gray-700 mb-1">Akun Instagram (Opsional)</label>
+                        <input type="text" name="instagram_account" id="instagram_account" value="{{ old('instagram_account') }}"
+                            placeholder="@username"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                        @error('instagram_account')
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="gender" class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
+                        <select name="gender" id="gender"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white">
+                            <option value="">-- Pilih Jenis Kelamin --</option>
+                            <option value="Pria" {{ old('gender') == 'Pria' ? 'selected' : '' }}>Laki-laki (Pria)</option>
+                            <option value="Wanita" {{ old('gender') == 'Wanita' ? 'selected' : '' }}>Perempuan (Wanita)</option>
+                        </select>
+                        @error('gender')
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                    <select name="gender" id="gender"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 @error('gender') border-red-500 @enderror">
-                        <option value="">Select Gender</option>
-                        <option value="Pria" {{ old('gender') == 'Pria' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Wanita" {{ old('gender') == 'Wanita' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                    @error('gender')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                    <textarea name="notes" id="notes" rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 @error('notes') border-red-500 @enderror">{{ old('notes') }}</textarea>
+                <div>
+                    <label for="notes" class="block text-xs font-semibold text-gray-700 mb-1">Catatan Tambahan (Opsional)</label>
+                    <textarea name="notes" id="notes" rows="3" placeholder="Informasi tambahan atau prestasi peserta..."
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">{{ old('notes') }}</textarea>
                     @error('notes')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex justify-end">
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                     <a href="{{ route('admin.batch-alumni.index') }}"
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2">
-                        Cancel
+                        class="px-5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-sm shadow-sm transition">
+                        Batal
                     </a>
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                        Save
+                    <button type="submit"
+                        class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition">
+                        Simpan Alumni
                     </button>
                 </div>
             </form>
         </div>
+
     </div>
 @endsection

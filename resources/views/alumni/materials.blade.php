@@ -1,150 +1,185 @@
 @extends('layouts.app')
 
-@section('title', 'Materi ' . $batch->nama_batch)
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
+@section('title', 'Materi ' . $batch->nama_batch . ' - ' . $batch->activity->title)
 
 @section('content')
-    <main class="mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="mb-8">
-                <nav class="flex mb-4" aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                        <li class="inline-flex items-center">
-                            <a href="{{ route('alumni.dashboard') }}" class="text-gray-500 hover:text-green-600">
-                                Dashboard Alumni
-                            </a>
-                        </li>
-                        <li aria-current="page">
-                            <div class="flex items-center">
-                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-1 text-gray-500">Materi {{ $batch->activity->title }} -
-                                    {{ $batch->nama_batch }}</span>
-                            </div>
-                        </li>
-                    </ol>
+<div class="min-h-screen bg-gray-50/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Header Card (Contained & Clean) -->
+        <div class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <!-- Breadcrumbs -->
+                <nav class="flex flex-wrap items-center gap-2 text-xs text-emerald-300/80 mb-3 font-medium">
+                    <a href="{{ route('alumni.dashboard') }}" class="hover:text-white transition">Dashboard Alumni</a>
+                    <span>/</span>
+                    <span class="text-white">{{ $batch->activity->title }}</span>
+                    <span>/</span>
+                    <span class="text-emerald-300 font-semibold">{{ $batch->nama_batch }}</span>
                 </nav>
-                <h2 class="text-3xl font-bold text-green-600">Materi {{ $batch->activity->title }}</h2>
-                <p class="text-gray-500 mt-2">{{ $batch->nama_batch }} |
-                    {{ $batch->tanggal_mulai_kegiatan->format('d M Y') }} -
-                    {{ $batch->tanggal_selesai_kegiatan->format('d M Y') }}</p>
-            </div>
 
-            @if (session('error'))
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-                    <p>{{ session('error') }}</p>
-                </div>
-            @endif
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                        <div class="border-b border-gray-200 px-6 py-4">
-                            <h5 class="text-xl font-semibold text-green-600">Daftar Materi</h5>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold mb-2">
+                            <span>#{{ $batch->batch_ke ?: '1' }}</span>
+                            <span>&bull;</span>
+                            <span>{{ $batch->activity->title }}</span>
                         </div>
-                        <div class="divide-y divide-gray-200">
-                            @if ($batch->materials->isEmpty())
-                                <div class="text-center py-16">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                    </svg>
-                                    <h5 class="mt-4 text-lg font-medium text-gray-900">Belum ada materi tersedia</h5>
-                                    <p class="mt-2 text-gray-500">Materi untuk batch ini belum tersedia. Silakan cek kembali
-                                        nanti.</p>
-                                </div>
-                            @else
-                                @foreach ($batch->materials as $material)
-                                    <div class="px-6 py-4 hover:bg-gray-50">
-                                        <div class="flex justify-between items-center">
-                                            <div>
-                                                <h5 class="text-lg font-medium text-gray-900">{{ $material->title }}</h5>
-                                                @if ($material->description)
-                                                    <p class="text-gray-500 mt-1">{{ $material->description }}</p>
-                                                @endif
-                                            </div>
-                                            <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $material->id]) }}"
-                                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                                Lihat
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-8">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div class="border-b border-gray-200 px-6 py-4">
-                            <h5 class="text-xl font-semibold text-green-600">Informasi Batch</h5>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <div>
-                                <h6 class="text-sm font-medium text-gray-500">Nama Kegiatan</h6>
-                                <p class="mt-1 text-gray-900">{{ $batch->activity->title }}</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-medium text-gray-500">Batch</h6>
-                                <p class="mt-1 text-gray-900">{{ $batch->nama_batch }}</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-medium text-gray-500">Periode</h6>
-                                <p class="mt-1 text-gray-900">{{ $batch->tanggal_mulai_kegiatan->format('d M Y') }} -
-                                    {{ $batch->tanggal_selesai_kegiatan->format('d M Y') }}</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-medium text-gray-500">Durasi</h6>
-                                <p class="mt-1 text-gray-900">{{ $batch->getDurationInWeeks() }} minggu</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-medium text-gray-500">Jumlah Materi</h6>
-                                <p class="mt-1 text-gray-900">{{ $batch->materials->count() }} materi</p>
-                            </div>
-                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                            Materi Pembelajaran: {{ $batch->nama_batch }}
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Periode Kegiatan: {{ $batch->tanggal_mulai_kegiatan ? $batch->tanggal_mulai_kegiatan->format('d M Y') : '-' }} &ndash; {{ $batch->tanggal_selesai_kegiatan ? $batch->tanggal_selesai_kegiatan->format('d M Y') : '-' }}</span>
+                        </p>
                     </div>
 
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div class="border-b border-gray-200 px-6 py-4">
-                            <h5 class="text-xl font-semibold text-green-600">Bantuan</h5>
-                        </div>
-                        <div class="p-6">
-                            <p class="text-gray-700 mb-4">Jika Anda mengalami kesulitan dalam mengakses materi, silakan
-                                ikuti langkah berikut:</p>
-                            <ol class="list-decimal pl-5 space-y-2 text-gray-700">
-                                <li>Pastikan Anda terdaftar sebagai alumni batch ini</li>
-                                <li>Periksa koneksi internet Anda</li>
-                                <li>Coba refresh halaman</li>
-                                <li>Jika masalah berlanjut, hubungi admin</li>
-                            </ol>
-                        </div>
-                    </div>
+                    <a href="{{ route('alumni.dashboard') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-xs self-start md:self-auto">
+                        &larr; Kembali ke Dashboard
+                    </a>
                 </div>
             </div>
         </div>
-    </main>
+
+        @if (session('error'))
+            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <span class="text-sm font-medium">{{ session('error') }}</span>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+        @endif
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Materials List -->
+            <div class="lg:col-span-2 space-y-4">
+                
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8">
+                    <div class="flex items-center justify-between pb-5 border-b border-gray-100 mb-6">
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900">Daftar Modul &amp; Pertemuan</h2>
+                            <p class="text-xs text-gray-500 mt-0.5">Akses slide materi, rekaman video sesi, dan catatan resume.</p>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100">
+                            {{ $batch->materials->count() }} Modul
+                        </span>
+                    </div>
+
+                    @if ($batch->materials->isEmpty())
+                        <div class="text-center py-16 px-4 bg-gray-50/60 rounded-2xl border border-dashed border-gray-200">
+                            <div class="w-16 h-16 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3 text-2xl">
+                                📚
+                            </div>
+                            <h3 class="text-base font-bold text-gray-900">Belum Ada Materi Tersedia</h3>
+                            <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto leading-relaxed">
+                                Berkas materi untuk batch ini sedang dipersiapkan oleh tim fasilitator. Silakan cek kembali secara berkala.
+                            </p>
+                        </div>
+                    @else
+                        <div class="space-y-3.5">
+                            @foreach ($batch->materials as $index => $material)
+                                <div class="group bg-gray-50/50 hover:bg-white rounded-2xl border border-gray-200/80 hover:border-emerald-500/60 p-5 transition-all shadow-xs hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div class="flex items-start gap-3.5">
+                                        <span class="w-8 h-8 rounded-xl bg-white border border-gray-200 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition">
+                                            {{ $material->order ?: ($index + 1) }}
+                                        </span>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-emerald-700 transition">
+                                                {{ $material->title }}
+                                            </h4>
+                                            @if ($material->description)
+                                                <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                                                    {{ $material->description }}
+                                                </p>
+                                            @endif
+
+                                            <div class="flex flex-wrap items-center gap-2 mt-2.5 text-[11px]">
+                                                @if ($material->video_url)
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-100 font-medium">
+                                                        ▶ Video Sesi
+                                                    </span>
+                                                @endif
+                                                @if ($material->slide_url)
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-100 font-medium">
+                                                        📊 Slide Materi
+                                                    </span>
+                                                @endif
+                                                @if ($material->notes_url)
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-100 font-medium">
+                                                        📝 Notulensi
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="shrink-0 pt-2 sm:pt-0">
+                                        <a href="{{ route('alumni.material.view', ['batchId' => $batch->id, 'materialId' => $material->id]) }}"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-gray-300 group-hover:border-emerald-500 group-hover:bg-emerald-600 group-hover:text-white text-gray-700 font-semibold text-xs transition shadow-2xs">
+                                            <span>Buka Detail</span>
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+
+            <!-- Right 1 Col: Batch Summary Sidebar -->
+            <div class="space-y-6">
+                
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-gray-900 pb-3 border-b border-gray-100 mb-4">Informasi Batch</h3>
+                    
+                    <div class="space-y-3.5 text-xs">
+                        <div>
+                            <span class="text-gray-400 block">Nama Program:</span>
+                            <span class="text-gray-900 font-semibold mt-0.5 block">{{ $batch->activity->title }}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 block">Nama Batch:</span>
+                            <span class="text-gray-900 font-semibold mt-0.5 block">{{ $batch->nama_batch }}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 block">Periode Pelaksanaan:</span>
+                            <span class="text-gray-900 font-medium mt-0.5 block">
+                                {{ $batch->tanggal_mulai_kegiatan ? $batch->tanggal_mulai_kegiatan->format('d M Y') : '-' }} &ndash; {{ $batch->tanggal_selesai_kegiatan ? $batch->tanggal_selesai_kegiatan->format('d M Y') : '-' }}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 block">Jumlah Materi:</span>
+                            <span class="text-emerald-700 font-bold mt-0.5 block">{{ $batch->materials->count() }} Materi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Box -->
+                <div class="bg-emerald-50/60 rounded-2xl border border-emerald-100 p-5 text-xs text-emerald-900">
+                    <h4 class="font-bold text-emerald-950 mb-1.5 flex items-center gap-1.5">
+                        <span>💬</span>
+                        <span>Butuh Bantuan?</span>
+                    </h4>
+                    <p class="text-emerald-800/90 leading-relaxed mb-3">
+                        Jika link video atau berkas materi tidak dapat dibuka, silakan hubungi tim fasilitator kami via email.
+                    </p>
+                    <a href="mailto:bidangdakwah@salmanitb.com" class="font-bold text-emerald-700 hover:underline">
+                        bidangdakwah@salmanitb.com &rarr;
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 @endsection

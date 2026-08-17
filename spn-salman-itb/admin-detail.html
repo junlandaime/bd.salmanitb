@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Detail Pendaftar — SPN Salman ITB Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FBF8F3',
+          ink: '#211D17',
+          muted: '#79705F',
+          hairline: '#E8E1D2',
+          gold: {
+            50:'#FDF6E9', 100:'#FAEACB', 200:'#F1D48E', 300:'#E6BB57',
+            400:'#D5A233', 500:'#C1861A', 600:'#A66F13', 700:'#835710', 800:'#5F3F0C'
+          },
+          leaf: { 50:'#EEF6EE', 100:'#DBEEDC', 500:'#3F8A4B', 600:'#2F7239', 700:'#245A2C' }
+        },
+        fontFamily: {
+          serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  body { background:#FBF8F3; }
+  [x-cloak] { display:none !important; }
+  input[type=radio]:checked, input[type=checkbox]:checked { accent-color:#A66F13; }
+  ::selection { background:#F1D48E; }
+  .field-label { font-weight:600; color:#211D17; font-size:0.875rem; margin-bottom:0.375rem; display:block; }
+  .field-input {
+    width:100%; background:#fff; border:1px solid #E8E1D2; border-radius:0.65rem;
+    padding:0.7rem 0.9rem; font-size:0.925rem; color:#211D17; transition:border-color .15s, box-shadow .15s;
+  }
+  .field-input:focus { outline:none; border-color:#C1861A; box-shadow:0 0 0 3px #FAEACB; }
+  .field-input::placeholder { color:#B3A990; }
+  .req { color:#B4432E; }
+</style>
+</head>
+<body class="font-sans text-ink">
+
+<header class="border-b border-hairline bg-cream/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-3xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gold-600 text-white flex items-center justify-center font-serif font-semibold text-sm">SP</div>
+      <div class="leading-tight">
+        <p class="font-serif font-semibold text-ink text-[15px]">SPN Salman 49</p>
+        <p class="text-[11px] text-muted -mt-0.5">Sekolah Pranikah ITB</p>
+      </div>
+    </a>
+    <a href="index.html" class="text-sm text-muted hover:text-gold-700 transition-colors">← Beranda</a>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 sm:px-6 py-8 sm:py-10" x-data="{
+  data: [{"id": 1, "nama": "Ahmad Fauzan Ramadhan", "panggilan": "Fauzan", "jk": "Pria", "wa": "0812-3456-7801", "ig": "@fauzan.ar", "asal": "Bandung", "status_diri": "Karyawan/Tenaga Kependidikan ITB", "instansi": "LPPM ITB", "universitas": "-", "paket": "Normal Bird", "harga": 849000, "metode": "QRIS", "info_dari": "Instagram Influencer", "status_bayar": "verified", "tanggal": "12 Agu 2026", "bukti": "bukti-fauzan.jpg"}, {"id": 2, "nama": "Salsabila Putri Anggraeni", "panggilan": "Salsa", "jk": "Wanita", "wa": "0813-2211-4590", "ig": "@salsabila.pa", "asal": "Jakarta", "status_diri": "Mahasiswa ITB", "instansi": "-", "universitas": "Institut Teknologi Bandung / ITB", "paket": "Normal Bird", "harga": 849000, "metode": "Transfer Bank (Muamalat)", "info_dari": "Media Sosial Salman ITB", "status_bayar": "pending", "tanggal": "12 Agu 2026", "bukti": "bukti-salsa.jpg"}, {"id": 3, "nama": "Muhammad Rizky Hidayat", "panggilan": "Rizky", "jk": "Pria", "wa": "0857-7712-3345", "ig": "@rizky.hdyt", "asal": "Surabaya", "status_diri": "Umum (Non-ITB)", "instansi": "PT Telkom Indonesia", "universitas": "-", "paket": "Early Bird", "harga": 749000, "metode": "QRIS", "info_dari": "Teman/Kerabat", "status_bayar": "verified", "tanggal": "30 Jul 2026", "bukti": "bukti-rizky.jpg"}, {"id": 4, "nama": "Nadia Zahra Kamila", "panggilan": "Nadia", "jk": "Wanita", "wa": "0821-9988-1123", "ig": "@nadia.zk", "asal": "Bogor", "status_diri": "Mahasiswa ITB", "instansi": "-", "universitas": "Institut Teknologi Bandung / ITB", "paket": "Early Bird", "harga": 749000, "metode": "QRIS", "info_dari": "Poster/Spanduk di Kampus", "status_bayar": "rejected", "tanggal": "29 Jul 2026", "bukti": "bukti-nadia.jpg"}, {"id": 5, "nama": "Fajar Nur Ilham", "panggilan": "Fajar", "jk": "Pria", "wa": "0838-1122-9987", "ig": "@fajar.ni", "asal": "Cimahi", "status_diri": "Dosen ITB", "instansi": "Fakultas Teknik Elektro ITB", "universitas": "-", "paket": "Normal Bird", "harga": 849000, "metode": "Transfer Bank (Muamalat)", "info_dari": "Website Salman ITB", "status_bayar": "pending", "tanggal": "13 Agu 2026", "bukti": "bukti-fajar.jpg"}, {"id": 6, "nama": "Aisyah Rahmawati", "panggilan": "Aisyah", "jk": "Wanita", "wa": "0812-3300-7765", "ig": "@aisyah.rhm", "asal": "Yogyakarta", "status_diri": "Alumni ITB", "instansi": "Bank Syariah Indonesia", "universitas": "Institut Teknologi Bandung / ITB", "paket": "Normal Bird", "harga": 849000, "metode": "QRIS", "info_dari": "Instagram Influencer", "status_bayar": "verified", "tanggal": "11 Agu 2026", "bukti": "bukti-aisyah.jpg"}, {"id": 7, "nama": "Ridho Aditya Pratama", "panggilan": "Ridho", "jk": "Pria", "wa": "0856-4432-1198", "ig": "@ridho.ap", "asal": "Bekasi", "status_diri": "Karyawan/Tenaga Kependidikan ITB", "instansi": "Direktorat Kemahasiswaan ITB", "universitas": "-", "paket": "Early Bird", "harga": 749000, "metode": "QRIS", "info_dari": "Lainnya", "status_bayar": "verified", "tanggal": "28 Jul 2026", "bukti": "bukti-ridho.jpg"}, {"id": 8, "nama": "Hana Maulida Sari", "panggilan": "Hana", "jk": "Wanita", "wa": "0819-5567-2234", "ig": "@hana.ms", "asal": "Malang", "status_diri": "Mahasiswa ITB", "instansi": "-", "universitas": "Institut Teknologi Bandung / ITB", "paket": "Normal Bird", "harga": 849000, "metode": "Transfer Bank (Muamalat)", "info_dari": "Media Sosial Salman ITB", "status_bayar": "pending", "tanggal": "13 Agu 2026", "bukti": "bukti-hana.jpg"}],
+  d: null,
+  init(){
+    const id = Number(new URLSearchParams(location.search).get('id')) || this.data[0].id;
+    this.d = this.data.find(x => x.id === id) || this.data[0];
+  },
+  badgeClass(status){
+    return status==='verified' ? 'bg-leaf-100 text-leaf-700'
+      : status==='rejected' ? 'bg-red-100 text-red-700'
+      : 'bg-gold-100 text-gold-700';
+  },
+  badgeLabel(status){
+    return status==='verified' ? 'Terverifikasi' : status==='rejected' ? 'Ditolak' : 'Menunggu Verifikasi';
+  },
+  setStatus(s){ this.d.status_bayar = s; }
+}" x-cloak>
+  <a href="admin-dashboard.html" class="text-sm text-muted hover:text-ink">← Kembali ke Dashboard</a>
+
+  <template x-if="d">
+    <div class="mt-4 space-y-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 class="font-serif text-2xl text-ink font-semibold" x-text="d.nama"></h1>
+          <p class="text-sm text-muted mt-0.5" x-text="'Daftar pada ' + d.tanggal + ' · ' + d.paket"></p>
+        </div>
+        <span class="text-xs font-semibold px-3 py-1.5 rounded-full" :class="badgeClass(d.status_bayar)" x-text="badgeLabel(d.status_bayar)"></span>
+      </div>
+
+      <div class="bg-white border border-hairline rounded-2xl p-5">
+        <p class="text-[11px] font-semibold tracking-wider text-gold-700 uppercase mb-2">Data Diri</p>
+        <div class="divide-y divide-hairline/60">
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Nama Panggilan</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.panggilan"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Jenis Kelamin</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.jk"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">WhatsApp</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.wa"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Instagram</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.ig"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Asal Daerah</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.asal"></span>
+      </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-hairline rounded-2xl p-5">
+        <p class="text-[11px] font-semibold tracking-wider text-gold-700 uppercase mb-2">Pendidikan & Pekerjaan</p>
+        <div class="divide-y divide-hairline/60">
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Status Diri</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.status_diri"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Instansi/Universitas</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.instansi !== '-' ? d.instansi : d.universitas"></span>
+      </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-hairline rounded-2xl p-5">
+        <p class="text-[11px] font-semibold tracking-wider text-gold-700 uppercase mb-2">Rincian Pembayaran</p>
+        <div class="divide-y divide-hairline/60">
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Paket</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.paket"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Metode Bayar</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.metode"></span>
+      </div>
+          <div class="flex items-start justify-between gap-4 py-2">
+        <span class="text-sm text-muted">Info Dari</span>
+        <span class="text-sm font-medium text-ink text-right" x-text="d.info_dari"></span>
+      </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 mt-1 border-t border-hairline">
+          <span class="text-sm font-semibold text-ink">Total</span>
+          <span class="font-serif text-lg font-semibold text-gold-700" x-text="'Rp' + d.harga.toLocaleString('id-ID')"></span>
+        </div>
+      </div>
+
+      <div class="bg-white border border-hairline rounded-2xl p-5">
+        <p class="text-[11px] font-semibold tracking-wider text-gold-700 uppercase mb-3">Bukti Transfer</p>
+        <div class="flex items-center gap-3 bg-[#F7F3EA] rounded-xl px-4 py-3">
+          <span class="text-xl">📄</span>
+          <span class="text-sm text-ink font-medium" x-text="d.bukti"></span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button @click="setStatus('verified')" class="flex-1 bg-leaf-600 hover:bg-leaf-700 text-white rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors">Verifikasi Pembayaran</button>
+        <button @click="setStatus('rejected')" class="flex-1 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors">Tolak</button>
+      </div>
+      <p class="text-xs text-muted text-center">Perubahan status pada halaman demo ini hanya tersimpan sementara di peramban, belum terhubung ke basis data.</p>
+    </div>
+  </template>
+</main>
+
+</body>
+</html>

@@ -30,10 +30,7 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        $featuredPrograms = Program::
-            // where('is_featured', true)
-            // ->
-            inRandomOrder()
+        $featuredPrograms = Program::inRandomOrder()
             ->take(3)
             ->get();
 

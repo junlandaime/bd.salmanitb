@@ -2,122 +2,114 @@
 
 @section('content')
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-900">Batch Kegiatan: {{ $activity->title }}</h1>
-            <p class="mt-1 text-sm text-gray-600">Kelola batch untuk kegiatan ini</p>
+            <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <a href="{{ route('admin.activities.index') }}" class="hover:text-emerald-600">Kegiatan</a>
+                <span>/</span>
+                <span>{{ $activity->title }}</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">Kelola Batch: {{ $activity->title }}</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Daftar periode pelaksanaan, tanggal pendaftaran, kuota, dan harga.</p>
         </div>
-        <div class="flex space-x-3">
+        <div class="flex items-center gap-3">
             <a href="{{ route('admin.activities.show', $activity) }}" 
-               class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                </svg>
-                Kembali
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 font-semibold text-sm hover:bg-gray-50 shadow-sm transition">
+                &larr; Detail Kegiatan
             </a>
             <a href="{{ route('admin.activities.batches.create', $activity) }}" 
-               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+               class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Tambah Batch
+                Tambah Batch Baru
             </a>
         </div>
     </div>
 
     @if(session('success'))
-        <div class="rounded-md bg-green-50 p-4 mb-6">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800">
-                        {{ session('success') }}
-                    </p>
-                </div>
-            </div>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl mb-6 flex items-center justify-between shadow-sm" role="alert">
+            <span class="text-sm font-medium">{{ session('success') }}</span>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">✕</button>
         </div>
     @endif
 
-    <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul class="divide-y divide-gray-200">
+    <!-- Batches List -->
+    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+        <ul class="divide-y divide-gray-100">
             @forelse($batches as $batch)
-                <li>
-                    <div class="px-4 py-4 sm:px-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center">
-                                    <p class="text-lg font-medium text-green-600 truncate">
-                                        {{ $batch->nama_batch }}
-                                    </p>
-                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($batch->status === 'aktif') bg-green-100 text-green-800
-                                        @elseif($batch->status === 'nonaktif') bg-gray-100 text-gray-800
-                                        @else bg-blue-100 text-blue-800 @endif">
-                                        {{ ucfirst($batch->status) }}
+                <li class="p-6 hover:bg-gray-50/75 transition">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3">
+                                <h3 class="text-lg font-bold text-gray-900 truncate">
+                                    {{ $batch->nama_batch }}
+                                </h3>
+                                @if ($batch->status === 'aktif')
+                                    @if ($batch->isRegistrationOpen())
+                                        <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                            Aktif (Dibuka)
+                                        </span>
+                                    @elseif($batch->tanggal_mulai_pendaftaran && now()->lt($batch->tanggal_mulai_pendaftaran))
+                                        <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-amber-100 text-amber-800">
+                                            Aktif (Akan Dibuka)
+                                        </span>
+                                    @else
+                                        <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            Selesai
+                                        </span>
+                                    @endif
+                                @elseif($batch->status === 'selesai')
+                                    <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        Selesai
                                     </span>
+                                @else
+                                    <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Nonaktif
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-400">👥 Kuota:</span>
+                                    <strong class="text-gray-900">{{ $batch->kuota }} peserta</strong>
                                 </div>
-                                <div class="mt-2 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6">
-                                    <div class="mt-2 flex items-center text-sm text-gray-500">
-                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                                        </svg>
-                                        Kuota: {{ $batch->kuota }} peserta
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500">
-                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                                        </svg>
-                                        Rp {{ number_format($batch->harga, 0, ',', '.') }}
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500">
-                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                        </svg>
-                                        Pendaftaran: {{ $batch->tanggal_mulai_pendaftaran->format('d M Y') }} - {{ $batch->tanggal_selesai_pendaftaran->format('d M Y') }}
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-400">🏷️ Harga:</span>
+                                    <strong class="text-gray-900">Rp {{ number_format($batch->harga, 0, ',', '.') }}</strong>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-400">📅 Pendaftaran:</span>
+                                    <span class="text-gray-800">{{ $batch->tanggal_mulai_pendaftaran ? $batch->tanggal_mulai_pendaftaran->format('d M Y') : '-' }} &ndash; {{ $batch->tanggal_selesai_pendaftaran ? $batch->tanggal_selesai_pendaftaran->format('d M Y') : '-' }}</span>
                                 </div>
                             </div>
-                            <div class="flex space-x-3">
-                                <a href="{{ route('admin.activities.batches.edit', [$activity, $batch]) }}" 
-                                   class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    Edit
-                                </a>
-                                <form action="{{ route('admin.activities.batches.destroy', [$activity, $batch]) }}" method="POST" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus batch ini?')"
-                                            class="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <a href="{{ route('admin.activities.batches.edit', [$activity, $batch]) }}" 
+                               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold text-xs shadow-sm transition">
+                                Edit Batch
+                            </a>
+                            <form action="{{ route('admin.activities.batches.destroy', [$activity, $batch]) }}" method="POST" class="inline-block"
+                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus batch ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="p-2 text-red-400 hover:text-red-600 rounded-xl hover:bg-red-50 transition" title="Hapus Batch">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </li>
             @empty
-                <li class="px-4 py-8">
-                    <div class="text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada batch</h3>
-                        <p class="mt-1 text-sm text-gray-500">
-                            Mulai dengan membuat batch baru untuk kegiatan ini.
-                        </p>
-                        <div class="mt-6">
-                            <a href="{{ route('admin.activities.batches.create', $activity) }}" 
-                               class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                Tambah Batch
-                            </a>
-                        </div>
-                    </div>
+                <li class="p-12 text-center">
+                    <p class="text-gray-400 text-sm">Belum ada batch untuk kegiatan ini.</p>
                 </li>
             @endforelse
         </ul>

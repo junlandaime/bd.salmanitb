@@ -1,227 +1,195 @@
 @extends('layouts.app')
 
 @section('title', $program->title . ' - Program Bidang Dakwah Masjid Salman ITB')
-@section('meta_description', Str::limit($program->description, 160))
+@section('meta_description', Str::limit(strip_tags($program->description), 160))
 @section('og_title', $program->title . ' - Program Bidang Dakwah Masjid Salman ITB')
-@section('og_description', Str::limit($program->description, 200))
-@section('og_image', 'https://bidangdakwah.salmanitb.com/storage/' . $program->featured_image)
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
-
+@section('og_description', Str::limit(strip_tags($program->description), 200))
+@section('og_image', $program->featured_image ? Storage::url($program->featured_image) : '')
+ 
 @section('content')
-    <style>
-        .soft-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-left: 1rem;
-            padding-right: 1rem
-        }
 
-        . {
-            position: relative
-        }
+{{-- ========================= HERO SECTION ========================= --}}
+<section class="relative isolate overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 text-white py-12 md:py-20">
+    <div aria-hidden="true" class="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
+    <div aria-hidden="true" class="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-teal-400/15 blur-3xl pointer-events-none"></div>
+    <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
 
-        .:before {
-            content: "";
-            position: absolute;
-            inset: -1px;
-            border-radius: 1rem;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, .6), rgba(59, 130, 246, .35));
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude
-        }
-
-        .card:hover .card-image {
-            transform: scale(1.05)
-        }
-
-        .card .card-image {
-            transition: transform .6s cubic-bezier(.2, .8, .2, 1)
-        }
-
-        .section-badge {
-            letter-spacing: .06em
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, .65);
-            backdrop-filter: saturate(1.4) blur(8px)
-        }
-
-        .dot-pattern {
-            background-image: radial-gradient(rgba(0, 0, 0, .06) 1px, transparent 1px);
-            background-size: 16px 16px
-        }
-    </style>
-
-    {{-- ========================= HERO SECTION ========================= --}}
-    <section
-        class="relative isolate overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-700 text-white">
-        <div aria-hidden="true" class="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-emerald-500/30 blur-3xl"></div>
-        <div aria-hidden="true" class="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>
-
-        <div class="soft-container py-16 md:py-24">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-                <div data-aos="fade-right" data-aos-duration="800">
-                    <p
-                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 ring-1 ring-white/20 section-badge text-sm">
-                        <span>Bidang Dakwah YPM Salman ITB</span>
-                    </p>
-                    <h1 class="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">{{ $program->title }}</h1>
-                    <p class="mt-4 text-white/90 text-lg leading-relaxed">
-                        {{ $program->description }}
-                    </p>
-                </div>
-                <div class="relative flex items-center justify-center" data-aos="fade-left" data-aos-duration="800"
-                    data-aos-delay="100">
-                    <x-application-logo-full class="w-3/4 h-auto opacity-90" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ========================= OVERVIEW SECTION ========================= --}}
-    <section class="py-16 bg-white">
-        <div class="soft-container">
-            <div class="grid md:grid-cols-2 gap-10 items-center">
-                <div data-aos="fade-right" data-aos-duration="800">
-                    <div class="glass rounded-2xl p-2 ">
-                        <img src="{{ Storage::url($program->featured_image) }}" alt="{{ $program->title }}"
-                            class="card-image w-full aspect-square object-cover rounded-2xl">
-                    </div>
-                </div>
-                <div data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
-                    <span
-                        class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 section-badge text-xs">TENTANG
-                        PROGRAM</span>
-                    <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Ringkasan Program</h2>
-                    <div class="mt-6 text-gray-700 leading-relaxed space-y-4">
-                        {!! nl2br(e($program->overview)) !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ========================= KEGIATAN & LAYANAN ========================= --}}
-    @if ($program->activities->count() > 0 || $program->services->count() > 0)
-        <section class="py-16 bg-gray-50">
-            <div class="soft-container">
-                <div class="text-center mb-12" data-aos="fade-down">
-                    <span
-                        class="inline-flex px-3 py-1 rounded-full bg-violet-100 text-violet-700 section-badge text-xs">KEGIATAN
-                        & LAYANAN</span>
-                    <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Yang Kami Tawarkan</h2>
-                    <div class="mt-4 h-1 w-20 bg-gradient-to-r from-emerald-600 to-emerald-500 mx-auto rounded-full"></div>
-                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
-                        Dalam rangka mendukung kelancaran ibadah dan kegiatan keagamaan, kami menyediakan berbagai kegiatan
-                        dan layanan {{ $program->title }}
-                    </p>
-                </div>
-
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($program->activities as $kegiatan)
-                        <article class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
-                            data-aos="zoom-in" data-aos-delay="{{ $loop->index * 80 }}">
-                            <div class="relative overflow-hidden">
-                                <img src="{{ Storage::url($kegiatan->featured_image) }}" alt="{{ $kegiatan->title }}"
-                                    class="card-image w-full h-56 object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent"></div>
-                                <div class="absolute top-4 left-4">
-                                    <span
-                                        class="inline-flex items-center gap-1 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Kegiatan</span>
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold mb-3">{{ $kegiatan->title }}</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                                    {{ $kegiatan->description }}
-                                </p>
-                                <a href="{{ route('activities.show', $kegiatan->slug) }}"
-                                    class="inline-flex items-center gap-2 text-emerald-700 font-semibold text-sm hover:text-emerald-800 transition">
-                                    Selengkapnya
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="w-4 h-4">
-                                        <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </article>
-                    @endforeach
-
-                    @foreach ($program->services as $layanan)
-                        <article class="card  rounded-2xl bg-white shadow-sm hover:shadow-xl transition overflow-hidden"
-                            data-aos="zoom-in" data-aos-delay="{{ ($program->activities->count() + $loop->index) * 80 }}">
-                            <div class="relative overflow-hidden">
-                                <img src="{{ Storage::url($layanan->image) }}" alt="{{ $layanan->title }}"
-                                    class="card-image w-full h-56 object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent"></div>
-                                <div class="absolute top-4 left-4">
-                                    <span
-                                        class="inline-flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Layanan</span>
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold mb-3">{{ $layanan->title }}</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                                    Memastikan pelaksanaan sholat berjamaah lima waktu serta sholat Jumat dengan suasana
-                                    yang khusyuk dan tertib.
-                                </p>
-                                @if ($layanan->link_url)
-                                    <a href="{{ $layanan->link_url }}"
-                                        class="inline-flex items-center gap-2 text-emerald-700 font-semibold text-sm hover:text-emerald-800 transition">
-                                        {{ $layanan->link_text ?? 'Pelajari Lebih Lanjut' }}
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                            class="w-4 h-4">
-                                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
-                                        </svg>
-                                    </a>
-                                @endif
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- ========================= CTA SECTION ========================= --}}
-    <section
-        class="relative py-16 bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-700 text-white overflow-hidden">
-        <div aria-hidden="true" class="absolute inset-0 dot-pattern opacity-20"></div>
-        <div class="soft-container relative">
-            <div class="text-center" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-extrabold">Bergabung dengan {{ $program->title }}</h2>
-                <p class="mt-4 text-white/90 max-w-2xl mx-auto text-lg">
-                    Jadilah bagian dari perjalanan membangun peradaban Islam melalui program-program dakwah yang inspiratif
-                    dan bermanfaat
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-8 space-y-4" data-aos="fade-right">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">
+                    <span>📚</span>
+                    <span>Program Dakwah &amp; Pembinaan</span>
+                </span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                    {{ $program->title }}
+                </h1>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
+                    {{ strip_tags($program->description) }}
                 </p>
-                <div class="mt-8 flex flex-wrap gap-3 justify-center">
-                    <a href="{{ route('activities.index') }}"
-                        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-emerald-700 font-semibold shadow hover:shadow-md transition">
-                        Lihat Kegiatan
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                            <path d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </a>
-                    <a href="{{ route('contact') }}"
-                        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl ring-1 ring-white/40 font-semibold hover:bg-white/10 transition">
-                        Hubungi Kami
-                    </a>
+            </div>
+
+            <div class="md:col-span-4 flex justify-center" data-aos="fade-left">
+                <div class="relative rounded-3xl p-3 bg-white/5 border border-white/15 backdrop-blur-md shadow-2xl w-full max-w-sm">
+                    <img src="{{ $program->featured_image ? Storage::url($program->featured_image) : 'https://picsum.photos/600/400' }}"
+                        alt="{{ $program->title }}"
+                        class="w-full aspect-[4/3] object-cover rounded-2xl shadow-inner" />
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+{{-- ========================= BREADCRUMB ========================= --}}
+<div class="bg-white border-b border-gray-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <nav class="flex text-xs font-medium text-gray-500" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-2">
+                <li><a href="{{ route('home') }}" class="hover:text-emerald-700 transition">Beranda</a></li>
+                <li><span>/</span></li>
+                <li><a href="{{ route('programs.index') }}" class="hover:text-emerald-700 transition">Program</a></li>
+                <li><span>/</span></li>
+                <li class="text-emerald-700 font-bold truncate max-w-xs">{{ $program->title }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+{{-- ========================= ACTIVITIES UNDER PROGRAM ========================= --}}
+<section class="py-16 bg-gray-50/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-down">
+            <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
+                Kelas &amp; Kegiatan
+            </span>
+            <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900">
+                Kegiatan Terkait {{ $program->title }}
+            </h2>
+            <p class="mt-2 text-xs sm:text-sm text-gray-600">
+                Daftar kelas, pelatihan, atau kegiatan yang dinaungi oleh program ini.
+            </p>
+        </div>
+
+        @if($program->activities && $program->activities->count() > 0)
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($program->activities as $activity)
+                    <article class="group rounded-2xl bg-white border border-gray-200/80 shadow-xs hover:shadow-xl hover:border-emerald-300 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                        data-aos="fade-up" data-aos-delay="{{ $loop->index * 70 }}">
+                        <div>
+                            <div class="relative aspect-[16/10] overflow-hidden">
+                                <img src="{{ $activity->featured_image ? Storage::url($activity->featured_image) : 'https://picsum.photos/600/400' }}"
+                                    alt="{{ $activity->title }}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute top-3 left-3">
+                                    <span class="px-2.5 py-1 rounded-full bg-emerald-600/90 backdrop-blur text-white text-[11px] font-bold">
+                                        {{ $activity->batches ? $activity->batches->count() . ' Batch' : 'Tersedia' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-6 space-y-3">
+                                <h3 class="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition leading-snug">
+                                    {{ $activity->title }}
+                                </h3>
+                                <p class="text-xs text-gray-600 leading-relaxed line-clamp-3">
+                                    {{ Str::limit(strip_tags($activity->description), 130) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0">
+                            @if(in_array($activity->slug, ['spn', 'sekolah-pranikah-offline', 'sekolah-pranikah-online']))
+                                <a href="{{ route('spn.index') }}"
+                                    class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs shadow-sm transition">
+                                    <span>Halaman SPN &rarr;</span>
+                                </a>
+                            @else
+                                <a href="{{ route('activities.show', $activity->slug) }}"
+                                    class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+                                    <span>Detail &amp; Pendaftaran &rarr;</span>
+                                </a>
+                            @endif
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
+                <div class="w-12 h-12 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center text-xl mx-auto mb-2">
+                    📋
+                </div>
+                <p class="text-sm font-bold text-gray-800">Belum ada kegiatan aktif di bawah program ini.</p>
+                <p class="text-xs text-gray-500 mt-1">Silakan cek program lainnya atau hubungi sekretariat kami.</p>
+            </div>
+        @endif
+
+    </div>
+</section>
+
+{{-- ========================= TOPICS & SCHEDULES ========================= --}}
+@if(($program->topics && $program->topics->count() > 0) || ($program->schedules && $program->schedules->count() > 0))
+<section class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-10">
+            
+            @if($program->topics && $program->topics->count() > 0)
+                <div class="space-y-6" data-aos="fade-right">
+                    <div>
+                        <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
+                            Kurikulum &amp; Topik
+                        </span>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900">Materi yang Dipelajari</h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        @foreach($program->topics as $topic)
+                            <div class="p-4 rounded-2xl bg-gray-50 border border-gray-200/80 flex items-start gap-3.5">
+                                <div class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    {{ $loop->iteration }}
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="text-xs font-bold text-gray-900">{{ $topic->title ?? $topic->name }}</h4>
+                                    @if(!empty($topic->description))
+                                        <p class="text-[11px] text-gray-600 leading-relaxed">{{ $topic->description }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if($program->schedules && $program->schedules->count() > 0)
+                <div class="space-y-6" data-aos="fade-left">
+                    <div>
+                        <span class="inline-flex px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider">
+                            Jadwal Rutin
+                        </span>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900">Waktu &amp; Lokasi Pembinaan</h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        @foreach($program->schedules as $sched)
+                            <div class="p-4 rounded-2xl bg-gray-50 border border-gray-200/80 flex items-start gap-3.5">
+                                <div class="w-7 h-7 rounded-xl bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    🕒
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="text-xs font-bold text-gray-900">{{ $sched->day ?? $sched->name }} - {{ $sched->time ?? '' }}</h4>
+                                    @if(!empty($sched->location))
+                                        <p class="text-[11px] text-gray-600 leading-relaxed">📍 {{ $sched->location }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+        </div>
+    </div>
+</section>
+@endif
+
 @endsection

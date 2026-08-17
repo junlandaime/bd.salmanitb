@@ -34,39 +34,56 @@ class ActivityBatch extends Model
         'harga' => 'decimal:2'
     ];
 
+    /**
+     * Auto update batches that have passed the registration end date to 'selesai'.
+     */
+    public static function updateExpiredBatches(): void
+    {
+        static::where('status', 'aktif')
+            ->whereNotNull('tanggal_selesai_pendaftaran')
+            ->whereDate('tanggal_selesai_pendaftaran', '<', Carbon::today())
+            ->update(['status' => 'selesai']);
+    }
+
     public function activity()
     {
         return $this->belongsTo(Activity::class);
     }
 
-    public function isRegistrationOpen()
+    public function isRegistrationOpen(): bool
     {
-        $now = Carbon::now();
+        $today = Carbon::today();
         return $this->status === 'aktif'
-            && $now->between($this->tanggal_mulai_pendaftaran, $this->tanggal_selesai_pendaftaran);
+            && $this->tanggal_mulai_pendaftaran
+            && $this->tanggal_selesai_pendaftaran
+            && $today->gte($this->tanggal_mulai_pendaftaran)
+            && $today->lte($this->tanggal_selesai_pendaftaran);
     }
 
-    public function getRegistrationStatus()
+    public function getRegistrationStatus(): string
     {
-        $now = Carbon::now();
+        $today = Carbon::today();
 
         if ($this->status !== 'aktif') {
-            return 'nonaktif';
+            return $this->status; // 'selesai' or 'nonaktif'
         }
 
-        if ($now->isBefore($this->tanggal_mulai_pendaftaran)) {
+        if ($this->tanggal_mulai_pendaftaran && $today->lt($this->tanggal_mulai_pendaftaran)) {
             return 'belum_dibuka';
         }
 
-        if ($now->isAfter($this->tanggal_selesai_pendaftaran)) {
+        if ($this->tanggal_selesai_pendaftaran && $today->gt($this->tanggal_selesai_pendaftaran)) {
             return 'ditutup';
         }
 
         return 'dibuka';
     }
 
-    public function getDurationInWeeks()
+    public function getDurationInWeeks(): int
     {
+        if (!$this->tanggal_mulai_kegiatan || !$this->tanggal_selesai_kegiatan) {
+            return 0;
+        }
         return $this->tanggal_mulai_kegiatan->diffInWeeks($this->tanggal_selesai_kegiatan) + 1;
     }
 
@@ -75,26 +92,33 @@ class ActivityBatch extends Model
         return $this->hasMany(BatchMaterial::class, 'activity_batch_id');
     }
 
+    public function alumni()
+    {
+        return $this->hasMany(BatchAlumni::class, 'activity_batch_id');
+    }
+
     public function isOpenForRegistration(): bool
     {
-        $now = now();
-        return $this->status === 'aktif' &&
-            $now->between($this->tanggal_mulai_pendaftaran, $this->tanggal_selesai_pendaftaran);
+        return $this->isRegistrationOpen();
     }
 
     public function getStatusPendaftaranAttribute(): string
     {
+        if ($this->status === 'selesai') {
+            return 'Selesai';
+        }
+
         if ($this->status !== 'aktif') {
             return 'Tidak Aktif';
         }
 
-        $now = now();
-        if ($now->lt($this->tanggal_mulai_pendaftaran)) {
+        $today = Carbon::today();
+        if ($this->tanggal_mulai_pendaftaran && $today->lt($this->tanggal_mulai_pendaftaran)) {
             return 'Akan Dibuka';
-        } elseif ($now->between($this->tanggal_mulai_pendaftaran, $this->tanggal_selesai_pendaftaran)) {
-            return 'Sedang Dibuka';
-        } else {
+        } elseif ($this->tanggal_selesai_pendaftaran && $today->gt($this->tanggal_selesai_pendaftaran)) {
             return 'Sudah Ditutup';
+        } else {
+            return 'Sedang Dibuka';
         }
     }
 }

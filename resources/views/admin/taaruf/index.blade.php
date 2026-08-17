@@ -1,332 +1,233 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Manajemen Taaruf')
+@section('title', 'Manajemen Taaruf - Admin Panel')
 
 @section('content')
-    <div class="py-6 px-4">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-semibold text-gray-800">Manajemen Profil Taaruf</h1>
-            <div class="flex space-x-2">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Manajemen Profil Ta'aruf</h1>
+                <p class="text-sm text-gray-500 mt-1">Kelola data peserta, verifikasi profil biodata, dan monitoring proses ta'aruf.</p>
+            </div>
+            <div class="flex items-center gap-2">
                 <a href="{{ route('admin.taaruf.statistics') }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                    <i class="fas fa-chart-bar mr-2"></i>Statistik
+                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 font-semibold text-sm hover:bg-gray-50 shadow-sm transition">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Statistik
                 </a>
                 <a href="{{ route('admin.taaruf.questions.index') }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                    <i class="fas fa-question-circle mr-2"></i>Pertanyaan Taaruf
+                    class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pertanyaan
                 </a>
             </div>
         </div>
 
-        <!-- Search and Filter Section -->
-        <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <!-- Filter Card -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-5 mb-8">
             <form action="{{ route('admin.taaruf.index') }}" method="GET" class="space-y-4">
-                <!-- Search Box -->
-                <div class="w-full">
-                    <label for="search" class="block text-xs font-medium text-gray-700 mb-1">Cari</label>
-                    <div class="flex">
+                
+                <!-- Top Row: Search (Full Width) -->
+                <div>
+                    <label for="search" class="block text-xs font-semibold text-gray-700 mb-1">Cari Profil</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
                         <input type="text" name="search" id="search" value="{{ request('search') }}"
-                            placeholder="Cari berdasarkan nama, email, atau pekerjaan..."
-                            class="flex-grow rounded-l-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-r-md">
-                            <i class="fas fa-search"></i>
-                        </button>
+                            placeholder="Nama lengkap, email, atau pekerjaan..."
+                            class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Grid of Filters (5 columns on desktop) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    
                     <!-- Gender Filter -->
                     <div>
-                        <label for="gender" class="block text-xs font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                        <label for="gender" class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
                         <select name="gender" id="gender"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
                             <option value="">Semua</option>
-                            <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Perempuan</option>
-                            <option value="gender_mismatch" {{ request('gender') == 'gender_mismatch' ? 'selected' : '' }}>
-                                Tidak
-                                Cocok
-                            </option>
+                            <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Laki-laki (Ikhwan)</option>
+                            <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Perempuan (Akhwat)</option>
+                            <option value="gender_mismatch" {{ request('gender') == 'gender_mismatch' ? 'selected' : '' }}>Ketidakcocokan Gender</option>
                         </select>
                     </div>
 
                     <!-- Status Filter -->
                     <div>
-                        <label for="status" class="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                        <label for="status" class="block text-xs font-semibold text-gray-700 mb-1">Status</label>
                         <select name="status" id="status"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
                             <option value="">Semua</option>
                             <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Tidak Aktif
-                            </option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
                     </div>
 
                     <!-- Taaruf Process Filter -->
                     <div>
-                        <label for="taaruf_process" class="block text-xs font-medium text-gray-700 mb-1">Proses
-                            Taaruf</label>
+                        <label for="taaruf_process" class="block text-xs font-semibold text-gray-700 mb-1">Proses Taaruf</label>
                         <select name="taaruf_process" id="taaruf_process"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
                             <option value="">Semua</option>
-                            <option value="in_process" {{ request('taaruf_process') == 'in_process' ? 'selected' : '' }}>
-                                Sedang Proses</option>
-                            <option value="not_in_process"
-                                {{ request('taaruf_process') == 'not_in_process' ? 'selected' : '' }}>Tidak Dalam Proses
-                            </option>
+                            <option value="in_process" {{ request('taaruf_process') == 'in_process' ? 'selected' : '' }}>Sedang Proses</option>
+                            <option value="not_in_process" {{ request('taaruf_process') == 'not_in_process' ? 'selected' : '' }}>Tidak Sedang Proses</option>
                         </select>
                     </div>
 
-                    <!-- Sort Options -->
+                    <!-- Sort By Field -->
                     <div>
-                        <label for="sort_by" class="block text-xs font-medium text-gray-700 mb-1">Urutkan
-                            Berdasarkan</label>
+                        <label for="sort_by" class="block text-xs font-semibold text-gray-700 mb-1">Urutkan Berdasarkan</label>
                         <select name="sort_by" id="sort_by"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Tanggal
-                                Dibuat</option>
-                            <option value="full_name" {{ request('sort_by') == 'full_name' ? 'selected' : '' }}>Nama
-                            </option>
-                            <option value="birth_place_date"
-                                {{ request('sort_by') == 'birth_place_date' ? 'selected' : '' }}>Usia</option>
-                            <option value="occupation" {{ request('sort_by') == 'occupation' ? 'selected' : '' }}>Pekerjaan
-                            </option>
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
+                            <option value="created_at" {{ request('sort_by', 'created_at') == 'created_at' ? 'selected' : '' }}>Tanggal Dibuat</option>
+                            <option value="full_name" {{ request('sort_by') == 'full_name' ? 'selected' : '' }}>Nama Lengkap</option>
+                            <option value="gender" {{ request('sort_by') == 'gender' ? 'selected' : '' }}>Jenis Kelamin</option>
+                            <option value="birth_place_date" {{ request('sort_by') == 'birth_place_date' ? 'selected' : '' }}>Tanggal Lahir</option>
+                            <option value="occupation" {{ request('sort_by') == 'occupation' ? 'selected' : '' }}>Pekerjaan</option>
+                            <option value="is_active" {{ request('sort_by') == 'is_active' ? 'selected' : '' }}>Status Aktif</option>
+                            <option value="is_in_taaruf_process" {{ request('sort_by') == 'is_in_taaruf_process' ? 'selected' : '' }}>Proses Ta'aruf</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <!-- Sort Direction -->
                     <div>
-                        <label for="sort_direction" class="block text-xs font-medium text-gray-700 mb-1">Urutan</label>
+                        <label for="sort_direction" class="block text-xs font-semibold text-gray-700 mb-1">Urutan</label>
                         <select name="sort_direction" id="sort_direction"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                            <option value="desc" {{ request('sort_direction') == 'desc' ? 'selected' : '' }}>Menurun
-                                (Z-A, Terbaru)</option>
-                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Menaik (A-Z,
-                                Terlama)</option>
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
+                            <option value="desc" {{ request('sort_direction', 'desc') == 'desc' ? 'selected' : '' }}>Menurun (Z-A, Terbaru)</option>
+                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Menaik (A-Z, Terlama)</option>
                         </select>
                     </div>
 
-                    <!-- Filter Buttons -->
-                    <div class="md:col-span-3 flex items-end justify-end">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-                            <i class="fas fa-filter mr-2"></i>Terapkan Filter
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <button type="submit"
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-semibold text-xs transition shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                            Terapkan Filter
                         </button>
                         <a href="{{ route('admin.taaruf.index') }}"
-                            class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded">
-                            <i class="fas fa-undo mr-2"></i>Reset
+                            class="inline-flex items-center px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs transition">
+                            Reset
                         </a>
                     </div>
+                    <span class="text-xs text-gray-400">Total: {{ $profiles->total() }} Profil</span>
                 </div>
             </form>
         </div>
 
-        <!-- Profiles Table -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Nama
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'full_name', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'full_name' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'full_name')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Jenis Kelamin
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'gender', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'gender' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'gender')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Usia
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'birth_place_date', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'birth_place_date' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'birth_place_date')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Pekerjaan
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'occupation', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'occupation' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'occupation')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'is_active', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'is_active' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'is_active')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Proses Taaruf
-                            <a href="{{ route('admin.taaruf.index', array_merge(request()->except(['sort_by', 'sort_direction']), ['sort_by' => 'is_in_taaruf_process', 'sort_direction' => request('sort_direction') == 'asc' && request('sort_by') == 'is_in_taaruf_process' ? 'desc' : 'asc'])) }}"
-                                class="ml-1 text-gray-400 hover:text-gray-600">
-                                @if (request('sort_by') == 'is_in_taaruf_process')
-                                    <i class="fas fa-sort-{{ request('sort_direction') == 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fas fa-sort"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Aksi
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse ($profiles as $profile)
+        <!-- Table Card -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-600 uppercase bg-gray-50/80 border-b border-gray-200">
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    @if ($profile->photo_url)
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full object-cover"
+                            <th class="px-6 py-3.5">Peserta</th>
+                            <th class="px-6 py-3.5">Jenis Kelamin</th>
+                            <th class="px-6 py-3.5">TTL / Usia</th>
+                            <th class="px-6 py-3.5">Pekerjaan</th>
+                            <th class="px-6 py-3.5">Status Akun</th>
+                            <th class="px-6 py-3.5">Proses Ta'aruf</th>
+                            <th class="px-6 py-3.5 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($profiles as $profile)
+                            <tr class="hover:bg-gray-50/75 transition">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        @if ($profile->photo_url)
+                                            <img class="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0"
                                                 src="{{ $profile->photo_url }}" alt="{{ $profile->full_name }}">
-                                        </div>
-                                    @else
-                                        <div
-                                            class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                                            <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                            </svg>
-                                        </div>
-                                    @endif
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $profile->full_name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500">
-                                            {{ $profile->user->email }}
+                                        @else
+                                            <div class="h-10 w-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-sm font-bold shrink-0">
+                                                👤
+                                            </div>
+                                        @endif
+                                        <div class="min-w-0">
+                                            <div class="font-bold text-gray-900 leading-snug">{{ $profile->full_name }}</div>
+                                            <div class="text-xs text-gray-400 truncate">{{ $profile->user->email ?? '-' }}</div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' }}">
-                                    {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-xs text-gray-500">
-                                {{ $profile->birth_place_date }}
-                            </td>
-                            <td class="px-6 py-4 text-xs text-gray-500 text-wrap">
-                                {{ $profile->occupation }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $profile->is_active ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $profile->is_in_taaruf_process ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ $profile->is_in_taaruf_process ? 'Sedang Proses' : 'Tidak Dalam Proses' }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium">
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('admin.taaruf.show', $profile->id) }}"
-                                        class="text-blue-600 hover:text-blue-900">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </a>
-                                    <a href="{{ route('admin.taaruf.edit', $profile->id) }}"
-                                        class="text-indigo-600 hover:text-indigo-900">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </a>
-                                    <form action="{{ route('admin.taaruf.toggle-active', $profile->id) }}" method="POST"
-                                        class="inline">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit"
-                                            class="{{ $profile->is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900' }}">
-                                            @if ($profile->is_active)
-                                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            @else
-                                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            @endif
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.taaruf.destroy', $profile->id) }}" method="POST"
-                                        class="inline"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus profil ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">
-                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
+                                        {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-600">
+                                    {{ $profile->birth_place_date ?? '-' }}
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-600">
+                                    {{ $profile->occupation ?? '-' }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600' }}">
+                                        {{ $profile->is_active ? 'Aktif' : 'Nonaktif' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->is_in_taaruf_process ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600' }}">
+                                        {{ $profile->is_in_taaruf_process ? 'Sedang Proses' : 'Tidak Dalam Proses' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <a href="{{ route('admin.taaruf.show', $profile->id) }}"
+                                            class="p-1.5 text-blue-500 hover:text-blue-700 rounded-lg hover:bg-blue-50 transition" title="Lihat Profil">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 text-center">
-                                Tidak ada profil taaruf yang ditemukan.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                        </a>
+                                        <a href="{{ route('admin.taaruf.edit', $profile->id) }}"
+                                            class="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition" title="Edit Profil">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('admin.taaruf.destroy', $profile->id) }}" method="POST" class="inline"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus profil ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 text-red-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition" title="Hapus Profil">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-400">Tidak ada profil ta'aruf yang ditemukan.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+                {{ $profiles->links() }}
+            </div>
         </div>
 
-        <!-- Pagination with appended query parameters -->
-        <div class="mt-4">
-            {{ $profiles->appends(request()->query())->links() }}
-        </div>
     </div>
 @endsection

@@ -1,130 +1,191 @@
 @csrf
-<div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md">
-    <div class="mb-4">
-        <label for="title" class="block text-sm font-medium text-gray-700">Judul</label>
+<div class="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+
+    <!-- Judul Berita -->
+    <div>
+        <label for="title" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+            Judul Berita / Liputan <span class="text-red-500">*</span>
+        </label>
         <input type="text" name="title" id="title"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition font-medium"
+            placeholder="Tulis judul berita yang jelas & informatif..."
             value="{{ old('title', $news->title ?? '') }}" required>
+        @error('title')
+            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+        @enderror
     </div>
 
-    <div class="mb-4">
-        <label for="excerpt" class="block text-sm font-medium text-gray-700">Ringkasan</label>
-        <textarea name="excerpt" id="excerpt" rows="3"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('excerpt', $news->excerpt ?? '') }}</textarea>
+    <!-- Ringkasan (Excerpt) -->
+    <div>
+        <label for="excerpt" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+            Ringkasan Berita (Lead / Excerpt)
+        </label>
+        <textarea name="excerpt" id="excerpt" rows="2"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition leading-relaxed"
+            placeholder="Ringkasan 5W+1H singkat mengenai kegiatan dakwah ini...">{{ old('excerpt', $news->excerpt ?? '') }}</textarea>
+        <p class="text-[11px] text-gray-400 mt-1">Ringkasan akan ditampilkan sebagai paragraf pembuka di kartu berita.</p>
+        @error('excerpt')
+            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+        @enderror
     </div>
 
-    <div class="mb-4">
-        <label for="content" class="block text-sm font-medium text-gray-700">Konten</label>
-        <textarea name="content" id="content" rows="10"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('content', $news->content ?? '') }}</textarea>
+    <!-- Konten Berita -->
+    <div>
+        <label for="content" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+            Isi Liputan Berita Lengkap <span class="text-red-500">*</span>
+        </label>
+        <textarea name="content" id="content" rows="12"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition leading-relaxed"
+            placeholder="Tulis narasi berita lengkap beserta kutipan narasumber...">{{ old('content', $news->content ?? '') }}</textarea>
+        @error('content')
+            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+        @enderror
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <!-- Grid: Gambar Utama & Tanggal Kegiatan -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
         <div>
-            <label for="featured_image" class="block text-sm font-medium text-gray-700">Gambar Utama</label>
+            <label for="featured_image" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                Foto Dokumentasi Utama
+            </label>
             <input type="file" name="featured_image" id="featured_image"
-                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-xl p-1"
                 accept="image/*">
+            <p class="text-[10px] text-gray-400 mt-1">Format: JPG, PNG, WEBP. Rekomendasi rasio 16:9.</p>
             @if (isset($news) && $news->featured_image)
-                <div class="mt-2">
-                    <img src="{{ Storage::url($news->featured_image) }}" alt="Gambar saat ini" class="h-32 w-auto">
+                <div class="mt-2.5">
+                    <img src="{{ Storage::url($news->featured_image) }}" alt="Gambar saat ini" class="h-28 w-auto rounded-xl object-cover border border-gray-200 shadow-2xs">
                 </div>
             @endif
+            @error('featured_image')
+                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div>
-            <label for="event_date" class="block text-sm font-medium text-gray-700">Tanggal Kegiatan</label>
+            <label for="event_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                Waktu Pelaksanaan Acara
+            </label>
             <input type="datetime-local" name="event_date" id="event_date"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
                 value="{{ old('event_date', isset($news) && $news->event_date ? $news->event_date->format('Y-m-d\TH:i') : '') }}">
+            <p class="text-[11px] text-gray-400 mt-1">Waktu kapan acara/kegiatan tersebut berlangsung.</p>
+            @error('event_date')
+                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+            @enderror
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <!-- Grid: Lokasi & Kategori -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
         <div>
-            <label for="location" class="block text-sm font-medium text-gray-700">Lokasi</label>
+            <label for="location" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                Lokasi Kegiatan
+            </label>
             <input type="text" name="location" id="location"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                placeholder="contoh: Ruang Utama Masjid Salman ITB"
                 value="{{ old('location', $news->location ?? '') }}">
+            @error('location')
+                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div>
-            <label for="news_category_id" class="block text-sm font-medium text-gray-700">Kategori</label>
-            <select name="news_category_id" id="news_category_id"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <label for="news_category_id" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                Kategori Berita <span class="text-red-500">*</span>
+            </label>
+            <select name="news_category_id" id="news_category_id" required
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}" @selected(old('news_category_id', $news->news_category_id ?? '') == $category->id)>
                         {{ $category->name }}
                     </option>
                 @endforeach
             </select>
+            @error('news_category_id')
+                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+            @enderror
         </div>
     </div>
 
-    <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Tag</label>
-        <div class="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
-            <div class="grid grid-cols-2 gap-2">
+    <!-- Grid: Status & Featured -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
+        <div>
+            <label for="status" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                Status Publikasi <span class="text-red-500">*</span>
+            </label>
+            <select name="status" id="status" required
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                <option value="draft" @selected(old('status', $news->status ?? '') == 'draft')>Simpan sebagai Draft</option>
+                <option value="published" @selected(old('status', $news->status ?? '') == 'published')>Terbitkan Sekarang (Published)</option>
+                <option value="archived" @selected(old('status', $news->status ?? '') == 'archived')>Arsip (Archived)</option>
+            </select>
+            @error('status')
+                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex items-center pt-5">
+            <label class="inline-flex items-center gap-3 p-3 rounded-2xl border border-gray-200 hover:border-amber-400 bg-amber-50/30 cursor-pointer transition w-full">
+                <input type="hidden" name="is_featured" value="0">
+                <input type="checkbox" name="is_featured" id="is_featured" value="1"
+                    class="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                    {{ old('is_featured', $news->is_featured ?? false) ? 'checked' : '' }}>
+                <div>
+                    <span class="text-xs font-bold text-gray-900 block">Tandai Berita Utama (Featured)</span>
+                    <span class="text-[11px] text-gray-500">Akan tampil di sorotan berita utama.</span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Tanggal Terbit (Conditional) -->
+    <div id="published-at-container" class="pt-2 border-t border-gray-100"
+        style="display: {{ old('status', $news->status ?? 'draft') === 'published' ? 'block' : 'none' }};">
+        <label for="published_at" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+            Waktu Publikasi Berita
+        </label>
+        <input type="datetime-local" name="published_at" id="published_at"
+            class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
+            value="{{ old('published_at', isset($news) && $news->published_at ? $news->published_at->format('Y-m-d\TH:i') : '') }}">
+        <p class="text-[11px] text-gray-400 mt-1">Kosongkan jika ingin otomatis menggunakan waktu saat ini.</p>
+    </div>
+
+    <!-- Tags Selection -->
+    <div class="pt-2 border-t border-gray-100 space-y-3">
+        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+            Tag Berita
+        </label>
+        <div class="border border-gray-200 rounded-2xl p-4 max-h-48 overflow-y-auto bg-gray-50/50">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 @foreach ($tags as $tag)
-                    <div class="flex items-center">
+                    <label class="flex items-center gap-2 p-2 rounded-xl border border-gray-200 bg-white hover:border-blue-400 cursor-pointer transition">
                         <input type="checkbox" id="tag_{{ $tag->id }}" name="tags[]" value="{{ $tag->id }}"
                             {{ isset($news) && $news->tags->contains($tag->id) ? 'checked' : '' }}
-                            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                        <label for="tag_{{ $tag->id }}" class="ml-2 text-sm text-gray-700">
-                            {{ $tag->name }}
-                        </label>
-                    </div>
+                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="text-xs font-medium text-gray-700">{{ $tag->name }}</span>
+                    </label>
                 @endforeach
             </div>
         </div>
 
-        <div class="mt-3">
-            <label for="new_tag" class="block text-sm font-medium text-gray-700 mb-1">Tambah Tag Baru</label>
-            <div class="flex items-center">
-                <input type="text" id="new_tag"
-                    class="border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 rounded-md shadow-sm text-sm flex-1"
-                    placeholder="Masukkan nama tag"
-                    onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewsTag(); }">
-                <button type="button" onclick="addNewsTag()"
-                    class="ml-2 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Tambah
-                </button>
-            </div>
+        <!-- Tambah Tag Baru -->
+        <div class="flex items-center gap-2 pt-1">
+            <input type="text" id="new_tag"
+                class="flex-1 max-w-sm px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                placeholder="Tulis tag berita baru..."
+                onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewsTag(); }">
+            <button type="button" onclick="addNewsTag()"
+                class="px-4 py-2 text-xs font-bold rounded-xl bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 border border-gray-300 transition shadow-2xs">
+                + Tambah Tag
+            </button>
         </div>
-
         @error('tags')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-            <select name="status" id="status"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                <option value="draft" @selected(old('status', $news->status ?? '') == 'draft')>Draft</option>
-                <option value="published" @selected(old('status', $news->status ?? '') == 'published')>Terbit</option>
-                <option value="archived" @selected(old('status', $news->status ?? '') == 'archived')>Arsip</option>
-            </select>
-        </div>
-
-        <div class="flex items-center mt-6">
-            <input type="hidden" name="is_featured" value="0">
-            <input type="checkbox" name="is_featured" id="is_featured" value="1"
-                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                {{ old('is_featured', $news->is_featured ?? false) ? 'checked' : '' }}>
-            <label for="is_featured" class="ml-2 block text-sm text-gray-700">Tandai sebagai berita pilihan</label>
-        </div>
-    </div>
-
-    <div class="mb-4" id="published-at-container"
-        style="display: {{ old('status', $news->status ?? 'draft') === 'published' ? 'block' : 'none' }};">
-        <label for="published_at" class="block text-sm font-medium text-gray-700">Tanggal Terbit</label>
-        <input type="datetime-local" name="published_at" id="published_at"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            value="{{ old('published_at', isset($news) && $news->published_at ? $news->published_at->format('Y-m-d\TH:i') : '') }}">
-        <p class="mt-1 text-xs text-gray-500">Kosongkan untuk menggunakan tanggal saat ini</p>
-    </div>
 </div>
 
 @push('scripts')
@@ -152,7 +213,7 @@
 
             if (!tagName) return;
 
-            const tagsContainer = document.querySelector('.grid.grid-cols-2.gap-2');
+            const tagsContainer = document.querySelector('.grid.grid-cols-2.sm\\:grid-cols-3.gap-2\\.5');
             const newTagId = 'new_' + tagName.toLowerCase().replace(/\s+/g, '_');
             const existingTag = document.getElementById('tag_' + newTagId);
 
@@ -162,23 +223,23 @@
                 return;
             }
 
-            const tagDiv = document.createElement('div');
-            tagDiv.className = 'flex items-center';
-            tagDiv.innerHTML = `
+            const tagLabel = document.createElement('label');
+            tagLabel.className = 'flex items-center gap-2 p-2 rounded-xl border border-blue-300 bg-blue-50/50 cursor-pointer transition';
+            tagLabel.innerHTML = `
                 <input
                     type="checkbox"
                     id="tag_${newTagId}"
                     name="tags[]"
                     value="${newTagId}"
                     checked
-                    class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 >
-                <label for="tag_${newTagId}" class="ml-2 text-sm text-gray-700">
-                    ${tagName} <span class="text-xs text-indigo-600">(baru)</span>
-                </label>
+                <span class="text-xs font-bold text-blue-900">${tagName} (baru)</span>
             `;
 
-            tagsContainer.appendChild(tagDiv);
+            if (tagsContainer) {
+                tagsContainer.appendChild(tagLabel);
+            }
             newTagInput.value = '';
         }
     </script>

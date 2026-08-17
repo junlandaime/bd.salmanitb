@@ -28,7 +28,10 @@ class ActivityController extends Controller
 
     public function show(Activity $activity)
     {
-        $activity->load('batches');
+        \App\Models\ActivityBatch::updateExpiredBatches();
+        $activity->load(['batches' => function ($q) {
+            $q->orderBy('batch_ke', 'desc');
+        }]);
         return view('admin.activities.show', compact('activity'));
     }
 

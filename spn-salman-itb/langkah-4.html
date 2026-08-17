@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paket & Pembayaran — SPN Salman ITB Batch 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FBF8F3',
+          ink: '#211D17',
+          muted: '#79705F',
+          hairline: '#E8E1D2',
+          gold: {
+            50:'#FDF6E9', 100:'#FAEACB', 200:'#F1D48E', 300:'#E6BB57',
+            400:'#D5A233', 500:'#C1861A', 600:'#A66F13', 700:'#835710', 800:'#5F3F0C'
+          },
+          leaf: { 50:'#EEF6EE', 100:'#DBEEDC', 500:'#3F8A4B', 600:'#2F7239', 700:'#245A2C' }
+        },
+        fontFamily: {
+          serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  body { background:#FBF8F3; }
+  [x-cloak] { display:none !important; }
+  input[type=radio]:checked, input[type=checkbox]:checked { accent-color:#A66F13; }
+  ::selection { background:#F1D48E; }
+  .field-label { font-weight:600; color:#211D17; font-size:0.875rem; margin-bottom:0.375rem; display:block; }
+  .field-input {
+    width:100%; background:#fff; border:1px solid #E8E1D2; border-radius:0.65rem;
+    padding:0.7rem 0.9rem; font-size:0.925rem; color:#211D17; transition:border-color .15s, box-shadow .15s;
+  }
+  .field-input:focus { outline:none; border-color:#C1861A; box-shadow:0 0 0 3px #FAEACB; }
+  .field-input::placeholder { color:#B3A990; }
+  .req { color:#B4432E; }
+</style>
+</head>
+<body class="font-sans text-ink">
+
+<header class="border-b border-hairline bg-cream/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-3xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gold-600 text-white flex items-center justify-center font-serif font-semibold text-sm">SP</div>
+      <div class="leading-tight">
+        <p class="font-serif font-semibold text-ink text-[15px]">SPN Salman 49</p>
+        <p class="text-[11px] text-muted -mt-0.5">Sekolah Pranikah ITB</p>
+      </div>
+    </a>
+    <a href="index.html" class="text-sm text-muted hover:text-gold-700 transition-colors">← Beranda</a>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 sm:px-6 py-10 sm:py-14">
+  
+  <div class="flex items-center gap-1 sm:gap-2 mb-8">
+    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white">✓</div><div class="flex-1 h-px bg-gold-600"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white">✓</div><div class="flex-1 h-px bg-gold-600"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white">✓</div><div class="flex-1 h-px bg-gold-600"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-gold-600 border-gold-600 text-white ring-4 ring-gold-100">4</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">5</div><div class="flex-1 h-px bg-hairline"></div><div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-[11px] sm:text-xs font-semibold shrink-0 bg-white border-hairline text-muted">6</div>
+  </div>
+
+  <div class="bg-white border border-hairline rounded-2xl shadow-sm shadow-black/[0.03] p-6 sm:p-9" x-data="{
+  q:{}, prev:['restu', 'gambaran_awal', 'alasan', 'harapan', 'nama_lengkap', 'nama_gelar', 'nama_panggilan', 'jenis_kelamin', 'whatsapp', 'instagram', 'tanggal_lahir', 'usia', 'asal_daerah', 'domisili', 'status_pernikahan', 'pendidikan', 'status_diri', 'pekerjaan', 'jabatan', 'instansi', 'lokasi_kerja', 'universitas', 'jurusan', 'angkatan'],
+  paket:'normal', referal:'', metode_bayar:'qris', info_dari:'',
+  hargaEarly: 749000, hargaNormal: 849000,
+  init(){
+    this.q = Object.fromEntries(new URLSearchParams(location.search));
+    this.paket = this.q.paket || 'normal';
+    this.referal = this.q.referal || '';
+    this.metode_bayar = this.q.metode_bayar || 'qris';
+    this.info_dari = this.q.info_dari || '';
+  },
+  get harga(){ return this.paket === 'early' ? this.hargaEarly : this.hargaNormal; },
+  get totalFormatted(){ return 'Rp' + this.harga.toLocaleString('id-ID'); },
+  get valid(){ return this.paket && this.metode_bayar && this.info_dari; }
+}" x-cloak>
+    <div class="mb-7">
+      <h1 class="font-serif text-2xl sm:text-[26px] text-ink font-semibold">Pendaftaran SPN Batch 49</h1>
+      <p class="text-sm text-muted mt-1">Langkah 4/6: Paket & Pembayaran</p>
+    </div>
+
+    <form method="GET" action="langkah-5.html" class="space-y-6">
+      <template x-for="f in prev" :key="f">
+      <input type="hidden" :name="f" :value="q[f] || ''">
+    </template>
+      <input type="hidden" name="harga" :value="harga">
+      <input type="hidden" name="total" :value="totalFormatted">
+      <p class="text-[15px] text-ink/80">Pilih paket harga dan metode pembayaran Anda.</p>
+
+      <div>
+        <label class="field-label mb-3">Paket Harga <span class="req">*</span></label>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="relative border rounded-xl px-4 py-3.5 opacity-60 cursor-not-allowed border-hairline">
+            <span class="absolute top-2.5 right-3 text-[10px] font-semibold tracking-wide uppercase bg-hairline text-muted px-2 py-0.5 rounded-full">Ditutup</span>
+            <p class="text-sm font-semibold text-ink">Early Bird</p>
+            <p class="font-serif text-lg text-ink mt-1">Rp749.000</p>
+            <p class="text-xs text-muted mt-0.5">24 - 31 Juli 2026</p>
+          </div>
+          <label class="border rounded-xl px-4 py-3.5 cursor-pointer transition-colors"
+            :class="paket==='normal' ? 'border-gold-500 bg-gold-50' : 'border-hairline hover:border-gold-300'">
+            <input type="radio" name="paket" value="normal" x-model="paket" class="sr-only">
+            <p class="text-sm font-semibold text-ink">Normal Bird</p>
+            <p class="font-serif text-lg text-ink mt-1">Rp849.000</p>
+            <p class="text-xs text-muted mt-0.5">1 - 22 Agustus 2026</p>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" for="ref">Kode Referal (opsional)</label>
+        <input id="ref" name="referal" x-model="referal" class="field-input" placeholder="Masukkan kode referal">
+      </div>
+
+      <div>
+        <label class="field-label" for="mb">Metode Pembayaran <span class="req">*</span></label>
+        <select id="mb" name="metode_bayar" x-model="metode_bayar" class="field-input">
+        <option value="">Pilih metode pembayaran</option>
+<option value="qris">QRIS</option>
+<option value="transfer">Transfer Bank (Muamalat)</option>
+      </select>
+      </div>
+
+      <div>
+        <label class="field-label" for="id">Tau informasi acara ini darimana? <span class="req">*</span></label>
+        <select id="id" name="info_dari" x-model="info_dari" class="field-input">
+        <option value="">Pilih salah satu</option>
+<option value="influencer">Instagram Influencer</option>
+<option value="medsos_salman">Media Sosial Salman ITB</option>
+<option value="teman">Teman/Kerabat</option>
+<option value="poster">Poster/Spanduk di Kampus</option>
+<option value="website">Website Salman ITB</option>
+<option value="lainnya">Lainnya</option>
+      </select>
+      </div>
+
+      <div class="flex items-center justify-between bg-gold-50 border border-gold-200 rounded-xl px-5 py-4">
+        <span class="text-sm font-semibold text-ink">Total Infak</span>
+        <span class="font-serif text-xl text-gold-700 font-semibold" x-text="totalFormatted"></span>
+      </div>
+
+      
+    <div class="flex items-center justify-between border-t border-hairline pt-6 mt-8">
+      <button type="button" @click="history.back()" class="text-sm font-medium text-muted hover:text-ink transition-colors">Kembali</button>
+      <button type="submit" :disabled="!(valid)"
+        :class="(valid) ? 'bg-gold-600 hover:bg-gold-700 text-white cursor-pointer' : 'bg-gold-100 text-gold-400 cursor-not-allowed'"
+        class="rounded-xl px-6 py-2.5 text-sm font-semibold transition-colors">Selanjutnya</button>
+    </div>
+
+    </form>
+
+  </div>
+  <p class="text-center text-xs text-muted mt-6">Sekolah Pranikah Salman ITB · Batch 49</p>
+</main>
+
+</body>
+</html>

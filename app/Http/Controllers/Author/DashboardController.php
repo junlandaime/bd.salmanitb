@@ -13,16 +13,44 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        $articleCount = Article::ownedBy($user)->count();
-        $publishedArticleCount = Article::ownedBy($user)->where('status', 'published')->count();
-        $newsCount = News::ownedBy($user)->count();
-        $publishedNewsCount = News::ownedBy($user)->where('status', 'published')->count();
+        // Articles statistics
+        $articleQuery = Article::ownedBy($user);
+        $articleCount = (clone $articleQuery)->count();
+        $publishedArticleCount = (clone $articleQuery)->where('status', 'published')->count();
+        $draftArticleCount = (clone $articleQuery)->where('status', 'draft')->count();
+        $featuredArticleCount = (clone $articleQuery)->where('is_featured', true)->count();
+
+        // News statistics
+        $newsQuery = News::ownedBy($user);
+        $newsCount = (clone $newsQuery)->count();
+        $publishedNewsCount = (clone $newsQuery)->where('status', 'published')->count();
+        $draftNewsCount = (clone $newsQuery)->where('status', 'draft')->count();
+        $featuredNewsCount = (clone $newsQuery)->where('is_featured', true)->count();
+
+        // Recent Articles & News
+        $recentArticles = Article::ownedBy($user)
+            ->with('category')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $recentNews = News::ownedBy($user)
+            ->with('category')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('author.dashboard', [
             'articleCount' => $articleCount,
             'publishedArticleCount' => $publishedArticleCount,
+            'draftArticleCount' => $draftArticleCount,
+            'featuredArticleCount' => $featuredArticleCount,
             'newsCount' => $newsCount,
             'publishedNewsCount' => $publishedNewsCount,
+            'draftNewsCount' => $draftNewsCount,
+            'featuredNewsCount' => $featuredNewsCount,
+            'recentArticles' => $recentArticles,
+            'recentNews' => $recentNews,
         ]);
     }
 }

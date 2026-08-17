@@ -1,212 +1,289 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Alumni')
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WE2HFGE5VL"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-WE2HFGE5VL');
-</script>
+@section('title', 'Dashboard Alumni - Bidang Dakwah Salman ITB')
 
 @section('content')
-    <main class="mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-green-600">Dashboard Alumni</h2>
-                <p class="text-gray-500 mt-2">Selamat datang di portal alumni Bidang Dakwah Masjid Salman ITB.</p>
-            </div>
-
-            @if (session('error'))
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-                    <p>{{ session('error') }}</p>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                    <p>{{ session('success') }}</p>
-                </div>
-            @endif
-
-            <div class="mb-8">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="border-b border-gray-200 px-6 py-4">
-                        <h5 class="text-xl font-semibold text-green-600">Batch Kegiatan Anda</h5>
+<div class="min-h-screen bg-gray-50/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- Welcome Hero Card (Contained & Clean) -->
+        <div class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 rounded-3xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+            <!-- Subtle background pattern -->
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div class="flex items-center gap-4 sm:gap-5">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-2xl sm:text-3xl font-bold text-emerald-300 shadow-inner shrink-0">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
-                    <div class="p-6">
-                        @if ($batches->isEmpty())
-                            <div class="text-center py-10">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 12H4M4 12l6-6m0 12l-6-6" />
-                                </svg>
-                                <h5 class="mt-4 text-lg font-medium text-gray-900">Anda belum terdaftar sebagai alumni batch
-                                    kegiatan</h5>
-                                <p class="mt-2 text-gray-500">Silakan hubungi admin jika Anda merasa sudah seharusnya
-                                    terdaftar.</p>
-                            </div>
-                        @else
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Kegiatan</th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Batch</th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Periode</th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Jumlah Materi</th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($batches as $batch)
-                                            <tr class="hover:bg-gray-50">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {{ $batch->activity->title }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $batch->nama_batch }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $batch->tanggal_mulai_kegiatan->format('d M Y') }} -
-                                                    {{ $batch->tanggal_selesai_kegiatan->format('d M Y') }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $batch->materials->count() }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <a href="{{ route('alumni.batch.materials', $batch->id) }}"
-                                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                        </svg>
-                                                        Lihat Materi
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Portal Alumni Resmi
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            Ahlan wa Sahlan, {{ Auth::user()->name }}!
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                            Akses materi pelatihan, riwayat batch kegiatan, dan jejaring dakwah alumni Masjid Salman ITB.
+                        </p>
                     </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center gap-3 shrink-0">
+                    <a href="{{ route('profile.edit') }}" 
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white text-xs font-semibold border border-white/15 transition shadow-sm">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>Edit Profil</span>
+                    </a>
+                    <a href="{{ route('taaruf.index') }}" 
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-xs font-semibold shadow-md shadow-pink-500/20 transition">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span>Layanan Ta'aruf</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden h-full">
-                    <div class="border-b border-gray-200 px-6 py-4">
-                        <h5 class="text-xl font-semibold text-green-600">Informasi Akun</h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-green-600 text-white rounded-full p-3 mr-4">
-                                <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h5 class="text-xl font-medium text-gray-900">{{ Auth::user()->name }}</h5>
-                                <p class="text-gray-500">{{ Auth::user()->email }}</p>
-                            </div>
-                        </div>
-
-                        <div class="space-x-2">
-                            <a href="{{ route('profile.edit') }}"
-                                class="inline-flex items-center px-4 py-2 border border-green-600 rounded-md shadow-sm text-sm font-medium text-green-600 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                <svg class="-ml-1 mr-2 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                Edit Profil
-                            </a>
-                            {{-- <a href="{{ route('alumni.password.change') }}"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                                </svg>
-                                Ubah Password
-                            </a> --}}
-
-                            <a href="{{ route('taaruf.index') }}"
-                                class="inline-flex items-center px-4 py-2 border border-pink-600 rounded-md shadow-sm text-sm font-medium text-pink-600 bg-white hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                                Taaruf
-                            </a>
-
-
-                        </div>
-                    </div>
+            <!-- Stats Mini Bar -->
+            <div class="relative z-10 mt-8 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-black/20 backdrop-blur border border-white/10 rounded-2xl p-4">
+                    <span class="text-xs text-slate-300 font-medium block">Batch Kegiatan Diikuti</span>
+                    <span class="text-2xl font-bold text-white mt-1 block">{{ $batches->count() }} Kegiatan</span>
                 </div>
-
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden h-full">
-                    <div class="border-b border-gray-200 px-6 py-4">
-                        <h5 class="text-xl font-semibold text-green-600">Informasi Penting</h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-blue-700">
-                                        Materi yang tersedia hanya dapat diakses oleh alumni batch kegiatan terkait.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-gray-700 mb-2">Sebagai alumni, Anda memiliki akses ke:</p>
-                        <ul class="list-disc pl-5 mb-6 text-gray-700 space-y-1">
-                            <li>Materi presentasi</li>
-                            <li>Rekaman video</li>
-                            <li>Notulensi kegiatan</li>
-                        </ul>
-
-                        <p class="text-gray-700 mb-2">Jika Anda memiliki pertanyaan, silakan hubungi admin melalui:</p>
-                        <p class="flex items-center text-gray-700">
-                            <svg class="h-5 w-5 text-gray-500 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                            </svg>
-                            <a target="_blank" href="mailto:bidangdakwah@salmanitb.com">bidangdakwah@salmanitb.com</a>
-                        </p>
-                        </p>
-                    </div>
+                <div class="bg-black/20 backdrop-blur border border-white/10 rounded-2xl p-4">
+                    <span class="text-xs text-slate-300 font-medium block">Total Materi &amp; Modul</span>
+                    <span class="text-2xl font-bold text-emerald-300 mt-1 block">
+                        {{ $batches->sum(fn($b) => $b->materials->count()) }} Berkas
+                    </span>
+                </div>
+                <div class="bg-black/20 backdrop-blur border border-white/10 rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-xs text-slate-300 font-medium block">Status Keanggotaan</span>
+                    <span class="text-sm font-bold text-emerald-400 mt-2 inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Alumni Terverifikasi
+                    </span>
                 </div>
             </div>
         </div>
-    </main>
+
+        @if (session('error'))
+            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <div class="flex items-center gap-2 text-sm font-medium">
+                    <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{{ session('error') }}</span>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl shadow-sm flex items-center justify-between" role="alert">
+                <div class="flex items-center gap-2 text-sm font-medium">
+                    <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">✕</button>
+            </div>
+        @endif
+
+        @php
+            $activeSpnRegs = \App\Models\SpnRegistration::where('user_id', Auth::id())->with('activityBatch')->latest()->get();
+        @endphp
+
+        @if($activeSpnRegs->isNotEmpty())
+            <div class="bg-gradient-to-r from-amber-500/10 via-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-2xs">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base font-bold shrink-0 shadow-xs">
+                        💛
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-gray-900">Pendaftaran Batch Sekolah Pranikah Aktif</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                {{ $activeSpnRegs->count() }} Pendaftaran
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-0.5">
+                            Pantau status verifikasi pembayaran dan administrasi batch SPN yang sedang Anda daftarkan.
+                        </p>
+                    </div>
+                </div>
+                <a href="{{ route('peserta.dashboard') }}"
+                    class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition shrink-0">
+                    <span>Status Pendaftaran SPN</span>
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        @endif
+
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Columns: Batches List -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8">
+                    <div class="flex items-center justify-between pb-5 border-b border-gray-100 mb-6">
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900">Batch Kegiatan Anda</h2>
+                            <p class="text-xs text-gray-500 mt-0.5">Daftar kelas dan program pelatihan yang pernah Anda ikuti.</p>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100">
+                            {{ $batches->count() }} Batch Terdaftar
+                        </span>
+                    </div>
+
+                    @if ($batches->isEmpty())
+                        <div class="text-center py-16 px-4 bg-gray-50/60 rounded-2xl border border-dashed border-gray-200">
+                            <div class="w-16 h-16 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3 text-2xl">
+                                📂
+                            </div>
+                            <h3 class="text-base font-bold text-gray-900">Belum Ada Batch Kegiatan</h3>
+                            <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto leading-relaxed">
+                                Anda belum terhubung dengan batch kegiatan manapun. Jika sudah menyelesaikan pelatihan, silakan hubungi tim admin.
+                            </p>
+                        </div>
+                    @else
+                        <div class="space-y-4">
+                            @foreach ($batches as $batch)
+                                <div class="group bg-white rounded-2xl border border-gray-200/80 hover:border-emerald-500/60 hover:shadow-md transition-all p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-100 border border-emerald-200 text-emerald-700 font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
+                                            #{{ $batch->batch_ke ?: '1' }}
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                                                    {{ $batch->activity->title ?? 'Kegiatan' }}
+                                                </span>
+                                            </div>
+                                            <h3 class="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition mt-1.5">
+                                                {{ $batch->nama_batch }}
+                                            </h3>
+                                            <div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-2 text-xs text-gray-500">
+                                                <span class="flex items-center gap-1.5">
+                                                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    {{ $batch->tanggal_mulai_kegiatan ? $batch->tanggal_mulai_kegiatan->format('d M Y') : '-' }} &ndash; {{ $batch->tanggal_selesai_kegiatan ? $batch->tanggal_selesai_kegiatan->format('d M Y') : '-' }}
+                                                </span>
+                                                <span class="flex items-center gap-1.5 font-medium text-gray-700">
+                                                    📁 {{ $batch->materials->count() }} Materi
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="shrink-0 pt-2 sm:pt-0">
+                                        <a href="{{ route('alumni.batch.materials', $batch->id) }}"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition">
+                                            <span>Buka Materi</span>
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+
+            <!-- Right 1 Column: Profile & Info -->
+            <div class="space-y-6">
+                
+                <!-- Account Profile Card -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6">
+                    <div class="flex items-center gap-3.5 pb-4 border-b border-gray-100 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base shrink-0">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0">
+                            <h3 class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->name }}</h3>
+                            <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 text-xs">
+                        <div class="flex items-center justify-between py-1 text-gray-600">
+                            <span>Role Akun:</span>
+                            <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded-md">Alumni</span>
+                        </div>
+                        <div class="flex items-center justify-between py-1 text-gray-600">
+                            <span>Bergabung:</span>
+                            <span class="font-medium text-gray-900">{{ Auth::user()->created_at ? Auth::user()->created_at->format('d M Y') : '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-gray-100 space-y-2">
+                        <a href="{{ route('profile.edit') }}"
+                            class="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-semibold text-xs transition shadow-2xs">
+                            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            Kelola Akun &amp; Password
+                        </a>
+                        <a href="{{ route('alumni.feedback.index') }}"
+                            class="w-full inline-flex items-center justify-between px-3.5 py-2 rounded-xl border border-teal-200 bg-teal-50 text-teal-700 hover:bg-teal-100 font-semibold text-xs transition">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                                <span>Feedback &amp; Saran</span>
+                            </div>
+                            @php
+                                $alumniAnsweredCount = \App\Models\Feedback::byUser(auth()->id())->where('status', 'answered')->count();
+                            @endphp
+                            @if($alumniAnsweredCount > 0)
+                                <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-600 text-white rounded-full">
+                                    {{ $alumniAnsweredCount }} Dibalas
+                                </span>
+                            @endif
+                        </a>
+                        <a href="{{ route('taaruf.index') }}"
+                            class="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-pink-200 bg-pink-50 text-pink-700 hover:bg-pink-100 font-semibold text-xs transition">
+                            <svg class="w-3.5 h-3.5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            Program Ta'aruf Keluarga Salman
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Info Help Card -->
+                <div class="bg-gradient-to-br from-teal-900 to-emerald-950 rounded-2xl text-white p-6 shadow-sm">
+                    <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm font-bold text-emerald-300 mb-3">
+                        💡
+                    </div>
+                    <h3 class="text-sm font-bold text-white mb-2">Panduan Hak Akses Materi</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                        Materi, slide, notulensi, dan video rekaman hanya dapat diunduh oleh alumni terverifikasi yang terdaftar pada batch terkait.
+                    </p>
+                    <div class="pt-3 border-t border-white/10 flex items-center gap-2 text-xs text-emerald-300 font-medium">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <a href="mailto:bidangdakwah@salmanitb.com" class="hover:underline">bidangdakwah@salmanitb.com</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 @endsection

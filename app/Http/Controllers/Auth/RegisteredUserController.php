@@ -33,6 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'website' => ['max:0'], // honeypot field — must be empty
         ]);
 
         $user = User::create([
@@ -45,6 +46,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect to peserta dashboard — every new user is a peserta
+        return redirect()->route('peserta.dashboard')
+            ->with('success', 'Pendaftaran akun berhasil! Selamat datang di Bidang Dakwah Masjid Salman ITB. Silakan cek email Anda untuk informasi akun.');
     }
 }
