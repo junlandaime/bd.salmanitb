@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\ActivityBatch;
+use App\Models\ActivityGallery;
 use App\Models\SpnPricingPackage;
 use App\Models\SpnDiscount;
 use Illuminate\Http\Request;
@@ -233,7 +234,12 @@ class SpnController extends Controller
     {
         $batch = $this->getActiveBatch();
         $activity = $batch ? $batch->activity : $this->getActivity('offline');
-        $gallery = $activity ? $activity->gallery : collect();
+        
+        $spnActivityIds = Activity::whereIn('slug', ['sekolah-pranikah-offline', 'sekolah-pranikah-online', 'spn'])->pluck('id');
+        $gallery = ActivityGallery::whereIn('activity_id', $spnActivityIds)->latest()->get();
+        if ($gallery->isEmpty() && $activity) {
+            $gallery = $activity->gallery;
+        }
 
         return view('spn.fasilitas', [
             'activePage' => 'fasilitas',
