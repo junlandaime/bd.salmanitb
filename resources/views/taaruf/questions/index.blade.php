@@ -138,15 +138,15 @@
                                     </div>
                                 </div>
 
-                                <div class="text-xs font-bold text-gray-900 bg-white p-3.5 rounded-xl border border-gray-200">
-                                    <span class="text-rose-600 mr-1.5 font-bold">Q:</span>
-                                    <span>{{ $question->question }}</span>
+                                <div class="text-xs font-bold text-gray-900 bg-white p-3.5 rounded-xl border border-gray-200 flex items-start gap-2">
+                                    <span class="text-rose-600 font-bold shrink-0">Q:</span>
+                                    <span class="whitespace-pre-line leading-relaxed font-semibold text-gray-800">{{ $question->question }}</span>
                                 </div>
 
                                 @if ($question->is_answered)
-                                    <div class="text-xs text-gray-700 bg-emerald-50/50 p-3.5 rounded-xl border border-emerald-200">
-                                        <span class="text-emerald-700 font-bold mr-1.5">Jawaban Anda:</span>
-                                        <span class="leading-relaxed">{{ $question->answer }}</span>
+                                    <div class="text-xs text-gray-700 bg-emerald-50/50 p-3.5 rounded-xl border border-emerald-200 flex items-start gap-2">
+                                        <span class="text-emerald-700 font-bold shrink-0">Jawaban Anda:</span>
+                                        <span class="leading-relaxed whitespace-pre-line text-emerald-900">{{ $question->answer }}</span>
                                     </div>
                                 @endif
 
@@ -158,7 +158,7 @@
                                             class="flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition">{{ $question->answer }}</textarea>
                                         <button type="submit"
                                             class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-xs transition self-end sm:self-auto shrink-0">
-                                            {{ $question->is_answered ? 'Perbarui Jawaban' : 'Kirim Jawaban' }}
+                                            {{ $question->is_answered ? 'Simpan Perubahan' : 'Kirim Jawaban' }}
                                         </button>
                                     </div>
                                 </form>
@@ -199,15 +199,15 @@
                                     </span>
                                 </div>
 
-                                <div class="text-xs text-gray-800 bg-white p-3 rounded-xl border border-gray-200">
-                                    <span class="font-bold text-rose-600 mr-1">Pertanyaan:</span>
-                                    <span>{{ $q->question }}</span>
+                                <div class="text-xs text-gray-800 bg-white p-3.5 rounded-xl border border-gray-200 flex items-start gap-2">
+                                    <span class="font-bold text-rose-600 shrink-0">Pertanyaan:</span>
+                                    <span class="whitespace-pre-line leading-relaxed font-semibold text-gray-800">{{ $q->question }}</span>
                                 </div>
 
                                 @if ($q->is_answered)
-                                    <div class="text-xs text-emerald-900 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                                        <span class="font-bold mr-1">Jawaban:</span>
-                                        <span>{{ $q->answer }}</span>
+                                    <div class="text-xs text-emerald-900 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 flex items-start gap-2">
+                                        <span class="font-bold text-emerald-800 shrink-0">Jawaban:</span>
+                                        <span class="whitespace-pre-line leading-relaxed text-emerald-900">{{ $q->answer }}</span>
                                     </div>
                                 @endif
                             </div>

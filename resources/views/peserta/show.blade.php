@@ -160,14 +160,21 @@
                             <span class="text-gray-500">Harga Dasar:</span>
                             <span class="font-medium text-gray-900">Rp {{ number_format($registration->harga_dasar, 0, ',', '.') }}</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Diskon:</span>
-                            <span class="font-medium text-red-600">- Rp {{ number_format($registration->potongan_diskon, 0, ',', '.') }}</span>
+                        @if($registration->potongan_diskon > 0)
+                        <div class="flex justify-between text-sm text-emerald-700">
+                            <div>
+                                <span class="font-medium">Diskon {{ $registration->discount_percentage }}%:</span>
+                                <span class="text-[11px] text-emerald-600 block">({{ $registration->discount_category_label }})</span>
+                            </div>
+                            <span class="font-bold">- Rp {{ number_format($registration->potongan_diskon, 0, ',', '.') }}</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Referral:</span>
-                            <span class="font-medium text-red-600">- Rp {{ number_format($registration->potongan_referal, 0, ',', '.') }}</span>
+                        @endif
+                        @if($registration->potongan_referal > 0)
+                        <div class="flex justify-between text-sm text-teal-700">
+                            <span class="font-medium">Referral @if($registration->referralCode)({{ $registration->referralCode->code }})@endif:</span>
+                            <span class="font-bold">- Rp {{ number_format($registration->potongan_referal, 0, ',', '.') }}</span>
                         </div>
+                        @endif
                         <hr class="border-gray-100">
                         <div class="flex justify-between text-lg font-bold">
                             <span class="text-gray-800">Total:</span>

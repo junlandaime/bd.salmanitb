@@ -116,6 +116,8 @@ class SpnRegistrationController extends Controller
             }
         }
 
+        $validated['usia'] = \Carbon\Carbon::parse($validated['tanggal_lahir'])->age;
+
         $request->session()->put('spn_step2', $validated);
 
         return redirect()->route('spn.daftar.step3');
@@ -301,6 +303,7 @@ class SpnRegistrationController extends Controller
             'paket' => $package->slug,
             'spn_pricing_package_id' => $package->id,
             'spn_discount_id' => $selectedDiscountId,
+            'discount_label' => $discountLabel,
             'spn_referral_code_id' => $spnReferralCodeId,
             'metode_bayar' => $validated['metode_bayar'],
             'info_dari' => $validated['info_dari'],
@@ -350,7 +353,7 @@ class SpnRegistrationController extends Controller
         );
         
         // Remove temp display-only keys and non-DB keys
-        unset($data['_paket_name'], $data['_discount_label'], $data['_referral_code'], $data['spn_discount_id'], $data['usia'], $data['kode_referal']);
+        unset($data['_paket_name'], $data['_discount_label'], $data['_referral_code'], $data['usia'], $data['kode_referal']);
 
         $batch = $this->getActiveBatch();
         $data['activity_batch_id'] = $batch->id;

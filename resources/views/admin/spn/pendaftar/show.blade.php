@@ -292,42 +292,82 @@
                     <h3 class="text-base font-bold text-gray-900">Rincian Pembayaran</h3>
                 </div>
 
-                <div class="space-y-3 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-500">Paket</span>
+                <div class="space-y-3.5 text-sm">
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                        <span class="text-gray-500">Pilihan Paket</span>
                         <span class="font-bold text-gray-900 capitalize">{{ str_replace('_', ' ', $registration->paket) }}</span>
                     </div>
+
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Status / Kategori</span>
+                        <span class="font-semibold text-gray-800 bg-gray-100 px-2.5 py-1 rounded-lg">
+                            {{ $registration->discount_category_label }}
+                        </span>
+                    </div>
+
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-500">Harga Dasar</span>
+                        <span class="text-gray-500">Harga Dasar Paket</span>
                         <span class="font-semibold text-gray-700">Rp {{ number_format($registration->harga_dasar, 0, ',', '.') }}</span>
                     </div>
 
                     @if($registration->potongan_diskon > 0)
-                    <div class="flex justify-between items-center text-emerald-600">
-                        <span>Potongan Kategori</span>
-                        <span class="font-semibold">- Rp {{ number_format($registration->potongan_diskon, 0, ',', '.') }}</span>
+                    <div class="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-emerald-800 space-y-1.5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center gap-1.5 text-xs font-bold">
+                                    <span>Potongan Diskon Kategori</span>
+                                    <span class="px-1.5 py-0.5 rounded-md bg-emerald-200 text-emerald-900 text-[10px] font-extrabold">
+                                        {{ $registration->discount_percentage }}%
+                                    </span>
+                                </div>
+                                <span class="text-xs text-emerald-900 font-bold block mt-0.5">
+                                    Label Diskon: {{ $registration->discount_category_label }}
+                                </span>
+                            </div>
+                            <span class="font-bold text-sm text-emerald-700 shrink-0">- Rp {{ number_format($registration->potongan_diskon, 0, ',', '.') }}</span>
+                        </div>
                     </div>
                     @endif
 
                     @if($registration->potongan_referal > 0)
-                    <div class="flex justify-between items-center text-emerald-600">
-                        <span>Potongan Referral @if($registration->referralCode) ({{ $registration->referralCode->code }}) @endif</span>
-                        <span class="font-semibold">- Rp {{ number_format($registration->potongan_referal, 0, ',', '.') }}</span>
+                    <div class="p-2.5 rounded-xl bg-teal-50/80 border border-teal-200/80 text-teal-800 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold flex items-center gap-1.5">
+                                <span>Potongan Referral</span>
+                                @if($registration->referralCode)
+                                    <span class="px-1.5 py-0.5 rounded-md bg-teal-200/80 text-teal-900 text-[10px] font-mono font-extrabold">
+                                        {{ $registration->referralCode->code }}
+                                    </span>
+                                @endif
+                            </span>
+                            <span class="font-bold text-sm text-teal-700">- Rp {{ number_format($registration->potongan_referal, 0, ',', '.') }}</span>
+                        </div>
                     </div>
                     @endif
 
-                    <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between items-center">
-                        <span class="font-bold text-gray-900">Total Infak</span>
-                        <span class="text-xl font-extrabold text-gray-900">Rp {{ number_format($registration->total_bayar, 0, ',', '.') }}</span>
+                    <div class="border-t-2 border-dashed border-gray-200 pt-3.5 mt-2 flex justify-between items-baseline">
+                        <div>
+                            <span class="font-bold text-gray-900 block text-xs">Total Pembayaran / Infak</span>
+                            <span class="text-[10px] text-gray-400">Termasuk seluruh potongan</span>
+                        </div>
+                        <span class="text-xl font-extrabold text-teal-800">
+                            Rp {{ number_format($registration->total_bayar, 0, ',', '.') }}
+                        </span>
                     </div>
 
-                    <div class="flex justify-between items-center pt-1 text-xs">
-                        <span class="text-gray-400">Metode Bayar</span>
-                        <span class="font-semibold text-gray-700 uppercase">{{ $registration->metode_bayar ?? 'Transfer' }}</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">Mengetahui Info Dari</span>
-                        <span class="text-gray-700 capitalize">{{ str_replace('_', ' ', $registration->info_dari ?? '-') }}</span>
+                    <div class="pt-2 border-t border-gray-100 space-y-1.5 text-xs text-gray-500">
+                        <div class="flex justify-between items-center">
+                            <span>Metode Pembayaran</span>
+                            <span class="font-bold text-gray-800 uppercase px-2 py-0.5 bg-gray-50 rounded-md border border-gray-200">
+                                {{ $registration->metode_bayar ?? 'Transfer' }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Mengetahui Info Dari</span>
+                            <span class="font-medium text-gray-700 capitalize">
+                                {{ str_replace('_', ' ', $registration->info_dari ?? '-') }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

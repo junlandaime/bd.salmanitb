@@ -260,13 +260,13 @@
                                 @foreach ($publicQuestions as $index => $q)
                                     <div class="bg-gray-50/70 border border-gray-200/80 rounded-2xl p-4 space-y-2">
                                         <div class="flex items-start gap-2 text-xs font-bold text-gray-900">
-                                            <span class="text-rose-500 font-bold">Q:</span>
-                                            <span>{{ $q->question }}</span>
+                                            <span class="text-rose-500 font-bold shrink-0">Q:</span>
+                                            <span class="leading-relaxed whitespace-pre-line">{{ $q->question }}</span>
                                         </div>
                                         <div
                                             class="flex items-start gap-2 text-xs text-gray-700 pl-4 border-l-2 border-emerald-400">
                                             <span class="text-emerald-600 font-bold shrink-0">A:</span>
-                                            <p class="leading-relaxed">{{ $q->answer }}</p>
+                                            <p class="leading-relaxed whitespace-pre-line">{{ $q->answer }}</p>
                                         </div>
                                     </div>
                                 @endforeach

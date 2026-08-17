@@ -7,14 +7,52 @@
   @include('spn.daftar._progress-bar', ['currentStep' => 5])
 
   <div class="frame-marks bg-white border-2 border-navy/30 rounded-2xl shadow-sm p-6 sm:p-9" x-data="{
-    buktiName:'', setuju:false, copied:false,
-    handleFile(e){ this.buktiName = e.target.files.length ? e.target.files[0].name : ''; },
-    copyRekening(){
+    buktiName: '',
+    buktiSize: '',
+    buktiPreview: null,
+    isPdf: false,
+    setuju: false,
+    copied: false,
+    handleFile(e) {
+      const file = e.target.files.length ? e.target.files[0] : null;
+      if (!file) return;
+
+      this.buktiName = file.name;
+      this.buktiSize = (file.size / 1024 / 1024 < 1) 
+        ? Math.round(file.size / 1024) + ' KB' 
+        : (file.size / 1024 / 1024).toFixed(2) + ' MB';
+      this.isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.buktiPreview = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.buktiPreview = null;
+      }
+    },
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    cancelFile() {
+      this.buktiName = '';
+      this.buktiSize = '';
+      this.buktiPreview = null;
+      this.isPdf = false;
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = '';
+      }
+    },
+    copyRekening() {
       navigator.clipboard.writeText('1130011057');
       this.copied = true;
       setTimeout(() => this.copied = false, 2500);
     },
-    get valid(){ return this.setuju === true && this.buktiName !== ''; }
+    get valid() {
+      return this.setuju === true && this.buktiName !== '';
+    }
   }" x-cloak>
     <div class="fm-tr"></div><div class="fm-bl"></div>
 
@@ -53,9 +91,19 @@
             <span class="text-navy/60">WhatsApp</span>
             <span class="font-semibold text-navy text-right font-mono">{{ $reviewData['whatsapp'] ?? '-' }}</span>
           </div>
-          <div class="flex justify-between py-2">
+          <div class="flex justify-between py-2 items-center">
             <span class="text-navy/60">TTL &amp; Usia</span>
-            <span class="font-semibold text-navy text-right">{{ $reviewData['tanggal_lahir'] ?? '-' }} ({{ $reviewData['usia'] ?? '-' }} thn)</span>
+            <span class="font-semibold text-navy text-right">
+              @php
+                $tglLahir = !empty($reviewData['tanggal_lahir']) ? \Carbon\Carbon::parse($reviewData['tanggal_lahir']) : null;
+                $calculatedAge = $tglLahir ? $tglLahir->age : ($reviewData['usia'] ?? null);
+              @endphp
+              {{ !empty($reviewData['asal_daerah']) ? $reviewData['asal_daerah'].', ' : '' }}
+              {{ $tglLahir ? $tglLahir->translatedFormat('d F Y') : ($reviewData['tanggal_lahir'] ?? '-') }}
+              @if(!empty($calculatedAge))
+                <span class="text-orange font-bold">({{ $calculatedAge }} tahun)</span>
+              @endif
+            </span>
           </div>
           <div class="flex justify-between py-2">
             <span class="text-navy/60">Domisili</span>
@@ -96,26 +144,67 @@
           <span class="text-xs font-bold text-cream/70 bg-white/10 px-2.5 py-1 rounded capitalize">{{ $reviewData['metode_bayar'] ?? 'Transfer' }}</span>
         </div>
 
-        <div class="space-y-2 text-xs sm:text-sm">
+        <div class="space-y-2.5 text-xs sm:text-sm">
           <div class="flex justify-between text-cream/80">
-            <span>Harga Dasar Paket ({{ $reviewData['paket_nama'] ?? 'SPN' }}):</span>
+            <span>Harga Dasar Paket ({{ $reviewData['_paket_name'] ?? $reviewData['paket_nama'] ?? ucwords(str_replace('_', ' ', $reviewData['paket'] ?? 'SPN')) }}):</span>
             <span class="font-semibold">Rp {{ number_format($reviewData['harga_dasar'] ?? 0, 0, ',', '.') }}</span>
           </div>
+
           @if(!empty($reviewData['potongan_diskon']) && $reviewData['potongan_diskon'] > 0)
-            <div class="flex justify-between text-emerald-400">
-              <span>Potongan Kategori:</span>
-              <span class="font-semibold">- Rp {{ number_format($reviewData['potongan_diskon'], 0, ',', '.') }}</span>
+            @php
+              $discPercentage = !empty($reviewData['harga_dasar']) && $reviewData['harga_dasar'] > 0
+                ? round(($reviewData['potongan_diskon'] / $reviewData['harga_dasar']) * 100)
+                : 0;
+              $discLabel = !empty($reviewData['discount_label'])
+                ? $reviewData['discount_label']
+                : (!empty($reviewData['_discount_label'])
+                  ? $reviewData['_discount_label']
+                  : 'Kategori Khusus');
+            @endphp
+            <div class="flex justify-between items-start text-emerald-400 bg-white/5 p-3 rounded-xl border border-emerald-400/20">
+              <div>
+                <div class="flex items-center gap-1.5 font-bold text-xs sm:text-sm">
+                  <span>Potongan Diskon Kategori</span>
+                  @if($discPercentage > 0)
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-400/20 text-emerald-300 text-[10px] font-extrabold">
+                      {{ $discPercentage }}%
+                    </span>
+                  @endif
+                </div>
+                <span class="text-[11px] text-emerald-300 font-semibold block mt-0.5">
+                  Label: {{ $discLabel }}
+                </span>
+              </div>
+              <span class="font-bold text-sm sm:text-base text-emerald-400 shrink-0">
+                - Rp {{ number_format($reviewData['potongan_diskon'], 0, ',', '.') }}
+              </span>
             </div>
           @endif
+
           @if(!empty($reviewData['potongan_referal']) && $reviewData['potongan_referal'] > 0)
-            <div class="flex justify-between text-emerald-400">
-              <span>Potongan Referral:</span>
-              <span class="font-semibold">- Rp {{ number_format($reviewData['potongan_referal'], 0, ',', '.') }}</span>
+            <div class="flex justify-between items-center text-emerald-400 bg-white/5 p-3 rounded-xl border border-emerald-400/20">
+              <div>
+                <span class="font-bold text-xs sm:text-sm">Potongan Referral</span>
+                @if(!empty($reviewData['_referral_code']) || !empty($reviewData['kode_referal']))
+                  <span class="text-[11px] text-emerald-300 font-mono block mt-0.5">
+                    Kode: {{ $reviewData['_referral_code'] ?? $reviewData['kode_referal'] }}
+                  </span>
+                @endif
+              </div>
+              <span class="font-bold text-sm sm:text-base text-emerald-400 shrink-0">
+                - Rp {{ number_format($reviewData['potongan_referal'], 0, ',', '.') }}
+              </span>
             </div>
           @endif
+
           <div class="border-t border-white/15 pt-3 mt-3 flex justify-between items-center">
-            <span class="font-display font-black text-base">Total yang Harus Ditransfer:</span>
-            <span class="font-display font-black text-orange text-2xl">Rp {{ number_format($reviewData['total_bayar'] ?? 0, 0, ',', '.') }}</span>
+            <div>
+              <span class="font-display font-black text-base block">Total yang Harus Ditransfer:</span>
+              <span class="text-[10px] text-cream/60">Termasuk seluruh potongan diskon</span>
+            </div>
+            <span class="font-display font-black text-orange text-2xl">
+              Rp {{ number_format($reviewData['total_bayar'] ?? 0, 0, ',', '.') }}
+            </span>
           </div>
         </div>
 
@@ -137,24 +226,77 @@
         </div>
       </div>
 
-      <!-- Upload Bukti Bayar -->
+      <!-- Upload Bukti Bayar with Cancel & Change Controls -->
       <div>
         <label class="field-label" for="bb">Unggah Berkas Bukti Pembayaran <span class="req">*</span></label>
-        <div class="border-2 border-dashed border-navy/30 rounded-xl p-6 text-center bg-paper/50 hover:bg-paper transition">
-          <input id="bb" type="file" name="bukti_bayar" @change="handleFile($event)" accept="image/*,application/pdf" class="hidden" required>
-          <label for="bb" class="cursor-pointer">
-            <span class="text-3xl block mb-2">📎</span>
-            <span class="text-xs sm:text-sm font-bold text-navy block">Klik untuk memilih foto / scan bukti transfer</span>
-            <span class="text-[11px] text-navy/60 block mt-1">Format: JPG, PNG, atau PDF (Maksimal 5 MB)</span>
-          </label>
-          <p x-show="buktiName" class="mt-3 text-xs font-bold text-emerald-700 bg-emerald-50 py-1.5 px-3 rounded-md inline-block border border-emerald-200" x-text="'File terpilih: ' + buktiName"></p>
+        <input id="bb" x-ref="fileInput" type="file" name="bukti_bayar" @change="handleFile($event)" accept="image/jpeg,image/png,image/jpg,image/webp,application/pdf" class="hidden" required>
+        
+        <!-- State 1: Belum Ada File Dipilih -->
+        <div x-show="!buktiName"
+          @click="triggerFileInput()"
+          class="border-2 border-dashed border-navy/30 rounded-2xl p-7 text-center bg-paper/40 hover:bg-paper cursor-pointer transition duration-200 group">
+          <div class="w-14 h-14 rounded-2xl bg-orange/10 text-orange flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition duration-200">
+            📁
+          </div>
+          <span class="text-xs sm:text-sm font-black text-navy block">Klik untuk memilih file bukti transfer</span>
+          <span class="text-[11px] text-navy/60 block mt-1">Mendukung format: JPG, PNG, WEBP, atau PDF (Maksimal 5 MB)</span>
+          <div class="mt-3">
+            <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-navy text-white font-bold text-xs group-hover:bg-orange transition shadow-xs">
+              <span>Pilih File Dari Perangkat</span>
+            </span>
+          </div>
         </div>
-        @error('bukti_bayar') <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p> @enderror
+
+        <!-- State 2: File Sudah Terpilih (Dengan Tombol Ganti & Batalkan / Hapus) -->
+        <div x-show="buktiName" x-cloak
+          class="bg-white border-2 border-emerald-500/60 rounded-2xl p-5 shadow-xs space-y-3">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <!-- Thumbnail Preview jika gambar, atau icon jika PDF -->
+              <template x-if="buktiPreview">
+                <div class="w-14 h-14 rounded-xl overflow-hidden border border-emerald-300 shrink-0 bg-gray-100 shadow-2xs">
+                  <img :src="buktiPreview" alt="Preview" class="w-full h-full object-cover">
+                </div>
+              </template>
+              <template x-if="!buktiPreview">
+                <div class="w-14 h-14 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-2xl shrink-0 border border-red-200">
+                  📄
+                </div>
+              </template>
+
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">
+                    ✓ File Siap Diunggah
+                  </span>
+                  <span class="text-[11px] text-gray-500 font-mono" x-text="buktiSize"></span>
+                </div>
+                <p class="text-xs sm:text-sm font-bold text-navy truncate mt-0.5" x-text="buktiName"></p>
+              </div>
+            </div>
+
+            <!-- Action Buttons: Ganti & Batal -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+              <button type="button" @click="triggerFileInput()"
+                class="px-3.5 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-navy text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                <span>🔄</span>
+                <span>Ganti File</span>
+              </button>
+              <button type="button" @click="cancelFile()"
+                class="px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition flex items-center gap-1.5 border border-rose-200 shadow-2xs">
+                <span>✕</span>
+                <span>Batalkan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @error('bukti_bayar') <p class="text-xs text-red-500 font-semibold mt-1.5">{{ $message }}</p> @enderror
       </div>
 
       <!-- Pernyataan & Janji Peserta -->
       <div class="pt-2">
-        <label class="flex items-start gap-3 p-4 rounded-xl border-2 border-navy/20 bg-paper cursor-pointer">
+        <label class="flex items-start gap-3 p-4 rounded-xl border-2 border-navy/20 bg-paper cursor-pointer hover:border-orange transition">
           <input type="checkbox" name="setuju" value="1" x-model="setuju" class="mt-1 w-4 h-4 text-orange focus:ring-orange rounded border-navy/30" required>
           <span class="text-xs sm:text-sm text-navy leading-relaxed">
             Saya menyatakan bahwa data yang diisi adalah benar, saya berkomitmen mengikuti seluruh rangkaian kegiatan Sekolah Pranikah Salman ITB dengan sungguh-sungguh, serta mematuhi seluruh tata tertib yang berlaku. <span class="req">*</span>

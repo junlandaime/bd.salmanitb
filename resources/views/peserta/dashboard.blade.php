@@ -333,15 +333,18 @@
                                                 <span class="font-medium text-gray-900">Rp {{ number_format($reg->harga_dasar, 0, ',', '.') }}</span>
                                             </div>
                                             @if($reg->potongan_diskon > 0)
-                                                <div class="flex justify-between text-emerald-700 font-medium">
-                                                    <span>Diskon Promo:</span>
-                                                    <span>- Rp {{ number_format($reg->potongan_diskon, 0, ',', '.') }}</span>
+                                                <div class="flex justify-between items-start text-emerald-700 font-medium">
+                                                    <div>
+                                                        <span>Diskon Kategori ({{ $reg->discount_percentage }}%):</span>
+                                                        <span class="text-[10px] text-emerald-600 block">({{ $reg->discount_category_label }})</span>
+                                                    </div>
+                                                    <span class="font-bold">- Rp {{ number_format($reg->potongan_diskon, 0, ',', '.') }}</span>
                                                 </div>
                                             @endif
                                             @if($reg->potongan_referal > 0)
-                                                <div class="flex justify-between text-emerald-700 font-medium">
-                                                    <span>Diskon Referral:</span>
-                                                    <span>- Rp {{ number_format($reg->potongan_referal, 0, ',', '.') }}</span>
+                                                <div class="flex justify-between text-teal-700 font-medium">
+                                                    <span>Diskon Referral @if($reg->referralCode)({{ $reg->referralCode->code }})@endif:</span>
+                                                    <span class="font-bold">- Rp {{ number_format($reg->potongan_referal, 0, ',', '.') }}</span>
                                                 </div>
                                             @endif
                                         </div>

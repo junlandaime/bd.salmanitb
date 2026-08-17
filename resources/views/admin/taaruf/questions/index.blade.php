@@ -173,7 +173,7 @@
                                         </button>
                                     </div>
                                 @else
-                                    <p class="leading-relaxed">{{ $question->question }}</p>
+                                    <p class="leading-relaxed whitespace-pre-line">{{ $question->question }}</p>
                                 @endif
                             </td>
 
@@ -194,7 +194,7 @@
                                             </button>
                                         </div>
                                     @else
-                                        <div class="text-emerald-800 leading-relaxed">
+                                        <div class="text-emerald-800 leading-relaxed whitespace-pre-line">
                                             {{ $question->answer }}
                                         </div>
                                     @endif

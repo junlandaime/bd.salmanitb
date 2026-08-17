@@ -61,6 +61,20 @@
           <span class="text-navy/60">Paket SPN</span>
           <span class="font-semibold text-navy text-right capitalize">{{ str_replace('_', ' ', $registration->paket) }}</span>
         </div>
+        @if($registration->potongan_diskon > 0)
+        <div class="flex justify-between py-2 text-emerald-700">
+          <span class="font-medium">Potongan Diskon ({{ $registration->discount_percentage }}%)</span>
+          <span class="font-bold text-right">- Rp {{ number_format($registration->potongan_diskon, 0, ',', '.') }}
+            <span class="text-[11px] block font-normal text-emerald-600">({{ $registration->discount_category_label }})</span>
+          </span>
+        </div>
+        @endif
+        @if($registration->potongan_referal > 0)
+        <div class="flex justify-between py-2 text-emerald-700">
+          <span class="font-medium">Potongan Referral</span>
+          <span class="font-bold text-right">- Rp {{ number_format($registration->potongan_referal, 0, ',', '.') }}</span>
+        </div>
+        @endif
         <div class="flex justify-between py-2">
           <span class="text-navy/60">Metode Pembayaran</span>
           <span class="font-semibold text-navy text-right uppercase">{{ $registration->metode_bayar === 'qris' ? 'QRIS' : 'Transfer Bank Muamalat' }}</span>
