@@ -11,7 +11,9 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Mail\SpnRegistrationConfirmation;
 
@@ -74,6 +76,14 @@ class SpnRegistrationService
             $batch = ActivityBatch::findOrFail($data['activity_batch_id']);
             $data['registration_code'] = $this->generateRegistrationCode($batch);
 
+            // Defensive check for recent migration columns (in case hosting hasn't run php artisan migrate yet)
+            if (!Schema::hasColumn('spn_registrations', 'spn_discount_id')) {
+                unset($data['spn_discount_id']);
+            }
+            if (!Schema::hasColumn('spn_registrations', 'discount_label')) {
+                unset($data['discount_label']);
+            }
+
             $registration = SpnRegistration::create($data);
 
             if ($buktiFile) {
@@ -114,8 +124,12 @@ class SpnRegistrationService
             // Link user_id back to SpnRegistration
             $registration->update(['user_id' => $user->id]);
 
-            // Send confirmation email with conditional password setup button
-            Mail::to($registration->email)->send(new SpnRegistrationConfirmation($registration, $activationToken, $hasExistingAccount));
+            // Send confirmation email with graceful error handling so SMTP timeout doesn't break registration
+            try {
+                Mail::to($registration->email)->send(new SpnRegistrationConfirmation($registration, $activationToken, $hasExistingAccount));
+            } catch (\Throwable $e) {
+                Log::error('Gagal mengirim email konfirmasi pendaftaran SPN ke ' . $registration->email . ': ' . $e->getMessage());
+            }
 
             return $registration;
         });

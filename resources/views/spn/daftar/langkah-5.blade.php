@@ -229,7 +229,7 @@
       <!-- Upload Bukti Bayar with Cancel & Change Controls -->
       <div>
         <label class="field-label" for="bb">Unggah Berkas Bukti Pembayaran <span class="req">*</span></label>
-        <input id="bb" x-ref="fileInput" type="file" name="bukti_bayar" @change="handleFile($event)" accept="image/jpeg,image/png,image/jpg,image/webp,application/pdf" class="hidden" required>
+        <input id="bb" x-ref="fileInput" type="file" name="bukti_bayar" @change="handleFile($event)" accept="image/jpeg,image/png,image/jpg,image/webp,application/pdf" class="sr-only" tabindex="-1">
         
         <!-- State 1: Belum Ada File Dipilih -->
         <div x-show="!buktiName"

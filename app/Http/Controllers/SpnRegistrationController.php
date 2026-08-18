@@ -342,29 +342,45 @@ class SpnRegistrationController extends Controller
     {
         $request->validate([
             'setuju' => 'accepted',
-            'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
         ]);
 
-        $data = array_merge(
-            $request->session()->get('spn_step1', []),
-            $request->session()->get('spn_step2', []),
-            $request->session()->get('spn_step3', []),
-            $request->session()->get('spn_step4', [])
-        );
+        $step1 = $request->session()->get('spn_step1');
+        $step2 = $request->session()->get('spn_step2');
+        $step3 = $request->session()->get('spn_step3');
+        $step4 = $request->session()->get('spn_step4');
+
+        if (empty($step1) || empty($step2) || empty($step3) || empty($step4)) {
+            return redirect()->route('spn.daftar.step1')->with('error', 'Sesi pendaftaran Anda telah berakhir. Silakan isi kembali formulir pendaftaran.');
+        }
+
+        $data = array_merge($step1, $step2, $step3, $step4);
         
         // Remove temp display-only keys and non-DB keys
         unset($data['_paket_name'], $data['_discount_label'], $data['_referral_code'], $data['usia'], $data['kode_referal']);
 
         $batch = $this->getActiveBatch();
+        if (!$batch) {
+            return back()->with('error', 'Batch pendaftaran tidak ditemukan atau belum aktif.');
+        }
+
         $data['activity_batch_id'] = $batch->id;
         $data['setuju'] = true;
 
-        $registration = $this->registrationService->createRegistration($data, $request->file('bukti_bayar'));
+        try {
+            $registration = $this->registrationService->createRegistration($data, $request->file('bukti_bayar'));
 
-        // Clear session data
-        $request->session()->forget(['spn_step1', 'spn_step2', 'spn_step3', 'spn_step4']);
+            // Clear session data
+            $request->session()->forget(['spn_step1', 'spn_step2', 'spn_step3', 'spn_step4']);
 
-        return redirect()->route('spn.daftar.step6', ['code' => $registration->registration_code]);
+            return redirect()->route('spn.daftar.step6', ['code' => $registration->registration_code]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memproses pendaftaran SPN Langkah 5: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->withInput()->with('error', 'Terjadi kendala saat memproses pendaftaran: ' . $e->getMessage() . '. Silakan coba beberapa saat lagi atau hubungi admin.');
+        }
     }
 
     public function step6($code)
