@@ -55,6 +55,16 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
+        if ($user) {
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_login_at')) {
+                    $user->updateQuietly(['last_login_at' => \Illuminate\Support\Carbon::now()]);
+                }
+            } catch (\Throwable $e) {
+                // Ignore if migration is not yet run
+            }
+        }
+
         if ($user->hasAnyRole(['superAdmin', 'admin', 'admin_spn', 'admin_taaruf'])) {
             return redirect()->intended(route('admin.dashboard', absolute: false));
         } elseif ($user->hasRole('alumni')) {

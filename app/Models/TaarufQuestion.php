@@ -17,13 +17,23 @@ class TaarufQuestion extends Model
         'is_answered',
         'is_anonymous',
         'is_public',
+        'answered_at',
     ];
 
     protected $casts = [
         'is_answered' => 'boolean',
         'is_anonymous' => 'boolean',
         'is_public' => 'boolean',
+        'answered_at' => 'datetime',
     ];
+
+    public function getAnsweredAtAttribute($value)
+    {
+        if ($value) {
+            return \Carbon\Carbon::parse($value);
+        }
+        return $this->is_answered ? $this->updated_at : null;
+    }
 
     /**
      * Get the taaruf profile that owns the question.

@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'is_active',
         'activation_token',
+        'last_login_at',
     ];
 
     /**
@@ -49,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 

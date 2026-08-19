@@ -101,7 +101,7 @@
                             <div class="bg-gray-50/70 border border-gray-200/80 rounded-2xl p-5 space-y-3">
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <div class="flex items-center gap-2 text-xs">
-                                        <span class="text-gray-400">{{ $question->created_at->format('d M Y, H:i') }}</span>
+                                        <span class="text-gray-500 font-medium">{{ $question->created_at->translatedFormat('d M Y, H:i') }} WIB</span>
                                         @if ($question->is_answered)
                                             <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold text-[10px]">
                                                 Sudah Dijawab
@@ -146,7 +146,14 @@
                                 @if ($question->is_answered)
                                     <div class="text-xs text-gray-700 bg-emerald-50/50 p-3.5 rounded-xl border border-emerald-200 flex items-start gap-2">
                                         <span class="text-emerald-700 font-bold shrink-0">Jawaban Anda:</span>
-                                        <span class="leading-relaxed whitespace-pre-line text-emerald-900">{{ $question->answer }}</span>
+                                        <div class="flex-1">
+                                            <span class="leading-relaxed whitespace-pre-line text-emerald-900">{{ $question->answer }}</span>
+                                            @if ($question->answered_at)
+                                                <span class="block text-[10px] text-emerald-700/70 mt-1 font-medium">
+                                                    Dijawab pada {{ $question->answered_at->translatedFormat('d M Y, H:i') }} WIB
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                 @endif
 
@@ -192,7 +199,7 @@
                                 <div class="flex items-center justify-between text-xs">
                                     <div class="flex items-center gap-2">
                                         <span class="font-bold text-gray-800">Ditujukan ke: {{ $q->profile->full_name ?? 'Peserta' }}</span>
-                                        <span class="text-gray-400">&bull; {{ $q->created_at->format('d M Y') }}</span>
+                                        <span class="text-gray-400">&bull; Diajukan: {{ $q->created_at->translatedFormat('d M Y, H:i') }} WIB</span>
                                     </div>
                                     <span class="px-2.5 py-0.5 rounded-full {{ $q->is_answered ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200' }} text-[10px] font-bold">
                                         {{ $q->is_answered ? 'Sudah Dijawab' : 'Menunggu Jawaban' }}
@@ -207,7 +214,14 @@
                                 @if ($q->is_answered)
                                     <div class="text-xs text-emerald-900 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 flex items-start gap-2">
                                         <span class="font-bold text-emerald-800 shrink-0">Jawaban:</span>
-                                        <span class="whitespace-pre-line leading-relaxed text-emerald-900">{{ $q->answer }}</span>
+                                        <div class="flex-1">
+                                            <span class="whitespace-pre-line leading-relaxed text-emerald-900">{{ $q->answer }}</span>
+                                            @if ($q->answered_at)
+                                                <span class="block text-[10px] text-emerald-700/70 mt-1 font-medium">
+                                                    Dijawab pada {{ $q->answered_at->translatedFormat('d M Y, H:i') }} WIB
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                 @endif
                             </div>

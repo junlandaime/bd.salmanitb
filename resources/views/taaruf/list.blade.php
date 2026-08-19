@@ -233,7 +233,20 @@
                             <p class="text-xs text-gray-500 mt-0.5">Ditemukan <span class="font-bold text-gray-800">{{ $profiles->total() ?? count($profiles) }}</span> profil alumni aktif</p>
                         </div>
 
-                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                        <div class="flex flex-wrap items-center gap-2.5 self-end sm:self-auto">
+                            <!-- Sort Selection -->
+                            <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                                <span>Urutkan:</span>
+                                <select id="sort_by" name="sort"
+                                    class="px-2.5 py-1 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white font-medium text-gray-700">
+                                    <option value="recently_active" {{ request('sort', 'recently_active') == 'recently_active' ? 'selected' : '' }}>⚡ Baru Saja Aktif</option>
+                                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>✨ Peserta Baru</option>
+                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>🔤 Nama A - Z</option>
+                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>🔤 Nama Z - A</option>
+                                    <option value="marriage_target" {{ request('sort') == 'marriage_target' ? 'selected' : '' }}>💍 Target Menikah</option>
+                                </select>
+                            </div>
+
                             <!-- Per Page Selection -->
                             <div class="flex items-center gap-1.5 text-xs text-gray-500">
                                 <span>Tampilkan:</span>
@@ -290,10 +303,15 @@
                                                     <h3 class="text-sm font-bold text-gray-900 truncate group-hover:text-rose-700 transition">
                                                         {{ $profile->full_name }}
                                                     </h3>
-                                                    <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                                                    <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
                                                         <span class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-100 text-rose-700 text-[10px] font-bold">
                                                             {{ $age ? $age . ' Tahun' : 'Usia -' }}
                                                         </span>
+                                                        @if ($profile->latest_spn_batch)
+                                                            <span class="px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-[10px] font-semibold">
+                                                                🎓 {{ $profile->latest_spn_batch }}
+                                                            </span>
+                                                        @endif
                                                         @if ($profile->marriage_target_year)
                                                             <span class="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-semibold">
                                                                 Target: {{ $profile->marriage_target_year }}
@@ -320,8 +338,14 @@
                                             </div>
                                         </div>
 
-                                        <!-- Card Action -->
-                                        <div class="pt-3 border-t border-gray-100">
+                                        <!-- Card Footer: Last Active & Action -->
+                                        <div class="pt-3 border-t border-gray-100 space-y-2.5">
+                                            <div class="flex items-center justify-between text-[11px] text-gray-500">
+                                                <span class="inline-flex items-center gap-1.5 font-medium text-gray-600">
+                                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                                    <span>{{ $profile->last_active_label }}</span>
+                                                </span>
+                                            </div>
                                             <a href="{{ route('taaruf.profile.show', $profile->id) }}"
                                                 class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 font-bold text-xs shadow-2xs transition group-hover:bg-rose-600 group-hover:text-white group-hover:border-rose-600">
                                                 <span>Lihat Biodata Lengkap</span>
@@ -341,8 +365,10 @@
                                         <tr>
                                             <th class="px-4 py-3 text-left font-bold text-gray-700">Foto</th>
                                             <th class="px-4 py-3 text-left font-bold text-gray-700">Nama Lengkap</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Alumni SPN</th>
                                             <th class="px-4 py-3 text-left font-bold text-gray-700">Usia</th>
                                             <th class="px-4 py-3 text-left font-bold text-gray-700">Domisili</th>
+                                            <th class="px-4 py-3 text-left font-bold text-gray-700">Terakhir Aktif</th>
                                             <th class="px-4 py-3 text-left font-bold text-gray-700">Target Menikah</th>
                                             <th class="px-4 py-3 text-center font-bold text-gray-700">Aksi</th>
                                         </tr>
@@ -363,11 +389,20 @@
                                                 <td class="px-4 py-3 whitespace-nowrap font-bold text-gray-900">
                                                     {{ $profile->full_name }}
                                                 </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-teal-800 font-semibold">
+                                                    {{ $profile->latest_spn_batch ?: 'Alumni SPN' }}
+                                                </td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-gray-600">
                                                     {{ \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) ? \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date) . ' th' : '-' }}
                                                 </td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-gray-600">
                                                     {{ $profile->current_residence ?: '-' }}
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-gray-500">
+                                                    <span class="inline-flex items-center gap-1.5">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        <span>{{ $profile->last_active_label }}</span>
+                                                    </span>
                                                 </td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-rose-600 font-semibold">
                                                     {{ $profile->marriage_target_year ?: '-' }}
@@ -762,6 +797,13 @@
                 // Event listeners
                 filterSelect.addEventListener('change', showFilterOptions);
                 locationLevelSelect.addEventListener('change', updateLocationSelects);
+
+                const sortBySelect = document.getElementById('sort_by');
+                if (sortBySelect) {
+                    sortBySelect.addEventListener('change', function() {
+                        updateUrlAndReload('sort', this.value);
+                    });
+                }
 
                 // Per page change handler
                 if (perPageSelect) {

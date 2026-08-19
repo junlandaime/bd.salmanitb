@@ -133,7 +133,7 @@
         <!-- Main Content Area -->
         <div class="flex flex-col flex-1 w-full overflow-hidden">
             <!-- Topbar -->
-            <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200/80 sticky top-0 z-10 shadow-2xs">
+            <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200/80 sticky top-0 z-30 shadow-2xs">
                 <div class="flex items-center gap-3">
                     <button @click="sidebarOpen = true" class="text-gray-500 hover:text-emerald-700 p-1.5 rounded-xl hover:bg-gray-100 focus:outline-none lg:hidden">
                         <i class="fas fa-bars text-lg"></i>
@@ -171,24 +171,36 @@
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
                              @click.away="open = false"
-                             class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl py-2 border border-gray-100 z-50"
+                             class="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl py-2 border border-gray-100 z-50"
                              style="display: none;">
-                            <div class="px-4 py-2 border-b border-gray-100">
+                            <div class="px-4 py-2.5 border-b border-gray-100">
                                 <p class="text-xs font-bold text-gray-900 truncate">{{ auth()->user()->name }}</p>
                                 <p class="text-[11px] text-gray-500 truncate">{{ auth()->user()->email }}</p>
                             </div>
+                            <a href="{{ route('peserta.dashboard') }}"
+                                class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
+                                <i class="fas fa-th-large text-gray-400 w-4 text-center"></i>
+                                <span>Dashboard Peserta</span>
+                            </a>
+                            @if(auth()->user() && auth()->user()->hasRole('alumni'))
+                                <a href="{{ route('alumni.dashboard') }}"
+                                    class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-teal-700 bg-teal-50/60 hover:bg-teal-50 transition">
+                                    <i class="fas fa-graduation-cap text-teal-500 w-4 text-center"></i>
+                                    <span>Portal Alumni</span>
+                                </a>
+                            @endif
                             <a href="{{ route('profile.edit') }}"
-                                class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
+                                class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
                                 <i class="fas fa-user-cog text-gray-400 w-4 text-center"></i>
-                                <span>Pengaturan Profil</span>
+                                <span>Pengaturan Akun</span>
                             </a>
                             <a href="{{ route('peserta.feedback.index') }}"
-                                class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
+                                class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
                                 <i class="fas fa-comment-dots text-gray-400 w-4 text-center"></i>
                                 <span>Feedback &amp; Aspirasi</span>
                             </a>
                             <a href="{{ route('home') }}" target="_blank"
-                                class="sm:hidden flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
+                                class="sm:hidden flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
                                 <i class="fas fa-globe text-gray-400 w-4 text-center"></i>
                                 <span>Lihat Website</span>
                             </a>

@@ -89,7 +89,13 @@
                             </div>
 
                             <div class="flex-1 text-center sm:text-left space-y-2">
-                                <h2 class="text-xl font-bold text-gray-900">{{ $profile->full_name }}</h2>
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <h2 class="text-xl font-bold text-gray-900">{{ $profile->full_name }}</h2>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200 self-center sm:self-auto">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span>{{ $profile->last_active_label }}</span>
+                                    </span>
+                                </div>
                                 <p class="text-xs text-gray-500">Nama Panggilan: <span
                                         class="font-semibold text-gray-800">{{ $profile->nickname ?: '-' }}</span></p>
 
@@ -108,11 +114,7 @@
                                     <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
                                         <span class="text-gray-400 block text-[11px]">Alumni SPN:</span>
                                         <span class="font-semibold text-gray-800">
-                                            @if ($profile->user->batchAlumni->first() && $profile->user->batchAlumni->first()->activityBatch)
-                                                {{ $profile->user->batchAlumni->first()->activityBatch->nama_batch }}
-                                            @else
-                                                Alumni SPN
-                                            @endif
+                                            {{ $profile->latest_spn_batch ?: 'Alumni SPN' }}
                                         </span>
                                     </div>
                                     <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100">

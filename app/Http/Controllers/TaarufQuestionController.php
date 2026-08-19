@@ -142,11 +142,16 @@ class TaarufQuestionController extends Controller
         // }
 
         // Update the question
-        $question->update([
+        $updateData = [
             'answer' => $request->answer,
             'is_answered' => true,
             'is_public' => $request->has('is_public') ? true : false,
-        ]);
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('taaruf_questions', 'answered_at')) {
+            $updateData['answered_at'] = \Illuminate\Support\Carbon::now();
+        }
+
+        $question->update($updateData);
 
 
         // Send notification to the user who asked the question

@@ -348,15 +348,15 @@ class TaarufController extends Controller
         $perPage = $this->resolvePerPage($request);
         $oppositeGender = $taarufProfile->gender === 'male' ? 'female' : 'male';
 
-        $query = TaarufProfile::where('gender', $oppositeGender)
-            ->where('is_active', true);
+        $query = TaarufProfile::where('taaruf_profiles.gender', $oppositeGender)
+            ->where('taaruf_profiles.is_active', true);
 
         // Search by name
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('full_name', 'like', '%' . $search . '%')
-                    ->orWhere('nickname', 'like', '%' . $search . '%');
+                $q->where('taaruf_profiles.full_name', 'like', '%' . $search . '%')
+                    ->orWhere('taaruf_profiles.nickname', 'like', '%' . $search . '%');
             });
         }
 
@@ -368,7 +368,7 @@ class TaarufController extends Controller
         } elseif ($filter === 'location') {
             $this->applyLocationFilter($query, $request);
         } elseif ($filter === 'marriage_year' && $request->filled('marriage_year')) {
-            $query->where('marriage_target_year', $request->marriage_year);
+            $query->where('taaruf_profiles.marriage_target_year', $request->marriage_year);
         }
 
         // Get education levels for dropdown
@@ -382,9 +382,26 @@ class TaarufController extends Controller
             ->values()
             ->toArray();
 
-        $profiles = $query->with('user')
-            ->orderBy('full_name', 'asc')
-            ->paginate($perPage)
+        // Dynamic Sorting (Default: Recently Active / Baru Saja Aktif)
+        $sort = $request->get('sort', 'recently_active');
+        $query->with(['user', 'user.batchAlumni.activityBatch']);
+
+        if ($sort === 'newest') {
+            $query->orderBy('taaruf_profiles.created_at', 'desc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('taaruf_profiles.full_name', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('taaruf_profiles.full_name', 'desc');
+        } elseif ($sort === 'marriage_target') {
+            $query->orderByRaw("CASE WHEN taaruf_profiles.marriage_target_year IS NULL OR taaruf_profiles.marriage_target_year = '' THEN 1 ELSE 0 END, taaruf_profiles.marriage_target_year ASC");
+        } else {
+            // 'recently_active' (Default) - prioritize users who logged in or updated their profile recently
+            $query->leftJoin('users', 'taaruf_profiles.user_id', '=', 'users.id')
+                ->select('taaruf_profiles.*')
+                ->orderByRaw('COALESCE(users.last_login_at, taaruf_profiles.updated_at, taaruf_profiles.created_at) DESC');
+        }
+
+        $profiles = $query->paginate($perPage)
             ->appends($request->except('page'));
 
         $myProfile = $taarufProfile;
@@ -394,7 +411,8 @@ class TaarufController extends Controller
             'profiles',
             'myProfile',
             'educations',
-            'view'
+            'view',
+            'sort'
         ));
     }
 
@@ -549,22 +567,22 @@ class TaarufController extends Controller
         // Apply education level filter when applicable
         $strataTypes = ['strata', 'strata_university', 'strata_major', 'full'];
         if (in_array($filterType, $strataTypes) && $request->filled('filter_education_level')) {
-            $query->where('education_level', $request->filter_education_level);
+            $query->where('taaruf_profiles.education_level', $request->filter_education_level);
         }
 
         // Apply university filter when applicable
         $universityTypes = ['university', 'strata_university', 'full'];
         if (in_array($filterType, $universityTypes) && $request->filled('filter_university')) {
             $query->where(function ($q) use ($request) {
-                $q->where('university', $request->filter_university)
-                    ->orWhere('custom_university', $request->filter_university);
+                $q->where('taaruf_profiles.university', $request->filter_university)
+                    ->orWhere('taaruf_profiles.custom_university', $request->filter_university);
             });
         }
 
         // Apply major filter when applicable
         $majorTypes = ['major', 'strata_major', 'full'];
         if (in_array($filterType, $majorTypes) && $request->filled('filter_major')) {
-            $query->where('major', 'like', '%' . $request->filter_major . '%');
+            $query->where('taaruf_profiles.major', 'like', '%' . $request->filter_major . '%');
         }
     }
 
@@ -588,7 +606,7 @@ class TaarufController extends Controller
 
             $paramName = 'location_' . $level;
             if ($request->filled($paramName)) {
-                $query->where($prefix . $level, $request->get($paramName));
+                $query->where('taaruf_profiles.' . $prefix . $level, $request->get($paramName));
             }
         }
     }
