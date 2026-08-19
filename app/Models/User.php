@@ -103,4 +103,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Feedback::class);
     }
+
+    /**
+     * Get the SPN registrations for this user.
+     */
+    public function spnRegistrations()
+    {
+        return $this->hasMany(SpnRegistration::class);
+    }
 }

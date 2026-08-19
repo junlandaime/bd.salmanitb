@@ -18,14 +18,18 @@ class TaarufAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $query = TaarufProfile::with(['user', 'user.batchAlumni']);
+        $query = TaarufProfile::with(['user.batchAlumni.activityBatch', 'user.spnRegistrations.activityBatch']);
 
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->filled('search')) {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('full_name', 'like', "%{$searchTerm}%")
-                    ->orWhere('occupation', 'like', "%{$searchTerm}%")
+                $q->where('taaruf_profiles.full_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('taaruf_profiles.nickname', 'like', "%{$searchTerm}%")
+                    ->orWhere('taaruf_profiles.occupation', 'like', "%{$searchTerm}%")
+                    ->orWhere('taaruf_profiles.university', 'like', "%{$searchTerm}%")
+                    ->orWhere('taaruf_profiles.residence_city', 'like', "%{$searchTerm}%")
+                    ->orWhere('taaruf_profiles.origin_city', 'like', "%{$searchTerm}%")
                     ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
                         $userQuery->where('email', 'like', "%{$searchTerm}%");
                     });
@@ -33,10 +37,10 @@ class TaarufAdminController extends Controller
         }
 
         // Handle all gender filter options
-        if ($request->has('gender') && !empty($request->gender)) {
+        if ($request->filled('gender')) {
             if ($request->gender === 'male' || $request->gender === 'female') {
                 // Filter by specific gender
-                $query->where('gender', $request->gender);
+                $query->where('taaruf_profiles.gender', $request->gender);
             } elseif ($request->gender === 'gender_mismatch') {
                 // Use a more explicit approach to find mismatches
                 $query->whereHas('user.batchAlumni', function ($q) {
@@ -58,19 +62,43 @@ class TaarufAdminController extends Controller
         }
 
         // Filter by active status if requested
-        if ($request->has('status') && in_array($request->status, ['active', 'inactive'])) {
+        if ($request->filled('status') && in_array($request->status, ['active', 'inactive'])) {
             $isActive = $request->status === 'active';
-            $query->where('is_active', $isActive);
+            $query->where('taaruf_profiles.is_active', $isActive);
         }
 
         // Filter by taaruf process status
-        if ($request->has('taaruf_process') && in_array($request->taaruf_process, ['in_process', 'not_in_process'])) {
+        if ($request->filled('taaruf_process') && in_array($request->taaruf_process, ['in_process', 'not_in_process'])) {
             $isInProcess = $request->taaruf_process === 'in_process';
-            $query->where('is_in_taaruf_process', $isInProcess);
+            $query->where('taaruf_profiles.is_in_taaruf_process', $isInProcess);
+        }
+
+        // Filter by activity status (terakhir aktif)
+        if ($request->filled('activity_status')) {
+            $now = \Illuminate\Support\Carbon::now();
+            if ($request->activity_status === 'active_24h') {
+                $query->where(function ($aq) use ($now) {
+                    $aq->whereHas('user', function ($uq) use ($now) {
+                        $uq->where('last_login_at', '>=', $now->copy()->subHours(24));
+                    })->orWhere('taaruf_profiles.updated_at', '>=', $now->copy()->subHours(24));
+                });
+            } elseif ($request->activity_status === 'active_7d') {
+                $query->where(function ($aq) use ($now) {
+                    $aq->whereHas('user', function ($uq) use ($now) {
+                        $uq->where('last_login_at', '>=', $now->copy()->subDays(7));
+                    })->orWhere('taaruf_profiles.updated_at', '>=', $now->copy()->subDays(7));
+                });
+            } elseif ($request->activity_status === 'active_30d') {
+                $query->where(function ($aq) use ($now) {
+                    $aq->whereHas('user', function ($uq) use ($now) {
+                        $uq->where('last_login_at', '>=', $now->copy()->subDays(30));
+                    })->orWhere('taaruf_profiles.updated_at', '>=', $now->copy()->subDays(30));
+                });
+            }
         }
 
         // Sorting
-        $sortField = $request->sort_by ?? 'created_at';
+        $sortField = $request->sort_by ?? 'last_active';
         $sortDirection = $request->sort_direction ?? 'desc';
 
         // Validate sort field to prevent SQL injection
@@ -81,13 +109,18 @@ class TaarufAdminController extends Controller
             'occupation',
             'is_active',
             'is_in_taaruf_process',
-            'created_at'
+            'created_at',
+            'last_active'
         ];
 
-        if (in_array($sortField, $allowedSortFields)) {
-            $query->orderBy($sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
+        if ($sortField === 'last_active') {
+            $query->leftJoin('users', 'taaruf_profiles.user_id', '=', 'users.id')
+                ->select('taaruf_profiles.*')
+                ->orderByRaw('COALESCE(users.last_login_at, taaruf_profiles.updated_at, taaruf_profiles.created_at) ' . ($sortDirection === 'asc' ? 'asc' : 'desc'));
+        } elseif (in_array($sortField, $allowedSortFields)) {
+            $query->orderBy('taaruf_profiles.' . $sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
         } else {
-            $query->latest(); // Default sorting
+            $query->orderBy('taaruf_profiles.created_at', 'desc');
         }
 
         $profiles = $query->paginate(15)->appends($request->all());
@@ -229,7 +262,11 @@ class TaarufAdminController extends Controller
      */
     public function show($id)
     {
-        $profile = TaarufProfile::with('user')->findOrFail($id);
+        $profile = TaarufProfile::with([
+            'user.batchAlumni.activityBatch',
+            'user.spnRegistrations.activityBatch',
+            'questions.askedBy'
+        ])->findOrFail($id);
 
         return view('admin.taaruf.show', compact('profile'));
     }

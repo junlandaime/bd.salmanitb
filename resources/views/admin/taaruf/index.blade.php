@@ -48,8 +48,8 @@
                     </div>
                 </div>
 
-                <!-- Grid of Filters (5 columns on desktop) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Grid of Filters (6 columns on desktop) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                     
                     <!-- Gender Filter -->
                     <div>
@@ -65,7 +65,7 @@
 
                     <!-- Status Filter -->
                     <div>
-                        <label for="status" class="block text-xs font-semibold text-gray-700 mb-1">Status</label>
+                        <label for="status" class="block text-xs font-semibold text-gray-700 mb-1">Status Akun</label>
                         <select name="status" id="status"
                             class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
                             <option value="">Semua</option>
@@ -76,7 +76,7 @@
 
                     <!-- Taaruf Process Filter -->
                     <div>
-                        <label for="taaruf_process" class="block text-xs font-semibold text-gray-700 mb-1">Proses Taaruf</label>
+                        <label for="taaruf_process" class="block text-xs font-semibold text-gray-700 mb-1">Proses Ta'aruf</label>
                         <select name="taaruf_process" id="taaruf_process"
                             class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
                             <option value="">Semua</option>
@@ -85,12 +85,25 @@
                         </select>
                     </div>
 
+                    <!-- Activity Status Filter -->
+                    <div>
+                        <label for="activity_status" class="block text-xs font-semibold text-gray-700 mb-1">Aktivitas Akun</label>
+                        <select name="activity_status" id="activity_status"
+                            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
+                            <option value="">Semua Aktivitas</option>
+                            <option value="active_24h" {{ request('activity_status') == 'active_24h' ? 'selected' : '' }}>Aktif 24 Jam Terakhir</option>
+                            <option value="active_7d" {{ request('activity_status') == 'active_7d' ? 'selected' : '' }}>Aktif 7 Hari Terakhir</option>
+                            <option value="active_30d" {{ request('activity_status') == 'active_30d' ? 'selected' : '' }}>Aktif 30 Hari Terakhir</option>
+                        </select>
+                    </div>
+
                     <!-- Sort By Field -->
                     <div>
                         <label for="sort_by" class="block text-xs font-semibold text-gray-700 mb-1">Urutkan Berdasarkan</label>
                         <select name="sort_by" id="sort_by"
                             class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
-                            <option value="created_at" {{ request('sort_by', 'created_at') == 'created_at' ? 'selected' : '' }}>Tanggal Dibuat</option>
+                            <option value="last_active" {{ request('sort_by', 'last_active') == 'last_active' ? 'selected' : '' }}>⚡ Terakhir Aktif / Online</option>
+                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Tanggal Dibuat</option>
                             <option value="full_name" {{ request('sort_by') == 'full_name' ? 'selected' : '' }}>Nama Lengkap</option>
                             <option value="gender" {{ request('sort_by') == 'gender' ? 'selected' : '' }}>Jenis Kelamin</option>
                             <option value="birth_place_date" {{ request('sort_by') == 'birth_place_date' ? 'selected' : '' }}>Tanggal Lahir</option>
@@ -105,8 +118,8 @@
                         <label for="sort_direction" class="block text-xs font-semibold text-gray-700 mb-1">Urutan</label>
                         <select name="sort_direction" id="sort_direction"
                             class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition bg-white">
-                            <option value="desc" {{ request('sort_direction', 'desc') == 'desc' ? 'selected' : '' }}>Menurun (Z-A, Terbaru)</option>
-                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Menaik (A-Z, Terlama)</option>
+                            <option value="desc" {{ request('sort_direction', 'desc') == 'desc' ? 'selected' : '' }}>Menurun (Terbaru / Z-A)</option>
+                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Menaik (Terlama / A-Z)</option>
                         </select>
                     </div>
 
@@ -139,9 +152,10 @@
                     <thead class="text-xs text-gray-600 uppercase bg-gray-50/80 border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-3.5">Peserta</th>
-                            <th class="px-6 py-3.5">Jenis Kelamin</th>
-                            <th class="px-6 py-3.5">TTL / Usia</th>
-                            <th class="px-6 py-3.5">Pekerjaan</th>
+                            <th class="px-6 py-3.5">Alumni SPN</th>
+                            <th class="px-6 py-3.5">Gender &amp; Usia</th>
+                            <th class="px-6 py-3.5">Domisili &amp; Profesi</th>
+                            <th class="px-6 py-3.5">Terakhir Aktif</th>
                             <th class="px-6 py-3.5">Status Akun</th>
                             <th class="px-6 py-3.5">Proses Ta'aruf</th>
                             <th class="px-6 py-3.5 text-right">Aksi</th>
@@ -149,6 +163,9 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse ($profiles as $profile)
+                            @php
+                                $age = \App\Helpers\DateHelper::getAgeFromBirthPlaceDate($profile->birth_place_date);
+                            @endphp
                             <tr class="hover:bg-gray-50/75 transition">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
@@ -163,19 +180,50 @@
                                         <div class="min-w-0">
                                             <div class="font-bold text-gray-900 leading-snug">{{ $profile->full_name }}</div>
                                             <div class="text-xs text-gray-400 truncate">{{ $profile->user->email ?? '-' }}</div>
+                                            @if($profile->nickname)
+                                                <div class="text-[11px] text-pink-600">({{ $profile->nickname }})</div>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
-                                        {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
-                                    </span>
+                                    @if ($profile->latest_spn_batch)
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                                            <span>🎓</span>
+                                            <span>{{ $profile->latest_spn_batch }}</span>
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-gray-400">-</span>
+                                    @endif
                                 </td>
-                                <td class="px-6 py-4 text-xs text-gray-600">
-                                    {{ $profile->birth_place_date ?? '-' }}
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full {{ $profile->gender === 'male' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200' }}">
+                                            {{ $profile->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
+                                        </span>
+                                        <div class="text-xs font-medium text-gray-700">
+                                            {{ $age ? $age . ' Tahun' : '-' }}
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="px-6 py-4 text-xs text-gray-600">
-                                    {{ $profile->occupation ?? '-' }}
+                                <td class="px-6 py-4 text-xs">
+                                    <div class="text-gray-900 font-medium truncate max-w-[160px]">
+                                        📍 {{ $profile->current_residence ?: ($profile->residence_city ?: '-') }}
+                                    </div>
+                                    <div class="text-gray-500 truncate max-w-[160px] mt-0.5">
+                                        💼 {{ $profile->occupation ?: '-' }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-xs whitespace-nowrap">
+                                    <div class="inline-flex items-center gap-1.5 font-medium text-gray-700">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                                        <span>{{ $profile->last_active_label }}</span>
+                                    </div>
+                                    @if($profile->user && $profile->user->last_login_at)
+                                        <div class="text-[10px] text-gray-400 mt-0.5">
+                                            {{ $profile->user->last_login_at->translatedFormat('d M Y, H:i') }} WIB
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $profile->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600' }}">
@@ -217,7 +265,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-8 text-center text-gray-400">Tidak ada profil ta'aruf yang ditemukan.</td>
+                                <td colspan="8" class="px-6 py-8 text-center text-gray-400">Tidak ada profil ta'aruf yang ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>
