@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\ActivityBatch;
 use App\Models\SpnPricingPackage;
 use App\Models\SpnRegistration;
+use App\Models\TaarufProfile;
 use App\Services\SpnRegistrationService;
 use App\Services\SpnReferralService;
 
@@ -32,8 +34,9 @@ class SpnRegistrationController extends Controller
     public function step1()
     {
         $batch = $this->getActiveBatch();
-        if (!$batch || !$batch->isRegistrationOpen()) {
-            return redirect()->route('spn.index')->with('info', 'Mohon maaf, saat ini pendaftaran Sekolah Pranikah sedang ditutup. Nantikan pembukaan batch berikutnya.');
+
+        if (!$batch) {
+            return redirect()->route('spn.index')->with('info', 'Saat ini belum ada batch pendaftaran yang dibuka.');
         }
 
         $registeredCount = SpnRegistration::where('activity_batch_id', $batch->id)
@@ -67,18 +70,66 @@ class SpnRegistrationController extends Controller
         if (auth()->check()) {
             $user = auth()->user();
             $prevReg = SpnRegistration::where('user_id', $user->id)->latest()->first();
+            $taaruf = TaarufProfile::where('user_id', $user->id)->first();
+
+            // Helper Penyesuaian Jenis Kelamin
+            $gender = '';
+            if ($prevReg && $prevReg->jenis_kelamin) {
+                $gender = $prevReg->jenis_kelamin;
+            } elseif ($taaruf && $taaruf->gender) {
+                $g = strtolower($taaruf->gender);
+                if (in_array($g, ['l', 'laki-laki', 'pria', 'ikhwan'])) {
+                    $gender = 'pria';
+                } elseif (in_array($g, ['p', 'perempuan', 'wanita', 'akhwat'])) {
+                    $gender = 'wanita';
+                }
+            }
+
+            // Helper Penyesuaian Tanggal Lahir
+            $birthDate = '';
+            if ($prevReg && $prevReg->tanggal_lahir) {
+                $birthDate = $prevReg->tanggal_lahir->format('Y-m-d');
+            } elseif ($taaruf && $taaruf->birth_place_date) {
+                try {
+                    $parsed = Carbon::parse($taaruf->birth_place_date);
+                    if ($parsed && $parsed->year > 1940 && $parsed->year <= Carbon::now()->year) {
+                        $birthDate = $parsed->format('Y-m-d');
+                    }
+                } catch (\Throwable $e) {
+                    // Abaikan jika format teks tidak standar
+                }
+            }
+
+            // Helper Penyesuaian Asal Daerah
+            $asalDaerah = $prevReg->asal_daerah ?? '';
+            if (empty($asalDaerah) && $taaruf) {
+                $locParts = array_filter([$taaruf->origin_city, $taaruf->origin_province]);
+                $asalDaerah = implode(', ', $locParts);
+            }
+
+            // Helper Penyesuaian Domisili
+            $domisili = $prevReg->domisili ?? '';
+            if (empty($domisili) && $taaruf) {
+                if (!empty($taaruf->current_residence)) {
+                    $domisili = $taaruf->current_residence;
+                } else {
+                    $resParts = array_filter([$taaruf->residence_city, $taaruf->residence_province]);
+                    $domisili = implode(', ', $resParts);
+                }
+            }
+
             $prefill = [
-                'nama_lengkap' => $prevReg->nama_lengkap ?? $user->name,
+                'nama_lengkap' => $prevReg->nama_lengkap ?? $taaruf->full_name ?? $user->name,
                 'nama_gelar' => $prevReg->nama_gelar ?? '',
-                'nama_panggilan' => $prevReg->nama_panggilan ?? '',
-                'jenis_kelamin' => $prevReg->jenis_kelamin ?? '',
+                'nama_panggilan' => $prevReg->nama_panggilan ?? $taaruf->nickname ?? '',
+                'jenis_kelamin' => $gender,
                 'email' => $user->email,
                 'whatsapp' => $prevReg->whatsapp ?? '',
-                'instagram' => $prevReg->instagram ?? '',
-                'tanggal_lahir' => ($prevReg && $prevReg->tanggal_lahir) ? $prevReg->tanggal_lahir->format('Y-m-d') : '',
-                'asal_daerah' => $prevReg->asal_daerah ?? '',
-                'domisili' => $prevReg->domisili ?? '',
-                'status_pernikahan' => $prevReg->status_pernikahan ?? '',
+                'instagram' => $prevReg->instagram ?? $taaruf->instagram ?? '',
+                'tanggal_lahir' => $birthDate,
+                'asal_daerah' => $asalDaerah,
+                'domisili' => $domisili,
+                'status_pernikahan' => $prevReg->status_pernikahan ?? 'belum',
             ];
         }
 
@@ -129,15 +180,43 @@ class SpnRegistrationController extends Controller
         if (auth()->check()) {
             $user = auth()->user();
             $prevReg = SpnRegistration::where('user_id', $user->id)->latest()->first();
+            $taaruf = TaarufProfile::where('user_id', $user->id)->first();
+
+            $pendidikan = $prevReg->pendidikan ?? '';
+            if (empty($pendidikan) && $taaruf) {
+                $rawEdu = strtolower($taaruf->education_level ?? $taaruf->last_education ?? '');
+                if (str_contains($rawEdu, 's1') || str_contains($rawEdu, 'sarjana')) {
+                    $pendidikan = 's1';
+                } elseif (str_contains($rawEdu, 's2') || str_contains($rawEdu, 'magister')) {
+                    $pendidikan = 's2';
+                } elseif (str_contains($rawEdu, 's3') || str_contains($rawEdu, 'doktor')) {
+                    $pendidikan = 's3';
+                } elseif (str_contains($rawEdu, 'd3') || str_contains($rawEdu, 'diploma')) {
+                    $pendidikan = 'd3';
+                } elseif (str_contains($rawEdu, 'sma') || str_contains($rawEdu, 'smk') || str_contains($rawEdu, 'ma')) {
+                    $pendidikan = 'sma';
+                }
+            }
+
+            $statusDiri = $prevReg->status_diri ?? '';
+            if (empty($statusDiri) && $taaruf) {
+                $occ = strtolower($taaruf->occupation ?? '');
+                if (str_contains($occ, 'mahasiswa') || str_contains($occ, 'pelajar') || str_contains($occ, 'student')) {
+                    $statusDiri = 'mahasiswa';
+                } elseif (!empty($occ)) {
+                    $statusDiri = 'bekerja';
+                }
+            }
+
             $prefill = [
-                'pendidikan' => $prevReg->pendidikan ?? '',
-                'status_diri' => $prevReg->status_diri ?? '',
-                'pekerjaan' => $prevReg->pekerjaan ?? '',
+                'pendidikan' => $pendidikan,
+                'status_diri' => $statusDiri,
+                'pekerjaan' => $prevReg->pekerjaan ?? $taaruf->occupation ?? '',
                 'jabatan' => $prevReg->jabatan ?? '',
                 'instansi' => $prevReg->instansi ?? '',
                 'lokasi_kerja' => $prevReg->lokasi_kerja ?? '',
-                'universitas' => $prevReg->universitas ?? '',
-                'jurusan' => $prevReg->jurusan ?? '',
+                'universitas' => $prevReg->universitas ?? $taaruf->university ?? $taaruf->custom_university ?? '',
+                'jurusan' => $prevReg->jurusan ?? $taaruf->major ?? '',
                 'angkatan' => $prevReg->angkatan ?? '',
             ];
         }
@@ -345,13 +424,30 @@ class SpnRegistrationController extends Controller
             'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
         ]);
 
-        $step1 = $request->session()->get('spn_step1');
-        $step2 = $request->session()->get('spn_step2');
-        $step3 = $request->session()->get('spn_step3');
-        $step4 = $request->session()->get('spn_step4');
+        // Pull session data atomically to prevent duplicate simultaneous submission
+        $step1 = $request->session()->pull('spn_step1');
+        $step2 = $request->session()->pull('spn_step2');
+        $step3 = $request->session()->pull('spn_step3');
+        $step4 = $request->session()->pull('spn_step4');
 
         if (empty($step1) || empty($step2) || empty($step3) || empty($step4)) {
-            return redirect()->route('spn.daftar.step1')->with('error', 'Sesi pendaftaran Anda telah berakhir. Silakan isi kembali formulir pendaftaran.');
+            // Check if user has just completed registration in this batch within the last 2 minutes
+            $batch = $this->getActiveBatch();
+            if ($batch) {
+                $userEmail = auth()->user()?->email;
+                if ($userEmail) {
+                    $recentReg = SpnRegistration::where('activity_batch_id', $batch->id)
+                        ->where('email', $userEmail)
+                        ->where('created_at', '>=', Carbon::now()->subMinutes(2))
+                        ->latest()
+                        ->first();
+                    if ($recentReg) {
+                        return redirect()->route('spn.daftar.step6', ['code' => $recentReg->registration_code]);
+                    }
+                }
+            }
+
+            return redirect()->route('spn.daftar.step1')->with('error', 'Sesi pendaftaran Anda telah berakhir atau formulir sudah berhasil terkirim.');
         }
 
         $data = array_merge($step1, $step2, $step3, $step4);
@@ -370,11 +466,14 @@ class SpnRegistrationController extends Controller
         try {
             $registration = $this->registrationService->createRegistration($data, $request->file('bukti_bayar'));
 
-            // Clear session data
-            $request->session()->forget(['spn_step1', 'spn_step2', 'spn_step3', 'spn_step4']);
-
             return redirect()->route('spn.daftar.step6', ['code' => $registration->registration_code]);
         } catch (\Throwable $e) {
+            // Restore session data on failure so user does not lose input
+            $request->session()->put('spn_step1', $step1);
+            $request->session()->put('spn_step2', $step2);
+            $request->session()->put('spn_step3', $step3);
+            $request->session()->put('spn_step4', $step4);
+
             \Illuminate\Support\Facades\Log::error('Gagal memproses pendaftaran SPN Langkah 5: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);

@@ -96,6 +96,7 @@ Route::middleware(['auth', 'role:superAdmin|admin|admin_spn|admin_taaruf'])->pre
         Route::get('/pendaftar/{id}', [SpnAdminController::class, 'show'])->name('show');
         Route::post('/pendaftar/{id}/verify', [SpnAdminController::class, 'verify'])->name('verify');
         Route::post('/pendaftar/{id}/reject', [SpnAdminController::class, 'reject'])->name('reject');
+        Route::delete('/pendaftar/{id}', [SpnAdminController::class, 'destroy'])->name('destroy');
         Route::get('/export', [SpnAdminController::class, 'export'])->name('export');
         Route::get('/pending-changes', [SpnAdminController::class, 'pendingChanges'])->name('pendingChanges');
         Route::post('/pending-changes/{id}/approve', [SpnAdminController::class, 'approveChange'])->name('approveChange');

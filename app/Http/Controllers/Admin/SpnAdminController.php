@@ -118,6 +118,26 @@ class SpnAdminController extends Controller
         return back()->with('success', 'Pendaftaran telah ditolak.');
     }
 
+    public function destroy($id)
+    {
+        $registration = SpnRegistration::findOrFail($id);
+
+        // Decrement referral usage if applied
+        if ($registration->spn_referral_code_id && $registration->referralCode) {
+            $registration->referralCode->decrement('usage_count');
+        }
+
+        // Delete media collection
+        $registration->clearMediaCollection('bukti_bayar');
+
+        $regCode = $registration->registration_code;
+        $regName = $registration->nama_lengkap;
+
+        $registration->delete();
+
+        return redirect()->route('admin.spn.registrants')->with('success', "Data pendaftaran #{$regCode} ({$regName}) berhasil dihapus secara permanen.");
+    }
+
     public function export(Request $request)
     {
         $query = SpnRegistration::with(['referralCode', 'activityBatch.activity'])->orderBy('created_at', 'asc');

@@ -31,7 +31,7 @@ Route::get('/dashboard', function () {
     }
     // Semua user tanpa role khusus diarahkan ke dashboard peserta
     return redirect()->route('peserta.dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // ==========================================================================
 // User Profile Management
@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 // Peserta Dashboard Routes
 // ==========================================================================
 
-Route::middleware(['auth', EnsureIsPeserta::class])->prefix('peserta')->name('peserta.')->group(function () {
+Route::middleware(['auth', 'verified', EnsureIsPeserta::class])->prefix('peserta')->name('peserta.')->group(function () {
     Route::get('/dashboard', [PesertaController::class, 'dashboard'])->name('dashboard');
     Route::get('/registration/{id}', [PesertaController::class, 'show'])->name('registration.show');
     Route::get('/registration/{id}/edit', [PesertaController::class, 'edit'])->name('registration.edit');

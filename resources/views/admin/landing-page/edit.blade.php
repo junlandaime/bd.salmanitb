@@ -23,6 +23,20 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-2xl mb-6 shadow-sm" role="alert">
+                <div class="flex items-center gap-2 font-bold text-sm mb-2 text-red-900">
+                    <span>⚠️</span>
+                    <span>Terdapat beberapa kesalahan pengisian formulir:</span>
+                </div>
+                <ul class="list-disc list-inside text-xs space-y-1 text-red-700">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('admin.landing-page.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
             @method('PUT')
@@ -66,6 +80,9 @@
                     @endif
                     <input type="file" id="hero_image" name="hero_image"
                         class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                    @error('hero_image')
+                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -122,10 +139,58 @@
                 </div>
             </div>
 
+            <!-- About Section Card -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+                <div class="flex items-center gap-2.5 pb-4 border-b border-gray-100">
+                    <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-sm">ℹ️</span>
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Tentang Kami &amp; Visi Misi</h2>
+                        <p class="text-xs text-gray-500">Informasi profil singkat dan visi misi Bidang Dakwah.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="about_title" class="block text-xs font-semibold text-gray-700 mb-1">Judul Tentang Kami</label>
+                    <input type="text" id="about_title" name="about_title"
+                        value="{{ old('about_title', $landingPage->about_title) }}"
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                </div>
+
+                <div>
+                    <label for="about_content" class="block text-xs font-semibold text-gray-700 mb-1">Konten Tentang Kami</label>
+                    <textarea id="about_content" name="about_content" rows="4"
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">{{ old('about_content', $landingPage->about_content) }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+                    <div>
+                        <label for="vision_title" class="block text-xs font-semibold text-gray-700 mb-1">Judul Visi</label>
+                        <input type="text" id="vision_title" name="vision_title"
+                            value="{{ old('vision_title', $landingPage->vision_title) }}"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl mb-3">
+                        
+                        <label for="vision_content" class="block text-xs font-semibold text-gray-700 mb-1">Konten Visi</label>
+                        <textarea id="vision_content" name="vision_content" rows="3"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl">{{ old('vision_content', $landingPage->vision_content) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="mission_title" class="block text-xs font-semibold text-gray-700 mb-1">Judul Misi</label>
+                        <input type="text" id="mission_title" name="mission_title"
+                            value="{{ old('mission_title', $landingPage->mission_title) }}"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl mb-3">
+                        
+                        <label for="mission_content" class="block text-xs font-semibold text-gray-700 mb-1">Konten Misi</label>
+                        <textarea id="mission_content" name="mission_content" rows="3"
+                            class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl">{{ old('mission_content', $landingPage->mission_content) }}</textarea>
+                    </div>
+                </div>
+            </div>
+
             <!-- Contact & Social Media Card -->
             <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6">
                 <div class="flex items-center gap-2.5 pb-4 border-b border-gray-100">
-                    <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-sm">📞</span>
+                    <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm">📞</span>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Kontak &amp; Media Sosial</h2>
                         <p class="text-xs text-gray-500">Informasi alamat, nomor telepon, email, dan akun resmi.</p>
@@ -180,6 +245,27 @@
                             value="{{ old('social_facebook', $landingPage->social_facebook ?? '') }}"
                             class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                     </div>
+                </div>
+            </div>
+
+            <!-- Footer & Deskripsi Tambahan Card -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+                <div class="flex items-center gap-2.5 pb-4 border-b border-gray-100">
+                    <span class="w-8 h-8 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-sm">📝</span>
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Deskripsi Footer &amp; Hak Cipta</h2>
+                        <p class="text-xs text-gray-500">Teks deskripsi singkat yang tampil di bagian bawah website (footer).</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="footer_description" class="block text-xs font-semibold text-gray-700 mb-1">Deskripsi Footer</label>
+                    <textarea id="footer_description" name="footer_description" rows="3"
+                        placeholder="Contoh: Bidang Dakwah Masjid Salman ITB berfokus pada pembinaan, pendidikan pra nikah, dan aktivitas keislaman..."
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">{{ old('footer_description', $landingPage->footer_description ?? '') }}</textarea>
+                    @error('footer_description')
+                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

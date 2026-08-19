@@ -46,8 +46,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Redirect to peserta dashboard — every new user is a peserta
-        return redirect()->route('peserta.dashboard')
-            ->with('success', 'Pendaftaran akun berhasil! Selamat datang di Bidang Dakwah Masjid Salman ITB. Silakan cek email Anda untuk informasi akun.');
+        // Redirect to email verification prompt notice
+        return redirect()->route('verification.notice')
+            ->with('success', 'Pendaftaran akun berhasil! Silakan periksa kotak masuk email Anda dan klik tautan verifikasi untuk mengaktifkan akun Anda.');
     }
 }
