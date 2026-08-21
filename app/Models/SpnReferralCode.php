@@ -54,6 +54,13 @@ class SpnReferralCode extends Model
         $this->increment('used_count');
     }
 
+    public function decrementUsage(): void
+    {
+        if ($this->used_count > 0) {
+            $this->decrement('used_count');
+        }
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

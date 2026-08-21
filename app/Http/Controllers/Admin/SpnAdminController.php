@@ -124,7 +124,7 @@ class SpnAdminController extends Controller
 
         // Decrement referral usage if applied
         if ($registration->spn_referral_code_id && $registration->referralCode) {
-            $registration->referralCode->decrement('usage_count');
+            $registration->referralCode->decrementUsage();
         }
 
         // Delete media collection
